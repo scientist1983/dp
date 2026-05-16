@@ -391,6 +391,23 @@ body.col-resizing{cursor:col-resize;user-select:none}
 .ra-proj-add-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:12px;border:1.5px dashed var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;width:100%;margin-top:4px}
 .ra-proj-add-btn:hover{border-color:var(--color-primary);color:var(--color-primary);background:rgba(44,58,255,.05)}
 .ra-proj-add-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none}
+
+/* Submit-to-project button inside ra-brc chat card */
+.ra-brc-submit{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px 16px;background:var(--color-primary);border:none;border-top:1px solid var(--ra-border);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .12s}
+.ra-brc-submit:hover{opacity:.85}
+.ra-brc-submit svg{width:13px;height:13px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+
+/* Request detail panel inside aside */
+.ra-req-detail{display:none;flex-direction:column;flex:1;overflow:hidden}
+.ra-req-detail-hd{padding:12px 14px;border-bottom:1px solid var(--ra-border);flex-shrink:0;display:flex;align-items:center;gap:8px}
+.ra-req-detail-back{background:transparent;border:1px solid var(--ra-border);border-radius:9999px;color:var(--ra-muted);font-family:inherit;font-size:12px;font-weight:600;padding:5px 12px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .12s;flex-shrink:0}
+.ra-req-detail-back:hover{border-color:var(--ra-text);color:var(--ra-text)}
+.ra-req-detail-title{font-size:14px;font-weight:700;color:var(--ra-text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-req-detail-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:9999px;flex-shrink:0}
+.ra-req-detail-status.sent{background:rgba(113,221,140,.15);color:var(--color-green)}
+.ra-req-detail-body{flex:1;overflow-y:auto;padding:12px 14px}
+.ra-req-detail-body::-webkit-scrollbar{width:3px}
+.ra-req-detail-body::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
 </style>
 </head>
 <body>
@@ -549,6 +566,18 @@ body.col-resizing{cursor:col-resize;user-select:none}
           <div class="ra-project-meta" id="project-meta">0 requests</div>
         </div>
         <div class="ra-project-body" id="project-req-list"></div>
+      </div>
+
+      <!-- REQUEST DETAIL PANEL (slides in when clicking a project request) -->
+      <div class="ra-req-detail" id="req-detail-panel">
+        <div class="ra-req-detail-hd">
+          <button class="ra-req-detail-back" onclick="closeReqDetail()">
+            <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none"><polyline points="15 18 9 12 15 6"/></svg>Project
+          </button>
+          <div class="ra-req-detail-title" id="req-detail-title">Request</div>
+          <div class="ra-req-detail-status sent" id="req-detail-status">Sent</div>
+        </div>
+        <div class="ra-req-detail-body" id="req-detail-body"></div>
       </div>
     </aside>
   </div>
@@ -842,8 +871,8 @@ function selectPackage(pkg,type,emoji){
   S.pkg=pkg;S.history.push({type,pkgId:pkg.id,pkgName:pkg.name});
   const old=document.getElementById('pkg-list');if(old)old.remove();
   addMsg(`${pkg.emoji} ${pkg.name}`,'user');
+  const inProject=document.getElementById('project-panel').style.display==='flex';
   showTyping(()=>{
-    // Rich brief-ready card in chat
     const card=document.createElement('div');card.className='ra-brc';
     card.innerHTML=`
       <div class="ra-brc-top">
@@ -857,10 +886,37 @@ function selectPackage(pkg,type,emoji){
         <div class="ra-brc-row"><span class="ra-brc-row-label">Tone</span><span class="ra-brc-row-val">${pkg.tone}</span></div>
         <div class="ra-brc-row"><span class="ra-brc-row-label">Audience</span><span class="ra-brc-row-val">${pkg.targetAudience}</span></div>
       </div>
-      <div class="ra-brc-footer">Review and edit the full brief in the panel on the right →</div>`;
+      ${inProject
+        ? `<button class="ra-brc-submit" onclick="submitToProject()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Add to Project</button>`
+        : `<div class="ra-brc-footer">Review and edit the full brief in the panel on the right →</div>`
+      }`;
     msgs().appendChild(card);scrollChat();
     fillBrief(pkg,type,emoji);
   });
+}
+
+function submitToProject(){
+  const dd=new Date();dd.setDate(dd.getDate()+7);
+  const entry={
+    title: S.pkg?.name||'Untitled',
+    type: S.type||'Design',
+    emoji: S.typeEmoji||'🎨',
+    status:'sent',
+    accent: S.pkg?.accent||'#2C3AFF',
+    pkg: S.pkg,
+    sizes: S.pkg?.sizes||'',
+    channels: S.pkg?.channels||'',
+    dueDate: dd.toISOString().slice(0,10),
+    desc: S.pkg?.desc||''
+  };
+  S.project.push(entry);
+  renderProjectPanel();
+  // Replace the submit button with a sent confirmation
+  const btn=document.querySelector('.ra-brc-submit');
+  if(btn){btn.disabled=true;btn.style.background='var(--color-green)';btn.style.color='#111';btn.innerHTML='✓ Added to project';}
+  showTyping(()=>{
+    addMsg(`<strong>${entry.title}</strong> added to <strong>${S.projectName}</strong>. Add another or keep going.`,'ai');
+  },600);
 }
 
 /* ── FILL BRIEF ── */
@@ -1014,16 +1070,18 @@ function chooseCreateProject(){
   document.getElementById('next-prompt').remove();
   // Save current request into project array
   const title=document.getElementById('bf-title').textContent||S.pkg?.name||'Untitled Request';
+  const dd2=new Date();dd2.setDate(dd2.getDate()+7);
   S.project.push({
     title,
     type:S.type||'Design',
     emoji:S.typeEmoji||'🎨',
     status:'sent',
     accent:S.pkg?.accent||'#2C3AFF',
+    pkg:S.pkg,
     sizes:document.getElementById('bf-sizes').textContent,
     channels:document.getElementById('bf-channels').textContent,
-    dueDate:document.getElementById('bf-due-date').value,
-    desc:document.getElementById('bf-desc').textContent.slice(0,80)
+    dueDate:document.getElementById('bf-due-date').value||dd2.toISOString().slice(0,10),
+    desc:document.getElementById('bf-desc').textContent
   });
   S.projectName=brands[brandIdx]+' Project';
   addMsg('Create a Project','user');
@@ -1049,8 +1107,8 @@ function renderProjectPanel(){
 
   const list=document.getElementById('project-req-list');
   list.innerHTML=S.project.map((r,i)=>`
-    <div class="ra-proj-req" id="proj-req-${i}">
-      <div class="ra-proj-req-hd" onclick="toggleProjReq(${i})">
+    <div class="ra-proj-req" id="proj-req-${i}" onclick="openReqDetail(${i})">
+      <div class="ra-proj-req-hd">
         <div class="ra-proj-req-icon" style="background:${r.accent}22">${r.emoji}</div>
         <div class="ra-proj-req-info">
           <div class="ra-proj-req-name">${r.title}</div>
@@ -1059,21 +1117,52 @@ function renderProjectPanel(){
         <div class="ra-proj-req-status ${r.status}">${r.status==='sent'?'Sent':'Draft'}</div>
         <svg class="ra-proj-req-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div class="ra-proj-req-body">
-        ${r.sizes?`<div class="ra-proj-detail-row"><span class="ra-proj-detail-label">Sizes</span><span class="ra-proj-detail-val">${r.sizes}</span></div>`:''}
-        ${r.channels?`<div class="ra-proj-detail-row"><span class="ra-proj-detail-label">Channels</span><span class="ra-proj-detail-val">${r.channels}</span></div>`:''}
-        ${r.dueDate?`<div class="ra-proj-detail-row"><span class="ra-proj-detail-label">Due</span><span class="ra-proj-detail-val">${r.dueDate}</span></div>`:''}
-        ${r.desc?`<div class="ra-proj-detail-row" style="flex-direction:column;align-items:flex-start;gap:3px"><span class="ra-proj-detail-label">Description</span><span class="ra-proj-detail-val" style="text-align:left;font-weight:400;color:var(--ra-muted);font-size:11.5px">${r.desc}…</span></div>`:''}
-      </div>
     </div>`).join('')+
     `<button class="ra-proj-add-btn" onclick="addToProject()">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add another request
     </button>`;
 }
 
-function toggleProjReq(i){
-  const el=document.getElementById(`proj-req-${i}`);
-  el.classList.toggle('expanded');
+function openReqDetail(i){
+  const r=S.project[i];
+  const p=r.pkg;
+  document.getElementById('req-detail-title').textContent=r.title;
+  document.getElementById('req-detail-status').textContent=r.status==='sent'?'Sent':'Draft';
+  // Build detail body reusing brief section styles
+  const dd=r.dueDate||'';
+  document.getElementById('req-detail-body').innerHTML=`
+    <div class="ra-brief-section">
+      <div class="ra-section-label">Request Details</div>
+      ${row('Request Title',r.title)}
+      ${row('Request Type',r.type)}
+      ${row('Sizes',p?.sizes||r.sizes||'—')}
+      ${row('Formats',p?.formats||'—')}
+      ${row('Channels',p?.channels||r.channels||'—')}
+      ${row('Target Audience',p?.targetAudience||'—')}
+      ${row('Due Date',dd||'—')}
+    </div>
+    <div class="ra-brief-section">
+      <div class="ra-section-label">Directions</div>
+      ${row('Description',p?.desc||r.desc||'—')}
+      ${p?.copyText?`<div class="ra-field"><div class="ra-field-label">Copy / Text</div><div class="ra-field-value" style="white-space:pre-line;line-height:1.6">${p.copyText}</div></div>`:''}
+    </div>
+    <div class="ra-brief-section">
+      <div class="ra-section-label">Inspiration &amp; Visual Style</div>
+      ${row('Brand Profile',p?.brandProfile||'—')}
+      ${row('Visual Style',p?.visualStyle||'—')}
+      ${row('Things to Avoid',p?.thingsToAvoid||'—')}
+      ${row('Visual References',p?.visualReferences||'—')}
+    </div>`;
+  // Switch panels
+  document.getElementById('project-panel').style.display='none';
+  document.getElementById('req-detail-panel').style.display='flex';
+}
+function row(label,val){
+  return `<div class="ra-field"><div class="ra-field-label">${label}</div><div class="ra-field-value">${val}</div></div>`;
+}
+function closeReqDetail(){
+  document.getElementById('req-detail-panel').style.display='none';
+  document.getElementById('project-panel').style.display='flex';
 }
 
 function addToProject(){
@@ -1135,16 +1224,18 @@ function selectTypeNew(type,emoji,el){
 const _origSubmit=typeof submitRequest==='function'?null:null;
 function addCurrentToProject(){
   const title=document.getElementById('bf-title').textContent||S.pkg?.name||'Untitled Request';
+  const dd3=new Date();dd3.setDate(dd3.getDate()+7);
   S.project.push({
     title,
     type:S.type||'Design',
     emoji:S.typeEmoji||'🎨',
     status:'sent',
     accent:S.pkg?.accent||'#2C3AFF',
+    pkg:S.pkg,
     sizes:document.getElementById('bf-sizes').textContent,
     channels:document.getElementById('bf-channels').textContent,
-    dueDate:document.getElementById('bf-due-date').value,
-    desc:document.getElementById('bf-desc').textContent.slice(0,80)
+    dueDate:document.getElementById('bf-due-date').value||dd3.toISOString().slice(0,10),
+    desc:document.getElementById('bf-desc').textContent
   });
   renderProjectPanel();
 }
