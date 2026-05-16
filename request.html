@@ -161,8 +161,14 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-send-btn:hover{background:#2834E5}
 .ra-send-btn svg{width:15px;height:15px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
 
+/* Resize handle */
+.ra-resize-handle{width:5px;flex-shrink:0;cursor:col-resize;background:transparent;position:relative;transition:background .15s;z-index:10}
+.ra-resize-handle::after{content:'';position:absolute;inset:0 1px;background:var(--ra-border);transition:background .15s}
+.ra-resize-handle:hover::after,.ra-resize-handle.resizing::after{background:var(--color-primary)}
+body.col-resizing{cursor:col-resize;user-select:none}
+
 /* Brief panel */
-.ra-brief{width:340px;min-width:340px;background:var(--ra-sb);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.ra-brief{width:340px;min-width:240px;max-width:600px;background:var(--ra-sb);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
 .ra-brief-hd{padding:14px 18px 12px;border-bottom:1px solid var(--ra-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .ra-brief-title{font-size:14px;font-weight:700;color:var(--ra-text)}
 .ra-brief-badge{font-size:11px;padding:3px 9px;border-radius:9999px;font-weight:700;background:rgba(44,58,255,.15);color:var(--color-primary)}
@@ -271,8 +277,8 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-fs-pin:hover{transform:translate(-50%,-50%) scale(1.15)}
 
 /* Annotation right panel */
-.ra-fs-right{width:280px;background:#111;border-left:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;flex-shrink:0}
-.ra-fs-right-scroll{flex:1;overflow-y:auto;padding:16px 14px}
+.ra-fs-right{width:280px;background:#111;border-left:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.ra-fs-right-scroll{flex:1;overflow-y:auto;padding:16px 14px;min-height:0}
 .ra-fs-right-scroll::-webkit-scrollbar{width:3px}
 .ra-fs-right-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
 .ra-ann-section-title{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:12px}
@@ -302,12 +308,13 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-fs-size-labels{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.3);margin-top:4px}
 
 /* FS bottom actions */
-.ra-fs-actions{padding:12px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:7px;flex-shrink:0}
-.ra-fs-send-btn{flex:1;padding:9px 12px;border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.7);font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
+.ra-fs-actions{padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.ra-fs-send-btn{width:100%;padding:8px 12px;border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.7);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .12s;text-align:center}
 .ra-fs-send-btn:hover{border-color:rgba(255,255,255,.4);color:#fff}
-.ra-fs-reject-btn{padding:9px 14px;border-radius:9999px;border:1px solid rgba(239,68,68,.4);background:transparent;color:#EF4444;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .12s;white-space:nowrap}
+.ra-fs-bottom-row{display:flex;gap:6px}
+.ra-fs-reject-btn{flex:1;padding:8px 10px;border-radius:9999px;border:1px solid rgba(239,68,68,.4);background:transparent;color:#EF4444;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .12s;text-align:center}
 .ra-fs-reject-btn:hover{background:rgba(239,68,68,.12)}
-.ra-fs-approve-btn{padding:9px 16px;border-radius:9999px;background:var(--color-green);color:#111;font-family:inherit;font-size:12.5px;font-weight:700;border:none;cursor:pointer;transition:opacity .12s;white-space:nowrap}
+.ra-fs-approve-btn{flex:1;padding:8px 10px;border-radius:9999px;background:var(--color-green);color:#111;font-family:inherit;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:opacity .12s;text-align:center}
 .ra-fs-approve-btn:hover{opacity:.85}
 
 /* Roles in brief */
@@ -382,8 +389,11 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
       </div>
     </div>
 
+    <!-- RESIZE HANDLE -->
+    <div class="ra-resize-handle" id="resize-handle" onmousedown="startResize(event)"></div>
+
     <!-- BRIEF PANEL -->
-    <aside class="ra-brief">
+    <aside class="ra-brief" id="ra-brief">
       <div class="ra-brief-hd">
         <span class="ra-brief-title">Creative Brief</span>
         <span class="ra-brief-badge" id="brief-badge">Draft</span>
@@ -513,8 +523,10 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
       </div>
       <div class="ra-fs-actions">
         <button class="ra-fs-send-btn" onclick="sendFSNotes()">Send notes to designer</button>
-        <button class="ra-fs-reject-btn" onclick="rejectFSAsset()">✕ Reject</button>
-        <button class="ra-fs-approve-btn" onclick="approveFSAsset()">Approve</button>
+        <div class="ra-fs-bottom-row">
+          <button class="ra-fs-reject-btn" onclick="rejectFSAsset()">✕ Reject</button>
+          <button class="ra-fs-approve-btn" onclick="approveFSAsset()">Approve</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1027,6 +1039,31 @@ function filterRoles(q){document.querySelectorAll('#roles-options .ra-role-optio
 function openModal(id){document.getElementById(id).classList.remove('hidden');}
 function closeModal(id){document.getElementById(id).classList.add('hidden');}
 document.querySelectorAll('.ra-modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.add('hidden');}));
+
+/* ── RESIZE ── */
+let _rx=0,_rw=0,_resizing=false;
+function startResize(e){
+  _resizing=true;_rx=e.clientX;
+  _rw=document.getElementById('ra-brief').offsetWidth;
+  document.getElementById('resize-handle').classList.add('resizing');
+  document.body.classList.add('col-resizing');
+  document.addEventListener('mousemove',_doResize);
+  document.addEventListener('mouseup',_stopResize);
+  e.preventDefault();
+}
+function _doResize(e){
+  if(!_resizing)return;
+  const brief=document.getElementById('ra-brief');
+  const w=Math.min(Math.max(_rw+(_rx-e.clientX),240),600);
+  brief.style.width=w+'px';brief.style.minWidth=w+'px';
+}
+function _stopResize(){
+  _resizing=false;
+  document.getElementById('resize-handle').classList.remove('resizing');
+  document.body.classList.remove('col-resizing');
+  document.removeEventListener('mousemove',_doResize);
+  document.removeEventListener('mouseup',_stopResize);
+}
 
 /* ── THEME ── */
 function toggleTheme(){
