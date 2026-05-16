@@ -342,40 +342,54 @@ body.col-resizing{cursor:col-resize;user-select:none}
 @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
 
-/* Another request prompt */
-.ra-another-prompt{display:flex;flex-direction:column;gap:10px;padding:16px;background:var(--ra-card);border:1px solid var(--ra-border);border-radius:14px;animation:fadeUp .2s ease}
-.ra-another-prompt-text{font-size:13.5px;color:var(--ra-text);line-height:1.5}
-.ra-another-btns{display:flex;gap:8px}
-.ra-another-yes{flex:1;padding:9px 14px;border-radius:9999px;background:var(--color-primary);border:none;color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .12s}
-.ra-another-yes:hover{opacity:.85}
-.ra-another-no{flex:1;padding:9px 14px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
-.ra-another-no:hover{border-color:var(--ra-text);color:var(--ra-text)}
+/* Next-step prompt (two options) */
+.ra-next-prompt{display:flex;flex-direction:column;gap:10px;padding:16px;background:var(--ra-card);border:1px solid var(--ra-border);border-radius:14px;animation:fadeUp .2s ease}
+.ra-next-prompt-text{font-size:13.5px;color:var(--ra-text);line-height:1.5;margin-bottom:2px}
+.ra-next-opts{display:flex;flex-direction:column;gap:7px}
+.ra-next-opt{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border-radius:11px;border:1px solid var(--ra-border);background:transparent;cursor:pointer;text-align:left;font-family:inherit;width:100%;transition:all .14s}
+.ra-next-opt:hover{border-color:var(--color-primary);background:rgba(44,58,255,.06)}
+.ra-next-opt-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ra-next-opt-body{flex:1;min-width:0}
+.ra-next-opt-title{font-size:13px;font-weight:700;color:var(--ra-text);margin-bottom:2px}
+.ra-next-opt-desc{font-size:12px;color:var(--ra-muted);line-height:1.5}
+.ra-next-dismiss{padding:8px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .12s;text-align:center;width:100%}
+.ra-next-dismiss:hover{border-color:var(--ra-text);color:var(--ra-text)}
 
-/* Project panel */
-.ra-project-panel{display:none;flex-direction:column;flex-shrink:0;border-bottom:1px solid var(--ra-border)}
-.ra-project-hd{padding:14px 16px 10px;display:flex;align-items:center;gap:8px}
-.ra-project-hd-text{flex:1;min-width:0}
-.ra-project-title{font-size:14px;font-weight:700;color:var(--ra-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ra-project-meta{font-size:11px;color:var(--ra-muted)}
-.ra-project-body{max-height:240px;overflow-y:auto;padding:0 14px 12px;display:flex;flex-direction:column;gap:6px}
+/* Project panel — replaces the aside content */
+.ra-project-panel{display:none;flex-direction:column;flex:1;overflow:hidden}
+.ra-project-hd{padding:14px 16px 12px;border-bottom:1px solid var(--ra-border);flex-shrink:0}
+.ra-project-hd-top{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.ra-project-title{font-size:15px;font-weight:700;color:var(--ra-text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-project-meta{font-size:11.5px;color:var(--ra-muted)}
+.ra-project-body{flex:1;overflow-y:auto;padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px}
 .ra-project-body::-webkit-scrollbar{width:3px}
 .ra-project-body::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
-.ra-project-section-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ra-muted);margin-top:4px;margin-bottom:2px}
-.ra-req-card{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;transition:background .12s;cursor:default}
-.ra-req-card:hover{background:var(--ra-card2)}
-.ra-req-card-icon{width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
-.ra-req-card-body{flex:1;min-width:0}
-.ra-req-card-name{font-size:13px;font-weight:700;color:var(--ra-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ra-req-card-meta{font-size:11.5px;color:var(--ra-muted);margin-top:1px}
-.ra-req-card-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:9999px;flex-shrink:0;margin-top:2px}
-.ra-req-card-status.sent{background:rgba(113,221,140,.15);color:var(--color-green)}
-.ra-req-card-status.draft{background:rgba(44,58,255,.15);color:var(--color-primary)}
-.ra-project-add-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:12px;border:1.5px dashed var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;width:100%}
-.ra-project-add-btn:hover{border-color:var(--color-primary);color:var(--color-primary);background:rgba(44,58,255,.05)}
-.ra-project-add-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none}
-.ra-project-footer{padding:12px 14px;border-top:1px solid var(--ra-border);flex-shrink:0}
-.ra-project-view-btn{width:100%;padding:9px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-text);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
-.ra-project-view-btn:hover{background:var(--ra-hover)}
+
+/* Expandable request cards in project */
+.ra-proj-req{border:1px solid var(--ra-border);border-radius:12px;overflow:hidden;transition:border-color .14s}
+.ra-proj-req.expanded{border-color:rgba(44,58,255,.4)}
+.ra-proj-req-hd{display:flex;align-items:center;gap:9px;padding:11px 12px;cursor:pointer;user-select:none;transition:background .12s}
+.ra-proj-req-hd:hover{background:var(--ra-hover)}
+.ra-proj-req-icon{width:30px;height:30px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+.ra-proj-req-info{flex:1;min-width:0}
+.ra-proj-req-name{font-size:13px;font-weight:700;color:var(--ra-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-proj-req-type{font-size:11px;color:var(--ra-muted);margin-top:1px}
+.ra-proj-req-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:9999px;flex-shrink:0}
+.ra-proj-req-status.sent{background:rgba(113,221,140,.15);color:var(--color-green)}
+.ra-proj-req-status.draft{background:rgba(44,58,255,.15);color:var(--color-primary)}
+.ra-proj-req-chevron{width:16px;height:16px;flex-shrink:0;stroke:var(--ra-muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;fill:none;transition:transform .18s}
+.ra-proj-req.expanded .ra-proj-req-chevron{transform:rotate(180deg)}
+.ra-proj-req-body{display:none;padding:0 12px 12px;border-top:1px solid var(--ra-border)}
+.ra-proj-req.expanded .ra-proj-req-body{display:block}
+.ra-proj-detail-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--ra-divider);font-size:12px}
+.ra-proj-detail-row:last-child{border-bottom:none}
+.ra-proj-detail-label{color:var(--ra-muted);flex-shrink:0;margin-right:8px}
+.ra-proj-detail-val{color:var(--ra-text);text-align:right;font-weight:500}
+
+/* Project add-request button */
+.ra-proj-add-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:12px;border:1.5px dashed var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;width:100%;margin-top:4px}
+.ra-proj-add-btn:hover{border-color:var(--color-primary);color:var(--color-primary);background:rgba(44,58,255,.05)}
+.ra-proj-add-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none}
 </style>
 </head>
 <body>
@@ -525,16 +539,13 @@ body.col-resizing{cursor:col-resize;user-select:none}
         <button class="ra-save-btn" onclick="saveDraft()">Save as Draft</button>
       </div>
 
-      <!-- PROJECT PANEL (shown after user confirms another request) -->
+      <!-- PROJECT PANEL (replaces brief when user creates a project) -->
       <div class="ra-project-panel" id="project-panel">
         <div class="ra-project-hd">
-          <div class="ra-project-hd-text">
+          <div class="ra-project-hd-top">
             <div class="ra-project-title" id="project-name">Project</div>
-            <div class="ra-project-meta" id="project-meta">0 requests</div>
           </div>
-          <button class="ra-project-add-btn" style="width:auto;padding:6px 10px;font-size:11.5px" onclick="addAnotherFromProject()">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add
-          </button>
+          <div class="ra-project-meta" id="project-meta">0 requests</div>
         </div>
         <div class="ra-project-body" id="project-req-list"></div>
       </div>
@@ -934,6 +945,10 @@ function approveAll(){
   S.deliverables.forEach((_,i)=>{S.approvals[i]='approve';toggleApproval(i,'approve');});
   showTyping(()=>{
     addMsg('All assets approved ✓ Your request is marked complete. Great work!','ai');
+    // If already in a project, save this request to it then re-render
+    if(document.getElementById('project-panel').style.display==='flex'){
+      addCurrentToProject();
+    }
     setTimeout(askAnotherRequest, 900);
   },600);
 }
@@ -943,42 +958,74 @@ function requestChanges(){
 
 function askAnotherRequest(){
   const wrap=document.createElement('div');
-  wrap.className='ra-another-prompt';
-  wrap.id='another-prompt';
+  wrap.className='ra-next-prompt';
+  wrap.id='next-prompt';
   wrap.innerHTML=`
-    <div class="ra-another-prompt-text">Would you like to create another request? I can add it to the same project so everything stays together.</div>
-    <div class="ra-another-btns">
-      <button class="ra-another-yes" onclick="confirmAnotherRequest()">Yes, add another</button>
-      <button class="ra-another-no" onclick="declineAnotherRequest()">No, I'm done</button>
-    </div>`;
+    <div class="ra-next-prompt-text">What would you like to do next?</div>
+    <div class="ra-next-opts">
+      <button class="ra-next-opt" onclick="chooseCreateAnother()">
+        <div class="ra-next-opt-icon" style="background:rgba(44,58,255,.15)">✏️</div>
+        <div class="ra-next-opt-body">
+          <div class="ra-next-opt-title">Create another request</div>
+          <div class="ra-next-opt-desc">Start a fresh brief for a new design — same flow, new request.</div>
+        </div>
+      </button>
+      <button class="ra-next-opt" onclick="chooseCreateProject()">
+        <div class="ra-next-opt-icon" style="background:rgba(213,255,2,.12)">📁</div>
+        <div class="ra-next-opt-body">
+          <div class="ra-next-opt-title">Create a Project</div>
+          <div class="ra-next-opt-desc">Group all your requests together so you can manage and track them in one place.</div>
+        </div>
+      </button>
+    </div>
+    <button class="ra-next-dismiss" onclick="dismissNextPrompt()">I'm done for now</button>`;
   msgs().appendChild(wrap);
   scrollChat();
 }
 
-function confirmAnotherRequest(){
-  document.getElementById('another-prompt').remove();
-  // Save current request to project
-  const title=document.getElementById('bf-title').textContent||S.pkg?.name||'Untitled Request';
-  const type=S.type||'Design';
-  const emoji=S.typeEmoji||'🎨';
-  S.project.push({title,type,emoji,status:'sent',accent:S.pkg?.accent||'#2C3AFF'});
-  if(S.project.length===1) S.projectName=brands[brandIdx]+' Project';
-  addMsg('Yes, add another','user');
-  showProjectPanel();
-  showTyping(()=>{
-    addMsg('Starting a new request — the brief panel is ready for your next one. What type of design do you need?','ai');
-    resetForNewRequest();
-  },700);
-}
-
-function declineAnotherRequest(){
-  document.getElementById('another-prompt').remove();
-  addMsg('No, I\'m done','user');
+function dismissNextPrompt(){
+  document.getElementById('next-prompt').remove();
+  addMsg('Done for now','user');
   showTyping(()=>addMsg('You\'re all set! Head back to the dashboard whenever you\'re ready.','ai'),500);
 }
 
-function showProjectPanel(){
-  // Project panel sits at the top; brief header/body/footer shift below it
+function chooseCreateAnother(){
+  document.getElementById('next-prompt').remove();
+  addMsg('Create another request','user');
+  showTyping(()=>{
+    addMsg('Let\'s go — what type of design do you need this time?','ai');
+    resetForNewRequest(false);
+  },700);
+}
+
+function chooseCreateProject(){
+  document.getElementById('next-prompt').remove();
+  // Save current request into project array
+  const title=document.getElementById('bf-title').textContent||S.pkg?.name||'Untitled Request';
+  S.project.push({
+    title,
+    type:S.type||'Design',
+    emoji:S.typeEmoji||'🎨',
+    status:'sent',
+    accent:S.pkg?.accent||'#2C3AFF',
+    sizes:document.getElementById('bf-sizes').textContent,
+    channels:document.getElementById('bf-channels').textContent,
+    dueDate:document.getElementById('bf-due-date').value,
+    desc:document.getElementById('bf-desc').textContent.slice(0,80)
+  });
+  S.projectName=brands[brandIdx]+' Project';
+  addMsg('Create a Project','user');
+  showTyping(()=>{
+    addMsg(`Project created — I've grouped your requests under <strong>${S.projectName}</strong>. You can expand each one in the side panel, or add more anytime.`,'ai');
+    switchToProjectPanel();
+  },700);
+}
+
+function switchToProjectPanel(){
+  // Hide brief panel entirely, show project panel
+  document.getElementById('brief-body').style.display='none';
+  document.querySelector('.ra-brief-hd').style.display='none';
+  document.querySelector('.ra-brief-footer').style.display='none';
   document.getElementById('project-panel').style.display='flex';
   renderProjectPanel();
 }
@@ -989,24 +1036,45 @@ function renderProjectPanel(){
   document.getElementById('project-meta').textContent=`${count} request${count!==1?'s':''} · In progress`;
 
   const list=document.getElementById('project-req-list');
-  list.innerHTML='<div class="ra-project-section-label">Requests</div>'+
-    S.project.map((r,i)=>`
-      <div class="ra-req-card">
-        <div class="ra-req-card-icon" style="background:${r.accent}22">${r.emoji}</div>
-        <div class="ra-req-card-body">
-          <div class="ra-req-card-name">${r.title}</div>
-          <div class="ra-req-card-meta">${r.type}</div>
+  list.innerHTML=S.project.map((r,i)=>`
+    <div class="ra-proj-req" id="proj-req-${i}">
+      <div class="ra-proj-req-hd" onclick="toggleProjReq(${i})">
+        <div class="ra-proj-req-icon" style="background:${r.accent}22">${r.emoji}</div>
+        <div class="ra-proj-req-info">
+          <div class="ra-proj-req-name">${r.title}</div>
+          <div class="ra-proj-req-type">${r.type}</div>
         </div>
-        <div class="ra-req-card-status sent">Sent</div>
-      </div>`).join('');
+        <div class="ra-proj-req-status ${r.status}">${r.status==='sent'?'Sent':'Draft'}</div>
+        <svg class="ra-proj-req-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="ra-proj-req-body">
+        ${r.sizes?`<div class="ra-proj-detail-row"><span class="ra-proj-detail-label">Sizes</span><span class="ra-proj-detail-val">${r.sizes}</span></div>`:''}
+        ${r.channels?`<div class="ra-proj-detail-row"><span class="ra-proj-detail-label">Channels</span><span class="ra-proj-detail-val">${r.channels}</span></div>`:''}
+        ${r.dueDate?`<div class="ra-proj-detail-row"><span class="ra-proj-detail-label">Due</span><span class="ra-proj-detail-val">${r.dueDate}</span></div>`:''}
+        ${r.desc?`<div class="ra-proj-detail-row" style="flex-direction:column;align-items:flex-start;gap:3px"><span class="ra-proj-detail-label">Description</span><span class="ra-proj-detail-val" style="text-align:left;font-weight:400;color:var(--ra-muted);font-size:11.5px">${r.desc}…</span></div>`:''}
+      </div>
+    </div>`).join('')+
+    `<button class="ra-proj-add-btn" onclick="addToProject()">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add another request
+    </button>`;
 }
 
-function resetForNewRequest(){
-  // Reset state for a new request
+function toggleProjReq(i){
+  const el=document.getElementById(`proj-req-${i}`);
+  el.classList.toggle('expanded');
+}
+
+function addToProject(){
+  addMsg('Add another request','user');
+  showTyping(()=>{
+    addMsg('Let\'s add it — what type of design do you need?','ai');
+    resetForNewRequest(true);
+  },600);
+}
+
+function resetForNewRequest(inProject){
   S.type=null;S.typeEmoji=null;S.pkg=null;
   S.deliverables=[];S.approvals={};S.fsPins=[];
-
-  // Clear brief fields
   ['bf-title','bf-req-type','bf-sizes','bf-formats','bf-channels','bf-audience','bf-desc','bf-brand-profile','bf-visual-style','bf-avoid','bf-references'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.textContent='';
   });
@@ -1015,7 +1083,7 @@ function resetForNewRequest(){
 
   // Show type picker in chat
   const tp=document.createElement('div');
-  tp.className='ra-type-picker';tp.id='type-picker-2';
+  tp.className='ra-type-picker';
   tp.innerHTML=`<div class="ra-type-picker-label"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Create</div>
     <div class="ra-type-tiles">
       <div class="ra-type-tile" style="background:linear-gradient(145deg,#5B5BD6,#8B5CF6)" onclick="selectTypeNew('Social Ads','📱',this)"><div class="ra-type-tile-emoji">📱</div><div class="ra-type-tile-name">Social Ads</div></div>
@@ -1024,29 +1092,26 @@ function resetForNewRequest(){
       <div class="ra-type-tile" style="background:linear-gradient(145deg,#E8520A,#F97316)" onclick="selectTypeNew('Email','✉️',this)"><div class="ra-type-tile-emoji">✉️</div><div class="ra-type-tile-name">Email</div></div>
       <div class="ra-type-tile" style="background:linear-gradient(145deg,#1a6db5,#2C3AFF)" onclick="selectTypeNew('Video','🎬',this)"><div class="ra-type-tile-emoji">🎬</div><div class="ra-type-tile-name">Video</div></div>
     </div>`;
-  msgs().appendChild(tp);
-  scrollChat();
+  msgs().appendChild(tp);scrollChat();
 
-  // Show draft brief panel again inside project panel context
-  showNewBriefInProject();
-}
-
-function showNewBriefInProject(){
-  // Reset brief to draft state; project panel remains visible above
-  document.getElementById('brief-body').style.display='';
-  document.getElementById('brief-locked').classList.add('hidden');
-  document.getElementById('brief-sections').style.display='none';
-  document.getElementById('brief-empty').style.display='';
-  document.getElementById('brief-assets-section').classList.add('hidden');
-  document.getElementById('brief-workflows-section').classList.add('hidden');
-  document.querySelector('.ra-brief-footer').style.display='';
-  document.querySelector('.ra-brief-hd').style.display='';
-  document.getElementById('brief-badge').textContent='Draft';
-  document.getElementById('brief-badge').className='ra-brief-badge';
-  document.getElementById('submit-btn').disabled=true;
-  document.getElementById('submit-btn').style.background='';
-  document.getElementById('submit-btn').style.color='';
-  document.getElementById('submit-btn').innerHTML='<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Submit Request';
+  if(inProject){
+    // Stay in project panel — brief will be shown in chat flow only; panel stays as project
+  } else {
+    // Restore brief panel for standalone new request
+    document.getElementById('brief-body').style.display='';
+    document.getElementById('brief-locked').classList.add('hidden');
+    document.getElementById('brief-sections').style.display='none';
+    document.getElementById('brief-empty').style.display='';
+    document.getElementById('brief-assets-section').classList.add('hidden');
+    document.getElementById('brief-workflows-section').classList.add('hidden');
+    document.querySelector('.ra-brief-footer').style.display='';
+    document.querySelector('.ra-brief-hd').style.display='';
+    document.getElementById('brief-badge').textContent='Draft';
+    document.getElementById('brief-badge').className='ra-brief-badge';
+    document.getElementById('submit-btn').disabled=true;
+    document.getElementById('submit-btn').style.cssText='';
+    document.getElementById('submit-btn').innerHTML='<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Submit Request';
+  }
 }
 
 function selectTypeNew(type,emoji,el){
@@ -1054,17 +1119,22 @@ function selectTypeNew(type,emoji,el){
   selectType(type,emoji);
 }
 
-function addAnotherFromProject(){
-  addMsg('Add another request','user');
-  showTyping(()=>{
-    addMsg('Starting a new request — what type of design do you need?','ai');
-    resetForNewRequest();
-  },600);
-}
-
-function openProjectView(){
-  addMsg('Opening project view…','user');
-  showTyping(()=>addMsg('Project view coming soon — for now all your requests are listed in the panel.','ai'),500);
+// When a new request is submitted inside a project, save it to the project list
+const _origSubmit=typeof submitRequest==='function'?null:null;
+function addCurrentToProject(){
+  const title=document.getElementById('bf-title').textContent||S.pkg?.name||'Untitled Request';
+  S.project.push({
+    title,
+    type:S.type||'Design',
+    emoji:S.typeEmoji||'🎨',
+    status:'sent',
+    accent:S.pkg?.accent||'#2C3AFF',
+    sizes:document.getElementById('bf-sizes').textContent,
+    channels:document.getElementById('bf-channels').textContent,
+    dueDate:document.getElementById('bf-due-date').value,
+    desc:document.getElementById('bf-desc').textContent.slice(0,80)
+  });
+  renderProjectPanel();
 }
 
 /* ── DRAW THUMBNAIL CANVAS ── */
