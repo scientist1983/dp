@@ -44,6 +44,7 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 /* Chat pane */
 .ra-chat{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;border-right:1px solid var(--ra-border);background:var(--ra-bg);overflow:hidden}
 .ra-chat-msgs{flex:1;min-height:0;overflow-y:auto;padding:24px 20px 80px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth}
+.ra-chat-msgs>*{flex-shrink:0}
 .ra-chat-msgs::-webkit-scrollbar{width:4px}
 .ra-chat-msgs::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
 
@@ -775,12 +776,16 @@ function getPkgs(type){
 /* ── CHAT HELPERS ── */
 const msgs=()=>document.getElementById('chat-msgs');
 function scrollChat(){
+  const el=msgs();
+  // Immediate pass (gets close)
+  el.scrollTop=el.scrollHeight;
+  // Second pass after flex reflow settles — reads the correct scrollHeight
   setTimeout(()=>{
-    const el=msgs();
+    void el.offsetHeight; // force reflow
     const last=el.lastElementChild;
     if(last) last.scrollIntoView({block:'end',behavior:'instant'});
     else el.scrollTop=el.scrollHeight;
-  },50);
+  },120);
 }
 function addMsg(html,role){
   const d=document.createElement('div');d.className='ra-msg '+role;
