@@ -1,6 +1,101 @@
 # Design System — JarCOS UI
 
-Source: Figma Variables panel, file `JarCOS UI` (`0v93xS3oDLra3a3uEJBwuP`)  
+Source: Figma Variables panel, file `JarCOS UI` (`0v93xS3oDLra3a3uEJBwuP`)
+
+**Color modes:** JarCOS-Light · JarCOS-Dark  
+**Density modes (Corner Radius & Size):** Standard · Expanded (+4) · Expanded (+8) · Condensed (-4)  
+**Font mode:** Lato · Regular / Semi Bold
+
+---
+
+## Corner Radius
+
+Values are in `px`. Token name = Standard value; modes adjust by ±4 or ±8.
+
+| Token | Standard | Expanded (+4) | Expanded (+8) | Condensed (-4) |
+|-------|---------|--------------|--------------|----------------|
+| `radius/0` | 0 | 0 | 0 | 0 |
+| `radius/4` | 4 | 8 | 12 | 0 |
+| `radius/8` | 8 | 12 | 16 | 4 |
+| `radius/12` | 12 | 16 | 20 | 8 |
+| `radius/16` | 16 | 20 | 24 | 12 |
+| `radius/20` | 20 | 24 | 28 | 16 |
+| `radius/24` | 24 | 28 | 32 | 20 |
+| `radius/28` | 28 | 32 | 36 | 24 |
+| `radius/32` | 32 | 36 | 40 | 28 |
+| `radius/40` | 40 | 44 | 48 | 36 |
+| `radius/48` | 48 | 52 | 56 | 44 |
+| `radius/56` | 56 | 58 | 62 | 52 |
+| `radius/64` | 64 | 68 | 72 | 60 |
+| `radius/72` | 72 | 76 | 80 | 68 |
+| `radius/80` | 80 | 84 | 88 | 76 |
+
+---
+
+## Font
+
+| Token | Lato mode |
+|-------|-----------|
+| `font` | `Lato` |
+| `letter spacing` | `0` |
+
+---
+
+## Font Weight
+
+| Token | Regular / Semi Bold mode |
+|-------|--------------------------|
+| `regular` | `400` |
+| `bold` | `700` |
+
+---
+
+## Paragraph Spacing
+
+Two modes: **Text** (no extra spacing) and **Paragraph** (adds bottom spacing).
+
+| Token | Text | Paragraph |
+|-------|------|-----------|
+| `paragraph-spacing/8` | 0 | 8 |
+| `paragraph-spacing/10` | 0 | 10 |
+| `paragraph-spacing/12` | 0 | 12 |
+| `paragraph-spacing/14` | 0 | 14 |
+| `paragraph-spacing/18` | 0 | 18 |
+| `paragraph-spacing/24` | 0 | 24 |
+| `paragraph-spacing/36` | 0 | 36 |
+| `paragraph-spacing/48` | 0 | 48 |
+
+---
+
+## Size (Type Scale)
+
+Font size tokens in `px`. Four density modes match Corner Radius.
+
+| Token | Standard | Expanded (+4) | Expanded (+8) | Condensed (-4) |
+|-------|---------|--------------|--------------|----------------|
+| `size/12` | 12 | 16 | 20 | 8 |
+| `size/16` | 16 | 20 | 24 | 12 |
+| `size/20` | 20 | 24 | 28 | 16 |
+| `size/24` | 24 | 28 | 32 | 20 |
+| `size/28` | 28 | 32 | 36 | 24 |
+| `size/32` | 32 | 36 | 40 | 28 |
+| `size/40` | 40 | 44 | 48 | 36 |
+| `size/48` | 48 | 52 | 56 | 44 |
+| `size/56` | 56 | 60 | 64 | 52 |
+| `size/64` | 64 | 68 | 72 | 60 |
+| `size/72` | 72 | 76 | 80 | 68 |
+| `size/80` | 80 | 84 | 88 | 76 |
+
+---
+
+## Spacing & Visibility
+
+> Screenshots pending — 13 Spacing tokens and 2 Visibility tokens not yet captured.
+
+---
+
+## Color Variables
+
 Two modes: **JarCOS-Light** and **JarCOS-Dark**
 
 ---
@@ -138,23 +233,6 @@ Two modes: **JarCOS-Light** and **JarCOS-Dark**
 |-------|-------|------|
 | `secondary/Yellow/100` | `#FFCC00` | `#FFCC00` |
 | `secondary/Yellow/10` | `#FFCC00` · 10% | `#FFCC00` · 10% |
-
----
-
-## Other Variable Collections
-
-The following collections exist in the Figma file (screenshots not yet captured):
-
-| Collection | Count | Notes |
-|-----------|-------|-------|
-| Corner Radius | 15 | Border radius scale |
-| Font | 2 | Font family tokens |
-| Font Weight | 2 | Weight tokens |
-| Paragraph Spacing | 8 | Line/paragraph spacing |
-| Size | 12 | Type size scale |
-| Spacing | 13 | Layout spacing scale |
-| Visibility 1 | 1 | Show/hide token |
-| Visibility 2 | 1 | Show/hide token |
 
 ---
 
