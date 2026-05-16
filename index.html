@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<!--
+  OPEN JAR — BRIEF BUILDER  v13
+  MODULES (Ctrl+F "MODULE:"):
+    DATA, STATE, SCREENS, WELCOME, CHAT, RECENTS, AI FLOW,
+    ROLES, ASSETS, ASSET MODAL + ANNOTATION, REQUESTS, BRIEF, MODAL, UTILS
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Jar — Brief Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;background:#F4F3F0}
+.app{display:flex;height:100vh;width:100vw;overflow:hidden}
+
+/* SIDENAV */
+.sidenav{width:52px;min-width:52px;background:#111;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:2px;z-index:20;flex-shrink:0}
+.sn-logo{width:34px;height:34px;background:#0A7C4A;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.sn-logo svg{width:18px;height:18px;fill:#fff}
+.sn-div{width:28px;height:1px;background:#2A2A2A;margin:6px 0}
+.sn-btn{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#666;border:none;background:transparent;transition:all .15s}
+.sn-btn:hover{background:#222;color:#999}.sn-btn.on{background:#1E1E1E;color:#fff}.sn-btn svg,.sn-set svg{width:18px;height:18px}
+.sn-new{width:34px;height:34px;background:#2563EB;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:4px;border:none}
+.sn-new:hover{background:#1D4ED8}.sn-new svg{width:16px;height:16px;fill:#fff}
+.sn-sp{flex:1}
+.sn-set{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#555;border:none;background:transparent;margin-bottom:8px;transition:all .15s}
+.sn-set:hover{color:#999}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;height:100vh}
+.topbar{height:52px;background:#fff;border-bottom:0.5px solid #E5E3DF;display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;z-index:15}
+.tb-l{display:flex;align-items:center;gap:10px}
+.tb-brand{font-size:13px;font-weight:600;color:#111;display:flex;align-items:center;gap:8px}
+.tb-dot{width:7px;height:7px;background:#0A7C4A;border-radius:50%}
+.tb-tag{font-size:11px;color:#BBB;padding:2px 8px;background:#F5F4F0;border-radius:9999px}
+.tb-r{display:flex;align-items:center;gap:10px}
+.tb-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#999;border:none;background:transparent;transition:all .15s}
+.tb-icon:hover{background:#F5F4F0;color:#555}.tb-icon svg{width:18px;height:18px}
+.tb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0A7C4A,#14B870);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;cursor:pointer}
+.progress-bar{height:2px;background:#EDEAE4;flex-shrink:0}
+.progress-fill{height:100%;background:#0A7C4A;width:0%;transition:width .5s ease}
+.content{flex:1;display:flex;overflow:hidden;position:relative}
+.content.mode-welcome .s-welcome{display:flex}.content.mode-welcome .s-chat{display:none}
+.content.mode-chat .s-welcome{display:none}.content.mode-chat .s-chat{display:flex;flex:1}
+
+/* WELCOME */
+.s-welcome{position:absolute;inset:0;background:#F4F3F0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;z-index:10;gap:14px}
+.w-hero{display:flex;align-items:flex-start;gap:40px;max-width:720px;width:100%}
+.w-copy{flex:1;padding-top:4px}
+.w-title{font-size:36px;font-weight:800;color:#111;letter-spacing:-.6px;line-height:1.1;margin-bottom:8px}
+.w-sub{font-size:14px;color:#999;margin-bottom:18px}
+.w-prompt{background:#fff;border:0.5px solid #E5E3DF;border-radius:14px;padding:16px 18px;font-size:13.5px;color:#555;line-height:1.65;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.mascot{width:150px;height:150px;border-radius:24px;background:linear-gradient(145deg,#0A7C4A,#14B870);display:flex;align-items:center;justify-content:center;font-size:72px;box-shadow:0 12px 32px rgba(10,124,74,.22);position:relative;overflow:hidden;flex-shrink:0}
+.mascot::after{content:'DP EXPRESS';position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:7.5px;font-weight:800;letter-spacing:.08em;color:rgba(255,255,255,.6);white-space:nowrap}
+/* Type popup */
+.type-popup{background:#fff;border-radius:18px;box-shadow:0 8px 40px rgba(0,0,0,.12);padding:20px 22px 16px;max-width:700px;width:100%;animation:popUp .3s cubic-bezier(.34,1.56,.64,1)}
+.tp-hd{display:flex;align-items:center;margin-bottom:18px;gap:7px;font-size:12.5px;font-weight:500;color:#999}
+.tp-hd svg{width:14px;height:14px}
+.type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.type-tile{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:transform .15s}
+.type-tile:hover{transform:translateY(-2px)}.type-tile:hover .tile{border-color:#0A7C4A;box-shadow:0 4px 16px rgba(10,124,74,.15)}
+.tile{width:100%;aspect-ratio:1;border-radius:14px;border:1.5px solid #E5E3DF;display:flex;align-items:center;justify-content:center;font-size:28px;background:#F8F7F4;transition:all .15s}
+.tile.c{border-color:transparent}.ts{background:linear-gradient(135deg,#6366F1,#8B5CF6)}.tl{background:linear-gradient(135deg,#0A7C4A,#14B870)}.te{background:linear-gradient(135deg,#F59E0B,#EF4444)}.tm{background:#F0EDE8}
+.tile-lbl{font-size:12px;font-weight:500;color:#555;text-align:center}
+.tp-ft{display:flex;align-items:center;gap:8px;padding-top:4px;border-top:0.5px solid #F0EDE8}
+.tp-ft-i{display:flex;align-items:center;gap:6px;font-size:12px;color:#AAA}.tp-ft-i svg{width:14px;height:14px}
+.view-all-btn{margin-left:auto;padding:6px 14px;border:0.5px solid #D5D2CC;border-radius:9999px;background:transparent;color:#666;font-size:11.5px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .12s}
+.view-all-btn:hover{border-color:#0A7C4A;color:#0A7C4A;background:#EBF5EE}
+/* Welcome input bar */
+.w-input-bar{max-width:700px;width:100%;background:#fff;border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,.08),0 0 0 0.5px rgba(0,0,0,.06);padding:12px 14px 10px;animation:popUp .35s .1s both cubic-bezier(.34,1.56,.64,1)}
+.w-input-ta{width:100%;border:none;outline:none;font-family:inherit;font-size:14px;color:#111;background:transparent;resize:none;line-height:1.5;min-height:32px;max-height:80px;overflow-y:auto}
+.w-input-ta::placeholder{color:#BBB}
+.w-input-row{display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:0.5px solid #F0EDE8}
+.w-plus{width:28px;height:28px;border-radius:50%;border:none;background:#F0EDE8;color:#777;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0;line-height:1}
+.w-plus:hover{background:#E2DFD9}
+.w-brand{margin-left:auto;display:flex;align-items:center;gap:4px;padding:4px 10px;border:0.5px solid #E5E3DF;border-radius:9999px;font-size:12px;color:#666;cursor:pointer;transition:all .12s}
+.w-brand:hover{border-color:#999;color:#333}.w-brand svg{width:10px;height:10px}
+.w-voice{width:28px;height:28px;border-radius:50%;border:none;background:#F0EDE8;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0}
+.w-voice:hover{background:#E2DFD9}.w-voice svg{width:14px;height:14px}
+.w-send{width:32px;height:32px;border-radius:50%;border:none;background:#111;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.w-send:hover{background:#333}.w-send.off{background:#D5D2CC;cursor:not-allowed}.w-send svg{width:14px;height:14px;fill:#fff}
+
+/* CHAT SCREEN */
+.s-chat{flex:1;display:none;overflow:hidden}
+.chat-pane{flex:1;display:flex;flex-direction:column;background:#fff;overflow:hidden;min-width:0;border-right:0.5px solid #E5E3DF}
+.msgs{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.msgs::-webkit-scrollbar{width:4px}.msgs::-webkit-scrollbar-thumb{background:#E5E3DF;border-radius:2px}
+.chat-ft{border-top:0.5px solid #E5E3DF;padding:11px 16px;display:flex;flex-direction:column;gap:7px;flex-shrink:0;background:#FAFAF8}
+.ci-wrap{display:flex;align-items:flex-end;gap:9px}
+.ci{flex:1;background:#F5F4F0;border:0.5px solid #E5E3DF;border-radius:12px;padding:10px 14px;font-size:13px;color:#111;min-height:42px;max-height:100px;line-height:1.5;font-family:inherit;resize:none;outline:none;transition:all .15s;overflow-y:auto}
+.ci::placeholder{color:#AAA}.ci:focus{background:#fff;border-color:#C8C5BF}.ci.off{pointer-events:none;opacity:.5}
+.send-btn{width:38px;height:38px;border-radius:50%;border:none;background:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;align-self:flex-end}
+.send-btn:hover{background:#333}.send-btn.off{background:#D0CCC7;cursor:not-allowed}.send-btn svg{width:15px;height:15px;fill:#fff}
+.chat-hint{font-size:11px;color:#C0BDB8;padding:0 2px}
+
+/* BUBBLES */
+.msg{display:flex;align-items:flex-end;gap:9px;max-width:90%;animation:fadeUp .2s ease;flex-shrink:0}
+.msg.ai{align-self:flex-start}.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.av.ai{background:#0A7C4A;color:#fff}.av.us{background:#111;color:#fff}
+.bub{padding:10px 14px;border-radius:18px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.msg.ai .bub{background:#fff;border:0.5px solid #E5E3DF;border-bottom-left-radius:3px;color:#111;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.msg.user .bub{background:#111;color:#fff;border-bottom-right-radius:3px}
+.tw{display:flex;align-items:flex-end;gap:9px;animation:fadeUp .18s ease}
+.dots{display:flex;gap:4px;padding:12px 15px;background:#fff;border:0.5px solid #E5E3DF;border-radius:18px;border-bottom-left-radius:3px}
+.dots span{width:5px;height:5px;background:#ccc;border-radius:50%;animation:db 1.1s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+
+/* RECENT CARDS */
+.rc-wrap{align-self:flex-start;margin-left:37px;width:min(440px,95%);display:flex;flex-direction:column;gap:6px;animation:fadeUp .25s ease}
+.rc-wrap.used{opacity:.28;pointer-events:none}
+.rc-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0A7C4A;margin-bottom:2px}
+.rc{background:#fff;border:0.5px solid #E5E3DF;border-radius:11px;padding:11px 13px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:all .15s}
+.rc:hover{border-color:#999;background:#FAFAF8;transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.06)}
+.rc.sel{border-color:#0A7C4A;background:#EBF5EE;pointer-events:none;transform:none;box-shadow:none}
+.rc-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.rc-body{flex:1;min-width:0}.rc-title{font-size:13px;font-weight:600;color:#111;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-desc{font-size:11.5px;color:#888;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rc-meta{font-size:10px;color:#C5C2BC;margin-top:3px;display:flex;align-items:center;gap:4px}
+.rc-dot{width:3px;height:3px;background:#D5D2CC;border-radius:50%}
+.rc-or{display:flex;align-items:center;gap:10px;padding:2px 0}
+.rc-or-line{flex:1;height:0.5px;background:#E5E3DF}.rc-or-text{font-size:11px;color:#C5C2BC;font-weight:500}
+
+/* OPTION CARDS */
+.oc-wrap{align-self:flex-start;margin-left:37px;width:min(420px,95%);display:flex;flex-direction:column;gap:5px;animation:fadeUp .25s ease}
+.oc-wrap.used{opacity:.28;pointer-events:none}
+.oc-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0A7C4A;margin-bottom:2px}
+.oc{background:#fff;border:0.5px solid #E5E3DF;border-radius:10px;padding:11px 14px;display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:all .12s}
+.oc:hover{border-color:#999;background:#FAFAF8}.oc:hover .oc-lt{background:#E2DFD9;color:#555}
+.oc.sel{border-color:#0A7C4A;background:#EBF5EE;pointer-events:none}.oc.sel .oc-lt{background:#0A7C4A;color:#fff}
+.oc-lt{width:20px;height:20px;background:#F0EDE8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#999;flex-shrink:0;transition:all .12s;margin-top:1px}
+.oc-tx{font-size:12.5px;color:#333;line-height:1.6;white-space:pre-wrap}
+.oc-ex{display:flex;flex-wrap:wrap;gap:5px;padding-top:4px}
+.xbtn{padding:5px 12px;border:0.5px solid #D5D2CC;border-radius:9999px;background:transparent;color:#666;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .12s}
+.xbtn:hover{border-color:#888;color:#222}
+
+/* INLINE ASSET CARDS */
+.ia-wrap{align-self:flex-start;margin-left:37px;width:min(450px,95%);display:flex;flex-direction:column;gap:5px;animation:fadeUp .3s ease}
+.ia-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0A7C4A;margin-bottom:2px}
+.ia-card{background:#fff;border:0.5px solid #E5E3DF;border-radius:11px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .12s}
+.ia-card:hover{border-color:#0A7C4A;background:#F0FDF7;transform:translateY(-1px);box-shadow:0 3px 10px rgba(10,124,74,.1)}
+.ia-card.approved{border-color:#0A7C4A;background:#EBF5EE;pointer-events:none}
+.ia-card.rejected{border-color:#EF4444;background:#FFF5F5;opacity:.55;pointer-events:none}
+.ia-thumb{width:44px;height:44px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;line-height:1.2;text-align:center;padding:3px;overflow:hidden;position:relative}
+.ia-thumb-expand{position:absolute;inset:0;background:rgba(0,0,0,.0);display:flex;align-items:center;justify-content:center;opacity:0;transition:all .15s;border-radius:8px;font-size:14px}
+.ia-card:hover .ia-thumb-expand{background:rgba(0,0,0,.3);opacity:1}
+.ia-info{flex:1;min-width:0}
+.ia-name{font-size:12.5px;font-weight:600;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.ia-type{font-size:11px;color:#AAA}
+.ia-expand-hint{font-size:10px;color:#0A7C4A;font-weight:500}
+.ia-btns{display:flex;gap:5px;flex-shrink:0}
+.ia-approve{padding:5px 11px;border-radius:9999px;border:none;background:#0A7C4A;color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .12s}
+.ia-approve:hover{background:#088A52}
+.ia-reject{padding:5px 11px;border-radius:9999px;border:0.5px solid #E5E3DF;background:transparent;color:#888;font-size:11px;cursor:pointer;font-family:inherit;transition:all .12s}
+.ia-reject:hover{border-color:#EF4444;color:#EF4444}
+.ia-footer{display:flex;gap:8px;padding-top:2px}
+.ia-approve-all{flex:1;padding:10px;border-radius:10px;background:#0A7C4A;color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+.ia-approve-all:hover{background:#088A52;transform:translateY(-1px);box-shadow:0 4px 14px rgba(10,124,74,.22)}
+.ia-approve-all.done{background:#14B870;pointer-events:none}
+.ia-req-btn{flex:1;padding:10px;border-radius:10px;background:#fff;color:#555;font-family:inherit;font-size:13px;font-weight:500;border:0.5px solid #E5E3DF;cursor:pointer;transition:all .15s}
+.ia-req-btn:hover{border-color:#999;color:#111}
+
+/* IN-PROGRESS REQUEST CARDS */
+.ip-wrap{align-self:flex-start;margin-left:37px;width:min(460px,95%);display:flex;flex-direction:column;gap:6px;animation:fadeUp .3s ease}
+.ip-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0A7C4A;margin-bottom:2px}
+.ip-card{background:#fff;border:0.5px solid #E5E3DF;border-radius:12px;padding:13px 15px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
+.ip-card:hover{border-color:#0A7C4A;background:#F0FDF7;transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.07)}
+.ip-card.active{border-color:#0A7C4A;background:#EBF5EE}
+.ip-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ip-info{flex:1;min-width:0}.ip-title{font-size:13px;font-weight:600;color:#111;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ip-type{font-size:11.5px;color:#AAA}
+.ip-badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:9999px;flex-shrink:0;white-space:nowrap}
+.ip-badge.awaiting{background:#FEF3C7;color:#D97706}.ip-badge.revision{background:#EDE9FE;color:#7C3AED}.ip-badge.approved{background:#D1FAE5;color:#059669}
+.ip-arrow{font-size:18px;color:#CCC;flex-shrink:0;transition:all .15s}.ip-card:hover .ip-arrow{color:#0A7C4A}
+.thread-div{display:flex;align-items:center;gap:10px;padding:4px 0;animation:fadeUp .2s ease}
+.td-line{flex:1;height:0.5px;background:#E5E3DF}.td-txt{font-size:11px;color:#AAA;white-space:nowrap;font-weight:500}
+.back-btn{align-self:flex-start;margin-left:37px;display:flex;align-items:center;gap:6px;font-size:12px;color:#0A7C4A;font-weight:600;cursor:pointer;padding:5px 12px;border:0.5px solid #0A7C4A;border-radius:9999px;background:#EBF5EE;transition:all .12s;animation:fadeUp .2s ease}
+.back-btn:hover{background:#D4EDE0}
+
+/* RIGHT PANEL — BRIEF */
+.right-panel{width:296px;min-width:296px;display:flex;flex-direction:column;background:#F7F5F1;overflow:hidden;flex-shrink:0;transition:width .4s,opacity .4s}
+.right-panel.hidden{width:0;min-width:0;opacity:0}
+.rp-hd{padding:14px 15px 11px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid #EAE8E3;flex-shrink:0}
+.rp-lbl{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#BBB}
+.rp-badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:9999px;background:#EDEAE4;color:#888;transition:all .3s}
+.rp-badge.locked{background:#E6F3EC;color:#0A7C4A}.rp-badge.progress{background:#DBEAFE;color:#1D4ED8}.rp-badge.approved{background:#D1FAE5;color:#059669}
+.rp-body{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.rp-body::-webkit-scrollbar{width:4px}.rp-body::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+.rp-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:44px 18px;gap:10px}
+.rp-empty-i{font-size:30px;opacity:.28}.rp-empty-t{font-size:11.5px;color:#BBB;line-height:1.6;max-width:180px}
+.bsec{background:#fff;border-radius:10px;padding:12px;border:0.5px solid #E5E3DF;animation:fadeUp .3s ease}
+.bsect{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#BBB;margin-bottom:9px}
+.brow{padding:5px 0;border-bottom:0.5px solid #F0EDE8}.brow:last-child{border-bottom:none;padding-bottom:0}
+.brl{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#C5C2BC;margin-bottom:2px}
+.brv{font-size:11.5px;color:#111;line-height:1.5;white-space:pre-wrap}
+.bai{padding:8px 0;border-bottom:0.5px solid #F0EDE8;display:flex;align-items:center;gap:9px}.bai:last-child{border-bottom:none;padding-bottom:0}
+.bai-th{width:34px;height:34px;border-radius:7px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;text-align:center;line-height:1.2;padding:2px}
+.bai-nm{font-size:11.5px;font-weight:600;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bai-tp{font-size:10px;color:#AAA}.bai-dl{width:24px;height:24px;border-radius:50%;background:#F0EDE8;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#666;flex-shrink:0;font-size:13px}
+.bai-dl:hover{background:#E2DFD9}
+.bwi{padding:8px 0;display:flex;align-items:center;gap:10px}
+.bwi-avs{display:flex}.bwi-av{width:24px;height:24px;border-radius:50%;border:2px solid #fff;margin-left:-6px;font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center}.bwi-av:first-child{margin-left:0}
+.bwi-nm{font-size:12px;font-weight:600;color:#111}.bwi-mt{font-size:10.5px;color:#AAA}
+.brief-locked-banner{background:#0A7C4A;color:#fff;padding:11px 12px;border-radius:9px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600}
+.brief-approved-banner{background:#14B870;color:#fff;padding:11px 12px;border-radius:9px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600}
+
+/* ROLES MODAL */
+.roles-ov{position:absolute;inset:0;background:rgba(10,10,10,.4);z-index:40;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(3px)}
+.roles-ov.show{display:flex}
+.roles-modal{background:#fff;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.18);width:100%;max-width:500px;overflow:hidden;animation:fadeUp .28s ease}
+.rm-hd{padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid #F0EDE8}
+.rm-title{font-size:15px;font-weight:700;color:#111}
+.rm-acts{display:flex;align-items:center;gap:8px}
+.rm-ok{padding:8px 20px;border-radius:9999px;background:#111;color:#fff;font-family:inherit;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s}
+.rm-ok:hover{background:#333}
+.rm-x{width:28px;height:28px;border-radius:50%;border:none;background:#F0EDE8;color:#666;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.rm-sub{font-size:11.5px;color:#AAA;padding:8px 20px 4px}
+.role-row{padding:10px 20px;display:flex;align-items:center;gap:12px;transition:background .12s}.role-row:hover{background:#FAFAF8}
+.rn{width:20px;height:20px;border-radius:50%;background:#F0EDE8;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#999;flex-shrink:0}
+.rav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.ri{flex:1;min-width:0}.rn2{font-size:13px;font-weight:600;color:#111}
+.rm2{font-size:11px;color:#AAA;display:flex;align-items:center;gap:5px;margin-top:1px}
+.rm2-dot{width:2px;height:2px;background:#CCC;border-radius:50%}
+.rb{padding:3px 9px;border-radius:9999px;font-size:11px;font-weight:600;flex-shrink:0}
+.b-you{background:#DBEAFE;color:#1D4ED8}.b-team{background:#EDE9FE;color:#7C3AED}.b-dp{background:#D1FAE5;color:#059669}
+
+/* =====================================================
+   ASSET FULLSCREEN MODAL + ANNOTATION
+===================================================== */
+.asset-fs{position:fixed;inset:0;z-index:200;display:none;background:#0D0D0D;flex-direction:column}
+.asset-fs.show{display:flex}
+/* Top bar */
+.afs-top{height:56px;background:#161616;display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;border-bottom:1px solid #2A2A2A}
+.afs-title{font-size:14px;font-weight:600;color:#fff}
+.afs-counter{font-size:12px;color:#888;background:rgba(255,255,255,.08);padding:3px 10px;border-radius:9999px}
+.afs-top-btns{display:flex;align-items:center;gap:8px}
+.afs-close{width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.afs-close:hover{background:rgba(255,255,255,.2)}
+/* Body */
+.afs-body{flex:1;display:flex;overflow:hidden}
+/* Canvas area */
+.afs-canvas-area{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;position:relative}
+.afs-prev,.afs-next{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;z-index:5}
+.afs-prev:hover,.afs-next:hover{background:rgba(255,255,255,.22)}
+.afs-prev{left:16px}.afs-next{right:16px}
+.afs-preview-wrap{position:relative;border-radius:12px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.5);max-width:680px;max-height:480px;width:100%;height:100%}
+.afs-preview-bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.afs-preview-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.7;text-align:center;line-height:1.2;padding:0 12px}
+.afs-preview-name{font-size:22px;font-weight:800;text-align:center;padding:0 16px;line-height:1.2;margin-top:8px}
+.afs-annotation-canvas{position:absolute;inset:0;cursor:crosshair;border-radius:12px}
+/* Annotation pins */
+.afs-pin{position:absolute;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;cursor:pointer;transform:translate(-50%,-50%);transition:transform .15s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.afs-pin:hover{transform:translate(-50%,-50%) scale(1.2)}
+/* Sidebar */
+.afs-sidebar{width:280px;min-width:280px;background:#1A1A1A;border-left:1px solid #2A2A2A;display:flex;flex-direction:column;overflow:hidden}
+.afs-sidebar-hd{padding:16px 16px 12px;border-bottom:1px solid #2A2A2A;flex-shrink:0}
+.afs-sidebar-title{font-size:12px;font-weight:700;color:#888;letter-spacing:.08em;text-transform:uppercase}
+.afs-notes{flex:1;overflow-y:auto;padding:12px}
+.afs-notes::-webkit-scrollbar{width:3px}.afs-notes::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+.afs-note-empty{padding:24px 12px;text-align:center;font-size:12.5px;color:#555;line-height:1.6}
+.afs-note{background:#252525;border-radius:10px;padding:10px 12px;margin-bottom:8px;animation:fadeUp .2s ease}
+.afs-note-num{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.afs-note-pin{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
+.afs-note-idx{font-size:11px;font-weight:600;color:#888}
+.afs-note-input{width:100%;background:#1A1A1A;border:0.5px solid #333;border-radius:7px;padding:7px 9px;font-size:12px;color:#E5E3DF;font-family:inherit;resize:none;outline:none;min-height:56px;line-height:1.5;transition:border-color .12s}
+.afs-note-input:focus{border-color:#0A7C4A}
+.afs-note-input::placeholder{color:#555}
+.afs-note-del{float:right;margin-left:8px;cursor:pointer;font-size:12px;color:#555;transition:color .12s}
+.afs-note-del:hover{color:#EF4444}
+/* Annotation toolbar */
+.afs-toolbar{padding:12px 16px;border-top:1px solid #2A2A2A;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+.afs-tb-row{display:flex;align-items:center;gap:6px}
+.afs-tb-lbl{font-size:10px;color:#666;font-weight:600;letter-spacing:.06em;text-transform:uppercase;width:52px;flex-shrink:0}
+.afs-tool-btn{width:30px;height:30px;border-radius:7px;border:none;background:rgba(255,255,255,.06);color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;font-size:14px}
+.afs-tool-btn:hover{background:rgba(255,255,255,.12);color:#fff}
+.afs-tool-btn.active{background:#0A7C4A;color:#fff}
+.afs-color-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .12s;flex-shrink:0}
+.afs-color-dot:hover{transform:scale(1.15)}.afs-color-dot.active{border-color:#fff}
+.afs-size-slider{flex:1;height:3px;accent-color:#0A7C4A;cursor:pointer}
+/* Bottom action bar */
+.afs-bottom{height:72px;background:#161616;border-top:1px solid #2A2A2A;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0}
+.afs-bottom-left{display:flex;align-items:center;gap:10px}
+.afs-send-notes{padding:9px 18px;border-radius:10px;border:0.5px solid #333;background:transparent;color:#CCC;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.afs-send-notes:hover{border-color:#888;color:#fff}
+.afs-bottom-right{display:flex;align-items:center;gap:10px}
+.afs-reject-btn{padding:11px 24px;border-radius:12px;background:transparent;color:#EF4444;font-family:inherit;font-size:13px;font-weight:600;border:1.5px solid #EF4444;cursor:pointer;transition:all .15s}
+.afs-reject-btn:hover{background:#EF4444;color:#fff}
+.afs-approve-btn{padding:11px 28px;border-radius:12px;background:#0A7C4A;color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+.afs-approve-btn:hover{background:#088A52;transform:translateY(-1px);box-shadow:0 4px 16px rgba(10,124,74,.3)}
+.afs-approved-state{padding:11px 28px;border-radius:12px;background:#14B870;color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;pointer-events:none}
+
+/* TYPE PICKER MODAL */
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-back.open{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:16px;width:880px;max-width:96vw;height:600px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 72px rgba(0,0,0,.22);transform:translateY(14px) scale(.98);transition:transform .22s,opacity .22s;opacity:0}
+.modal-back.open .modal{transform:translateY(0) scale(1);opacity:1}
+.m-top{padding:22px 24px 16px;border-bottom:0.5px solid #EDEAE4;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.m-title{font-size:17px;font-weight:700;color:#111}
+.m-search{flex:1;max-width:240px;height:36px;border:0.5px solid #E5E3DF;border-radius:9px;padding:0 13px;font-size:13px;font-family:inherit;color:#111;outline:none;background:#FAFAF8}
+.m-search:focus{border-color:#0A7C4A}
+.m-x{width:30px;height:30px;border-radius:50%;border:none;background:#F0EDE8;color:#666;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.m-x:hover{background:#E2DFD9;color:#333}
+.m-body{flex:1;display:flex;overflow:hidden}
+.m-cats{width:200px;min-width:200px;border-right:0.5px solid #EDEAE4;overflow-y:auto;padding:12px 9px;flex-shrink:0}
+.m-cats::-webkit-scrollbar{width:3px}.m-cats::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+.cat-item{padding:8px 11px;border-radius:8px;font-size:13px;color:#666;cursor:pointer;transition:all .12s}
+.cat-item:hover{background:#F5F4F0;color:#111}.cat-item.on{background:#F0EDE8;color:#111;font-weight:600}
+.m-gw{flex:1;overflow-y:auto;padding:16px 18px}
+.m-gw::-webkit-scrollbar{width:4px}.m-gw::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+.m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mt-card{border:0.5px solid #E5E3DF;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .12s;background:#fff}
+.mt-card:hover{border-color:#999;background:#FAFAF8}.mt-card.sel{border-color:#0A7C4A;background:#EBF5EE}
+.mt-card .chk{width:17px;height:17px;border-radius:4px;border:1.5px solid #D0CCC7;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.mt-card.sel .chk{background:#0A7C4A;border-color:#0A7C4A;color:#fff}
+.chk-tick{font-size:9px;display:none}.mt-card.sel .chk-tick{display:block}
+.mt-nm{font-size:12.5px;color:#444;line-height:1.4}.mt-card.sel .mt-nm{color:#111;font-weight:500}
+.m-bot{border-top:0.5px solid #EDEAE4;padding:15px 22px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.m-sl-lbl{font-size:12.5px;color:#AAA}.m-sl-lbl span{color:#111;font-weight:600}
+.m-conf{padding:10px 26px;border-radius:9999px;font-family:inherit;font-size:13px;font-weight:600;border:none;background:#D5D2CC;color:#fff;cursor:not-allowed;transition:all .15s}
+.m-conf.ready{background:#111;cursor:pointer}.m-conf.ready:hover{background:#333}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popUp{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes db{0%,60%,100%{transform:translateY(0);background:#ccc}30%{transform:translateY(-4px);background:#0A7C4A}}
+
+/* ── AGENT TABS ── */
+.agent-tabs{display:flex;align-items:center;gap:2px;padding:0 20px;height:42px;background:#fff;border-bottom:0.5px solid #E5E3DF;flex-shrink:0;z-index:14}
+.agent-close-btn{margin-left:auto;width:30px;height:30px;border-radius:50%;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#999;transition:background .12s,color .12s}
+.agent-close-btn:hover{background:#F5F4F0;color:#111}
+.agent-tab{padding:6px 16px;border-radius:9999px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#999;transition:all .15s;display:flex;align-items:center;gap:6px}
+.agent-tab:hover{background:#F5F4F0;color:#555}
+.agent-tab.active{background:#111;color:#fff}
+.agent-tab-dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.7}
+.agent-pane{display:none;flex-direction:column;overflow:hidden}
+.agent-pane.active{display:flex;flex:1;flex-direction:column;overflow:hidden;min-height:0}
+
+/* ── ONBOARDING AGENT ── */
+.ob-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#F4F3F0;min-height:0}
+/* OB Welcome */
+.ob-welcome{flex:1;background:#F4F3F0;display:flex;align-items:center;justify-content:center;padding:40px;gap:40px;overflow:auto;flex-wrap:wrap}
+.ob-welcome.hidden{display:none}
+.ob-wl-copy{max-width:420px;flex:1;min-width:260px}
+.ob-wl-title{font-size:42px;font-weight:800;color:#111;letter-spacing:-.6px;margin-bottom:6px}
+.ob-wl-name{font-size:16px;font-weight:400;color:#666;margin-bottom:24px}
+.ob-wl-name strong{color:#111}
+.ob-wl-bubble{background:#fff;border:0.5px solid #E5E3DF;border-radius:18px 18px 18px 3px;padding:18px 22px;font-size:14px;color:#555;line-height:1.7;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:28px}
+.ob-get-started{padding:14px 40px;border-radius:9999px;background:#111;color:#fff;font-family:inherit;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+.ob-get-started:hover{background:#333}
+.ob-mascot{flex-shrink:0;width:200px}
+.ob-mascot-img{width:220px;height:220px;border-radius:32px;background:linear-gradient(145deg,#0A7C4A,#14B870);display:flex;align-items:center;justify-content:center;font-size:100px;box-shadow:0 16px 48px rgba(10,124,74,.22);position:relative;overflow:hidden}
+.ob-mascot-img::before{content:'';position:absolute;inset:0;background:linear-gradient(145deg,#0A7C4A 0%,#14B870 60%,#52D6A2 100%)}
+.ob-mascot-img::after{content:'DESIGN PICKLE EXPRESS';position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:800;letter-spacing:.1em;color:rgba(255,255,255,.5);white-space:nowrap}
+
+/* OB Chat area */
+.ob-chat{flex:1;display:none;flex-direction:column;overflow:hidden;background:#fff}
+.ob-chat.active{display:flex;flex:1;min-height:0}
+.ob-msgs{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.ob-msgs::-webkit-scrollbar{width:4px}
+.ob-msgs::-webkit-scrollbar-thumb{background:#E5E3DF;border-radius:2px}
+.ob-input-bar{border-top:0.5px solid #E5E3DF;padding:11px 16px;background:#FAFAF8;flex-shrink:0;display:flex;flex-direction:column;gap:7px}
+.ob-input-row{display:flex;align-items:flex-end;gap:9px}
+.ob-input-ta{flex:1;background:#F5F4F0;border:0.5px solid #E5E3DF;border-radius:12px;padding:10px 14px;font-size:13px;color:#111;min-height:42px;max-height:100px;font-family:inherit;resize:none;outline:none;transition:all .15s}
+.ob-input-ta::placeholder{color:#AAA}
+.ob-input-ta:focus{background:#fff;border-color:#C8C5BF}
+.ob-send{width:38px;height:38px;border-radius:50%;border:none;background:#0A7C4A;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;align-self:flex-end;transition:all .15s}
+.ob-send:hover{background:#088A52}
+.ob-send.off{background:#D0CCC7;cursor:not-allowed}
+.ob-send svg{width:15px;height:15px;fill:#fff}
+
+/* OB Step cards (inline in chat) */
+.ob-step-card{align-self:flex-start;flex-shrink:0;margin-left:37px;width:min(500px,95%);background:#fff;border:0.5px solid #E5E3DF;border-radius:14px;overflow:hidden;animation:fadeUp .28s ease;box-shadow:0 2px 10px rgba(0,0,0,.05);display:flex;flex-direction:column;max-height:min(680px,82vh)}
+.ob-step-card.used{opacity:.3;pointer-events:none}
+.ob-sc-body{padding:18px 20px;overflow-y:auto;flex:1;min-height:200px}
+.ob-sc-q{font-size:15px;font-weight:700;color:#111;margin-bottom:4px}
+.ob-sc-hint{font-size:12px;color:#AAA;margin-bottom:16px;line-height:1.5}
+/* Dropdown */
+.ob-dropdown-wrap{position:relative}
+.ob-dropdown-btn{width:100%;padding:11px 14px;border:0.5px solid #D5D2CC;border-radius:10px;background:#fff;font-family:inherit;font-size:13.5px;color:#111;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color .12s}
+.ob-dropdown-btn:hover{border-color:#999}
+.ob-dropdown-btn.open{border-color:#0A7C4A;border-radius:10px 10px 0 0}
+.ob-dropdown-btn svg{width:16px;height:16px;flex-shrink:0;transition:transform .2s}
+.ob-dropdown-btn.open svg{transform:rotate(180deg)}
+.ob-dropdown-menu{position:absolute;top:100%;left:0;right:0;background:#fff;border:0.5px solid #D5D2CC;border-top:none;border-radius:0 0 10px 10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:50}
+.ob-dd-item{padding:12px 14px;font-size:13.5px;color:#444;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .1s}
+.ob-dd-item:hover{background:#F5F4F0;color:#111}
+.ob-dd-item.sel{color:#111;font-weight:500}
+.ob-dd-item .ob-check{width:16px;height:16px;flex-shrink:0;color:#0A7C4A}
+/* URL inputs */
+.ob-url-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ob-url-input{flex:1;padding:11px 14px;border:0.5px solid #D5D2CC;border-radius:10px;font-family:inherit;font-size:13px;color:#111;outline:none;transition:border-color .12s}
+.ob-url-input:focus{border-color:#0A7C4A}
+.ob-url-input::placeholder{color:#CCC}
+.ob-url-icon-btn{width:34px;height:34px;border-radius:50%;border:0.5px solid #D5D2CC;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:#555;font-size:18px;transition:all .12s}
+.ob-url-icon-btn:hover{border-color:#999;background:#F5F4F0}
+.ob-upload-link{display:flex;align-items:center;gap:6px;font-size:13px;color:#555;cursor:pointer;margin-top:4px;width:fit-content}
+.ob-upload-link:hover{color:#111}
+.ob-upload-link svg{width:16px;height:16px}
+/* Brand preview */
+.ob-brand-scan{margin-top:14px;border:0.5px solid #E5E3DF;border-radius:12px;overflow:hidden;animation:fadeUp .25s ease}
+.ob-brand-scan-head{background:#F7F5F1;padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid #E5E3DF}
+.ob-brand-scan-dot{width:8px;height:8px;border-radius:50%;background:#0A7C4A;flex-shrink:0}
+.ob-brand-scan-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0A7C4A}
+.ob-brand-scan-url{font-size:11px;color:#999;margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.ob-brand-loading{padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.ob-brand-bar{width:100%;height:4px;background:#EDEAE4;border-radius:2px;overflow:hidden}
+.ob-brand-bar-fill{height:100%;background:linear-gradient(90deg,#0A7C4A,#14B870);border-radius:2px;animation:brandScan 1.8s ease-in-out forwards}
+@keyframes brandScan{0%{width:0%}60%{width:75%}100%{width:100%}}
+.ob-brand-scan-msg{font-size:12px;color:#888}
+.ob-brand-result{padding:14px}
+.ob-brand-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ob-brand-favicon{width:36px;height:36px;border-radius:8px;background:#F5F4F0;border:0.5px solid #E5E3DF;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.ob-brand-favicon img{width:28px;height:28px;object-fit:contain}
+.ob-brand-domain{font-size:13px;font-weight:600;color:#111}
+.ob-brand-domain-sub{font-size:11px;color:#999}
+.ob-brand-section{margin-bottom:12px}
+.ob-brand-section-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#BBB;margin-bottom:6px}
+.ob-brand-colors{display:flex;gap:6px;flex-wrap:wrap}
+.ob-brand-swatch{width:32px;height:32px;border-radius:8px;border:0.5px solid rgba(0,0,0,.08);cursor:default;position:relative;transition:transform .1s}
+.ob-brand-swatch:hover{transform:scale(1.12)}
+.ob-brand-swatch-hex{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:#888;white-space:nowrap;opacity:0;transition:opacity .15s}
+.ob-brand-swatch:hover .ob-brand-swatch-hex{opacity:1}
+.ob-brand-fonts{display:flex;gap:6px;flex-wrap:wrap}
+.ob-brand-font-tag{padding:4px 10px;border-radius:9999px;background:#F0EDE8;border:0.5px solid #E5E3DF;font-size:11px;color:#444}
+/* Category pills */
+.ob-proj-name{width:100%;padding:11px 14px;border:0.5px solid #D5D2CC;border-radius:10px;font-family:inherit;font-size:13px;color:#111;outline:none;transition:border-color .12s;margin-bottom:14px}
+.ob-proj-name:focus{border-color:#0A7C4A}
+.ob-proj-name::placeholder{color:#CCC}
+.ob-cats-grid{display:flex;flex-wrap:wrap;gap:7px}
+.ob-cat-pill{padding:7px 13px;border:0.5px solid #D5D2CC;border-radius:9999px;font-size:12.5px;color:#555;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:5px;position:relative;user-select:none}
+.ob-cat-pill:hover{border-color:#999;color:#111}
+.ob-cat-pill.sel{border-color:#111;background:#111;color:#fff}
+.ob-cat-pill .ob-pill-count{background:#2563EB;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ob-cat-pill svg{width:12px;height:12px;transition:transform .15s}
+.ob-cat-pill.sel svg{transform:rotate(180deg)}
+.ob-cat-dropdown{position:absolute;top:calc(100% + 6px);left:0;min-width:200px;background:#fff;border:0.5px solid #D5D2CC;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.1);padding:8px 0;z-index:60;animation:fadeUp .15s ease}
+.ob-cat-sub{padding:9px 14px;font-size:13px;color:#444;display:flex;align-items:center;gap:9px;cursor:pointer;transition:background .1s}
+.ob-cat-sub:hover{background:#F5F4F0}
+.ob-cat-sub input[type="checkbox"]{width:16px;height:16px;accent-color:#0A7C4A;cursor:pointer}
+/* Email tags */
+.ob-email-wrap{border:0.5px solid #D5D2CC;border-radius:10px;padding:10px 12px;min-height:50px;display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;cursor:text;transition:border-color .12s;background:#fff}
+.ob-email-wrap:focus-within{border-color:#0A7C4A}
+.ob-email-tag{padding:4px 10px;border-radius:9999px;background:#F0EDE8;border:0.5px solid #D5D2CC;font-size:12.5px;color:#444;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.ob-email-tag.invalid{background:#FFF0F0;border-color:#EF4444;color:#EF4444}
+.ob-email-tag-x{cursor:pointer;color:#999;font-size:12px;transition:color .1s}
+.ob-email-tag-x:hover{color:#EF4444}
+.ob-email-input{border:none;outline:none;font-family:inherit;font-size:13px;color:#111;min-width:140px;background:transparent;flex:1}
+.ob-email-input::placeholder{color:#CCC}
+.ob-email-error{font-size:11.5px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px}
+.ob-send-invite-btn{float:right;padding:6px 14px;border:0.5px solid #D5D2CC;border-radius:9999px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#555;cursor:pointer;transition:all .12s;margin-top:8px}
+.ob-send-invite-btn:hover{border-color:#0A7C4A;color:#0A7C4A}
+.ob-pending{margin-top:14px}
+.ob-pending-hd{font-size:13px;font-weight:700;color:#111;margin-bottom:3px}
+.ob-pending-sub{font-size:11.5px;color:#AAA;margin-bottom:10px}
+.ob-invite-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-top:0.5px solid #F0EDE8}
+.ob-invite-email{font-size:13px;color:#333}
+.ob-invite-cancel{padding:4px 11px;border:0.5px solid #D5D2CC;border-radius:9999px;font-family:inherit;font-size:11px;color:#888;cursor:pointer;background:transparent;transition:all .12s}
+.ob-invite-cancel:hover{border-color:#EF4444;color:#EF4444}
+/* Integration tiles */
+.ob-integ-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ob-integ-tile{border:1.5px solid #E5E3DF;border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .15s;position:relative;background:#FAFAF8}
+.ob-integ-tile:hover{border-color:#999;background:#fff}
+.ob-integ-tile.sel{border-color:#111;background:#fff}
+.ob-integ-tile.sel .ob-integ-check{opacity:1}
+.ob-integ-check{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:6px;background:#111;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;font-size:11px;color:#fff;font-weight:700}
+.ob-integ-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.ob-integ-name{font-size:13px;font-weight:600;color:#111}
+/* Video card */
+.ob-video-thumb{width:100%;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;background:#DDD}
+.ob-video-thumb img{width:100%;display:block}
+.ob-video-placeholder{width:100%;height:220px;background:linear-gradient(135deg,#2A2A2A,#444);display:flex;align-items:center;justify-content:center;border-radius:12px;position:relative}
+.ob-play-btn{width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:background .15s}
+.ob-play-btn:hover{background:rgba(0,0,0,.85)}
+.ob-play-btn::after{content:'';width:0;height:0;border-style:solid;border-width:10px 0 10px 20px;border-color:transparent transparent transparent #FFD700;margin-left:4px}
+.ob-video-person{position:absolute;bottom:0;left:0;right:0;height:80%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.3));border-radius:0 0 12px 12px}
+/* OB step footer */
+.ob-sc-footer{padding:14px 20px;border-top:0.5px solid #F0EDE8;display:flex;gap:8px;background:#FAFAF8}
+.ob-back-btn{flex:1;max-width:120px;padding:11px;border-radius:10px;border:0.5px solid #D5D2CC;background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:#555;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.ob-back-btn:hover{border-color:#999;color:#111}
+.ob-next-btn{flex:1;padding:11px;border-radius:10px;background:#111;color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.ob-next-btn:hover{background:#333}
+.ob-next-btn.off{background:#D5D2CC;cursor:not-allowed}
+/* OB progress bar */
+.ob-prog{height:2px;background:#EDEAE4;flex-shrink:0}
+.ob-prog-fill{height:100%;background:#0A7C4A;transition:width .5s ease}
+
+/* Upload modal */
+.upload-modal-back{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:200;display:none;align-items:center;justify-content:center}
+.upload-modal-back.show{display:flex}
+.upload-modal{background:#fff;border-radius:20px;width:540px;max-width:94vw;padding:28px;box-shadow:0 16px 48px rgba(0,0,0,.15);animation:fadeUp .25s ease}
+.um-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.um-title{font-size:17px;font-weight:700;color:#111}
+.um-close{width:30px;height:30px;border-radius:50%;border:none;background:#F0EDE8;color:#666;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.um-close:hover{background:#E2DFD9}
+.um-drop{border:1.5px dashed #D5D2CC;border-radius:14px;padding:36px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#F9F9F9;cursor:pointer;transition:all .15s;margin-bottom:20px}
+.um-drop:hover{border-color:#0A7C4A;background:#EBF5EE}
+.um-drop-icon{width:44px;height:44px;border-radius:12px;background:#fff;border:0.5px solid #E5E3DF;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.um-drop-icon svg{width:22px;height:22px;color:#555}
+.um-drop-text{font-size:13.5px;color:#555;text-align:center}
+.um-drop-text a{color:#0A7C4A;text-decoration:none;font-weight:600}
+.um-drop-sub{font-size:12px;color:#AAA}
+.um-files-hd{font-size:13px;font-weight:600;color:#444;margin-bottom:8px}
+.um-file-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:0.5px solid #F0EDE8}
+.um-file-icon{width:32px;height:32px;border-radius:7px;background:#F5F4F0;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.um-file-icon svg{width:17px;height:17px;color:#666}
+.um-file-inf{flex:1;min-width:0}
+.um-file-nm{font-size:13px;font-weight:500;color:#111}
+.um-file-sz{font-size:11.5px;color:#AAA}
+.um-file-x{width:24px;height:24px;border-radius:50%;border:none;background:#F0EDE8;color:#888;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.um-file-x:hover{background:#E2DFD9;color:#555}
+.um-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.um-cancel{padding:10px 22px;border-radius:9999px;border:0.5px solid #D5D2CC;background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:#555;cursor:pointer;transition:all .12s}
+.um-cancel:hover{border-color:#999;color:#111}
+.um-select{padding:10px 22px;border-radius:9999px;border:none;background:#111;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
+.um-select:hover{background:#333}
+
+/* DASHBOARD */
+.db-wrap{flex:1;min-height:0;overflow:hidden;display:none;flex-direction:column;background:#F6F6F6;position:relative}
+.db-wrap.show{display:flex}
+.db-ai-fab{position:absolute;bottom:28px;right:28px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F97316,#3B82F6);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(59,130,246,0.35);z-index:10;transition:opacity .15s}
+.db-ai-fab.visible{display:flex}
+.db-ai-fab:hover{opacity:.88}
+.db-ai-fab-label{font-size:13px;font-weight:800;color:#fff;letter-spacing:.04em}
+.db-topbar{height:56px;background:#fff;border-bottom:0.5px solid #E5E3DF;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0}
+.db-brand{font-size:22px;font-weight:900;color:#111;letter-spacing:-.5px}
+.db-search{flex:1;max-width:300px;margin:0 24px;height:36px;background:#F5F4F0;border:0.5px solid #E5E3DF;border-radius:9999px;display:flex;align-items:center;gap:8px;padding:0 14px}
+.db-search input{border:none;background:transparent;outline:none;font-family:inherit;font-size:13px;color:#111;flex:1}
+.db-search input::placeholder{color:#AAA}
+.db-search svg{width:15px;height:15px;color:#AAA;flex-shrink:0}
+.db-search-icon{width:16px;height:16px;color:#AAA}
+.db-topbar-r{display:flex;align-items:center;gap:12px}
+.db-help{width:32px;height:32px;border-radius:50%;border:0.5px solid #E5E3DF;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#777;font-size:14px;font-weight:700}
+.db-notif{width:32px;height:32px;border-radius:50%;border:0.5px solid #E5E3DF;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#777}
+.db-notif svg{width:16px;height:16px}
+.db-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 8px;border-radius:8px;transition:background .12s}
+.db-user:hover{background:#F5F4F0}
+.db-user-av{width:32px;height:32px;border-radius:50%;background:#E05A2B;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;overflow:hidden}
+.db-user-info{display:flex;flex-direction:column;min-width:0}
+.db-user-name{font-size:13px;font-weight:600;color:#111;white-space:nowrap}
+.db-user-role{font-size:10.5px;color:#AAA}
+.db-body{flex:1;display:flex;overflow:hidden}
+.db-sidebar{width:180px;min-width:180px;background:#fff;border-right:0.5px solid #E5E3DF;display:flex;flex-direction:column;padding:16px 12px;overflow-y:auto;flex-shrink:0}
+.db-create-btn{width:100%;padding:10px;border-radius:10px;background:#111;color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;transition:background .12s}
+.db-create-btn:hover{background:#333}
+.db-create-btn svg{width:14px;height:14px}
+.db-nav-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .12s;margin-bottom:2px}
+.db-nav-item:hover{background:#F5F4F0}
+.db-nav-item.active{background:#F5F4F0}
+.db-nav-left{display:flex;align-items:center;gap:8px;font-size:13px;color:#333;font-weight:500}
+.db-nav-left svg{width:16px;height:16px;color:#777}
+.db-nav-left.active{color:#111;font-weight:600}
+.db-badge{padding:2px 7px;border-radius:9999px;background:#2563EB;color:#fff;font-size:10px;font-weight:700}
+.db-sidebar-footer{margin-top:auto;padding-top:16px;border-top:0.5px solid #F0EDE8}
+.db-sidebar-link{padding:8px 10px;font-size:12.5px;color:#888;cursor:pointer;border-radius:7px;transition:background .12s;display:flex;align-items:center;gap:7px}
+.db-sidebar-link:hover{background:#F5F4F0;color:#555}
+.db-sidebar-link svg{width:14px;height:14px}
+.db-main{flex:1;overflow-y:auto;padding:24px;display:flex;gap:20px;min-width:0}
+.db-main::-webkit-scrollbar{width:5px}
+.db-main::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px}
+.db-center{flex:1;min-width:0;display:flex;flex-direction:column;gap:20px}
+.db-page-title{font-size:24px;font-weight:800;color:#111;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.db-page-title svg{width:20px;height:20px;color:#AAA}
+.db-card{background:#fff;border-radius:12px;border:0.5px solid #E5E3DF;overflow:hidden}
+.db-card-hd{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid #F0EDE8}
+.db-card-title{font-size:14px;font-weight:700;color:#111}
+.db-view-all{font-size:12.5px;color:#0A7C4A;font-weight:600;cursor:pointer}
+.db-status-row{display:flex;gap:10px;padding:14px 18px;border-bottom:0.5px solid #F0EDE8}
+.db-stat-card{flex:1;border:0.5px solid #E5E3DF;border-radius:10px;padding:14px 16px;position:relative;cursor:pointer}
+.db-stat-card.warn{border-color:#FDE68A;background:#FFFBEB}
+.db-stat-n{font-size:12px;color:#888;margin-bottom:6px}
+.db-stat-v{font-size:26px;font-weight:800;color:#111}
+.db-stat-card.warn .db-stat-v{color:#D97706}
+.db-stat-arr{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:6px;background:#F5F4F0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#555}
+.db-table{width:100%;border-collapse:collapse}
+.db-table th{font-size:11px;font-weight:700;color:#AAA;letter-spacing:.06em;text-transform:uppercase;padding:11px 18px;text-align:left;border-bottom:0.5px solid #F0EDE8}
+.db-table td{padding:12px 18px;font-size:13px;color:#333;border-bottom:0.5px solid #F7F5F1;vertical-align:middle}
+.db-table tr:last-child td{border-bottom:none}
+.db-table tr:hover td{background:#FAFAF8}
+.db-req-thumb{width:36px;height:36px;border-radius:8px;overflow:hidden;flex-shrink:0}
+.db-req-name{font-size:13px;font-weight:500;color:#111}
+.db-req-tag{font-size:11px;color:#0A7C4A;cursor:pointer}
+.db-tag{font-size:11px;padding:3px 8px;border-radius:9999px;font-weight:500}
+.db-tag.in-progress{background:#DBEAFE;color:#1D4ED8}
+.db-tag.awaiting{background:#FEF3C7;color:#D97706}
+.db-progress-bar{width:80px;height:6px;background:#E5E3DF;border-radius:3px;overflow:hidden}
+.db-progress-fill{height:100%;background:#0A7C4A;border-radius:3px}
+.db-right{width:280px;min-width:280px;display:flex;flex-direction:column;gap:16px;flex-shrink:0}
+.db-right-card{background:#fff;border:0.5px solid #E5E3DF;border-radius:12px;padding:16px}
+.db-rc-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.db-rc-title{font-size:14px;font-weight:700;color:#111}
+.db-rc-action{font-size:12px;color:#0A7C4A;font-weight:600;cursor:pointer}
+.db-hours-num{font-size:32px;font-weight:800;color:#111;margin-bottom:2px}
+.db-hours-sub{font-size:12px;color:#AAA}
+.db-hours-bar{height:4px;background:#E5E3DF;border-radius:2px;margin:12px 0 6px}
+.db-hours-fill{height:100%;background:#0A7C4A;border-radius:2px;width:40%}
+.db-team-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:0.5px solid #F0EDE8}
+.db-team-row:first-child{border-top:none}
+.db-team-av{width:30px;height:30px;border-radius:50%;background:#F0EDE8;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#777;flex-shrink:0}
+.db-team-inf{flex:1;margin-left:8px;min-width:0}
+.db-team-email{font-size:12px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.db-team-status{font-size:10.5px;color:#AAA}
+.db-resend{padding:4px 10px;border:0.5px solid #D5D2CC;border-radius:9999px;font-size:11px;color:#555;cursor:pointer;background:transparent;font-family:inherit;transition:all .12s;flex-shrink:0}
+.db-resend:hover{border-color:#0A7C4A;color:#0A7C4A}
+.db-chart-area{height:80px;display:flex;align-items:flex-end;gap:2px;padding-top:8px}
+.db-chart-bar{flex:1;background:#E5E3DF;border-radius:2px;transition:background .12s;cursor:pointer;min-width:3px}
+.db-chart-bar:hover{background:#0A7C4A}
+.db-chart-bar.today{background:#0A7C4A}
+.db-chart-line{position:relative;height:80px;width:100%;overflow:hidden}
+.db-ai-bar{position:fixed;bottom:24px;right:24px;background:#fff;border:0.5px solid #E5E3DF;border-radius:16px;padding:12px 16px;box-shadow:0 4px 16px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px;width:280px;cursor:pointer;transition:all .15s;z-index:50}
+.db-ai-bar:hover{box-shadow:0 6px 24px rgba(0,0,0,.15)}
+.db-ai-bar input{flex:1;border:none;outline:none;font-family:inherit;font-size:13px;color:#111}
+.db-ai-bar input::placeholder{color:#CCC}
+.db-ai-icon{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sidenav">
+  <div class="sn-logo"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></div>
+  <button class="sn-new" onclick="switchTab('request')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg></button>
+  <div class="sn-div"></div>
+  <button class="sn-btn on" onclick="showDashboard()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+  <button class="sn-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+  <button class="sn-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
+  <button class="sn-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button>
+  <button class="sn-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
+  <div class="sn-sp"></div>
+  <button class="sn-set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M19.07 19.07l-1.41-1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M21 12h-2M5 12H3M12 3V1M12 23v-2"/></svg></button>
+</nav>
+<div class="main">
+  <div class="topbar">
+    <div class="tb-l"><div class="tb-brand"><div class="tb-dot"></div>Open Jar</div><span class="tb-tag" id="tb-tag">Brief Builder</span></div>
+    <div class="tb-r">
+      <button class="tb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+      <div class="tb-av">J</div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="pf"></div></div>
+  <!-- AGENT TABS -->
+  <div class="agent-tabs">
+    <button class="agent-tab active" id="tab-onboarding" onclick="switchTab('onboarding')"><span class="agent-tab-dot"></span>Onboarding Agent</button>
+    <button class="agent-tab" id="tab-request" onclick="switchTab('request')"><span class="agent-tab-dot"></span>Request Agent</button>
+    <button class="agent-close-btn" onclick="showDashboard()" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <!-- AGENTS AREA — position:relative so panes can use position:absolute;inset:0 -->
+  <div id="agents-area" style="position:relative;flex:1;overflow:hidden">
+
+    <!-- REQUEST AGENT PANE — same pattern as .content which works -->
+    <div id="pane-request" style="position:absolute;inset:0;display:none;overflow:hidden">
+      <div class="content mode-welcome" id="content">
+
+    <!-- WELCOME SCREEN -->
+    <div class="s-welcome" id="s-welcome">
+      <div class="w-hero">
+        <div class="w-copy">
+          <div class="w-title">Welcome, Jane 👋</div>
+          <div class="w-sub" style="font-size:15px;color:#666;margin-bottom:22px">I am <strong style="color:#111">John Pickle</strong>, your brief building agent</div>
+          <div class="w-prompt">To get started choose a request type below — or describe what you need in the box.</div>
+        </div>
+        <div class="mascot">🥒</div>
+      </div>
+      <div class="type-popup">
+        <div class="tp-hd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Create</div>
+        <div class="type-grid">
+          <div class="type-tile" onclick="pickType('social','Social Media Ads')"><div class="tile c ts"><span style="font-size:28px">📱</span></div><div class="tile-lbl">Social Ads</div></div>
+          <div class="type-tile" onclick="pickType('logo','Logo & Brand Identity')"><div class="tile c tl"><span style="font-size:28px">🎨</span></div><div class="tile-lbl">Logo</div></div>
+          <div class="type-tile" onclick="pickType('email','Email Design')"><div class="tile c te"><span style="font-size:28px">📧</span></div><div class="tile-lbl">Email</div></div>
+          <div class="type-tile" onclick="openModal()"><div class="tile tm"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#AAA" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div><div class="tile-lbl">More</div></div>
+        </div>
+        <div class="tp-ft"><div class="tp-ft-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Ratio</div><button class="view-all-btn" onclick="openModal()">View all request types →</button></div>
+      </div>
+      <!-- Welcome input bar -->
+      <div class="w-input-bar">
+        <textarea class="w-input-ta" id="w-input" placeholder="Describe what you want to request" rows="1" oninput="wResize(this);wCheck()" onkeydown="wKey(event)"></textarea>
+        <div class="w-input-row">
+          <button class="w-plus" title="Attach">+</button>
+          <div class="w-brand">Nike.com <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <button class="w-voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+          <button class="w-send off" id="w-send" onclick="submitWelcome()"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT SCREEN -->
+    <div class="s-chat" id="s-chat">
+      <div class="chat-pane">
+        <div class="msgs" id="msgs"></div>
+        <div class="chat-ft">
+          <div class="ci-wrap">
+            <textarea class="ci off" id="fi" placeholder="Describe what you want to create…" rows="1" oninput="autoResize(this);checkSend()" onkeydown="handleKey(event)"></textarea>
+            <button class="send-btn off" id="nb" onclick="sendMessage()"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+          </div>
+          <div class="chat-hint" id="hint">↑ Choose a request type to get started</div>
+        </div>
+      </div>
+      <div class="right-panel hidden" id="right-panel">
+        <div class="rp-hd" style="flex-wrap:wrap;gap:4px"><span class="rp-lbl">Brief</span><a id="rp-view-req" href="#" onclick="return false;" style="display:none;font-size:10.5px;font-weight:600;color:#0A7C4A;text-decoration:underline;text-underline-offset:2px;margin-left:auto;margin-right:6px">View Request</a><span class="rp-badge" id="rp-badge">Building...</span></div>
+        <div class="rp-body" id="rp-body">
+          <div class="rp-empty"><div class="rp-empty-i">📋</div><div class="rp-empty-t">Your brief builds here as you go.</div></div>
+        </div>
+      </div>
+      <!-- Roles modal overlay -->
+      <div class="roles-ov" id="roles-ov">
+        <div class="roles-modal">
+          <div class="rm-hd"><span class="rm-title">Workflows</span><div class="rm-acts"><button class="rm-ok" onclick="confirmRoles()">Looks good</button><button class="rm-x" onclick="document.getElementById('roles-ov').classList.remove('show')">✕</button></div></div>
+          <div class="rm-sub">Auto routed</div>
+          <div id="roles-list"></div>
+          <div style="height:10px"></div>
+        </div>
+      </div>
+    </div><!-- /s-chat -->
+
+  </div><!-- /content -->
+</div><!-- /pane-request -->
+
+    <!-- ONBOARDING AGENT PANE -->
+    <div id="pane-onboarding" style="position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;background:#F4F3F0">
+      <!-- Progress bar -->
+      <div style="height:3px;background:#EDEAE4;flex-shrink:0"><div id="ob-pf" style="height:100%;background:#0A7C4A;width:0%;transition:width .5s ease"></div></div>
+      <!-- Welcome screen -->
+      <div id="ob-welcome" style="flex:1;display:flex;align-items:center;justify-content:center;padding:48px 60px;gap:60px;overflow:auto;background:#F4F3F0">
+        <div style="flex:1;min-width:260px;max-width:420px">
+          <div style="font-size:40px;font-weight:800;color:#111;letter-spacing:-.5px;margin-bottom:6px">Welcome, Jane</div>
+          <div style="font-size:15px;color:#666;margin-bottom:22px">I am <strong style="color:#111">Sarah Pickle</strong> your onboarding agent.</div>
+          <div style="background:#fff;border:0.5px solid #E5E3DF;border-radius:14px 14px 14px 3px;padding:18px 22px;font-size:14px;color:#555;line-height:1.7;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:28px">
+            I'm here to help you set up your account smoothly and efficiently. Let's make sure everything is in place for you to get started!
+          </div>
+          <button onclick="obStart()" style="padding:14px 40px;border-radius:9999px;background:#111;color:#fff;font-family:inherit;font-size:14px;font-weight:700;border:none;cursor:pointer">Get Started</button>
+        </div>
+        <div style="flex-shrink:0">
+          <div style="width:200px;height:200px;border-radius:28px;background:linear-gradient(145deg,#0A7C4A,#14B870);display:flex;align-items:center;justify-content:center;font-size:80px;box-shadow:0 14px 40px rgba(10,124,74,.25);position:relative;overflow:hidden">
+            🥒
+            <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:800;letter-spacing:.1em;color:rgba(255,255,255,.5);white-space:nowrap">DESIGN PICKLE EXPRESS</div>
+          </div>
+        </div>
+      </div>
+      <!-- Chat area (shown after Get Started) -->
+      <div id="ob-chat" style="display:none;flex-direction:column;flex:1;overflow:hidden;background:#fff">
+        <div id="ob-msgs" style="flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:10px"></div>
+        <div style="border-top:0.5px solid #E5E3DF;padding:11px 16px;background:#FAFAF8;flex-shrink:0">
+          <div style="display:flex;align-items:flex-end;gap:9px">
+            <textarea id="ob-fi" placeholder="Type a message..." rows="1" style="flex:1;background:#F5F4F0;border:0.5px solid #E5E3DF;border-radius:12px;padding:10px 14px;font-size:13px;color:#111;min-height:42px;max-height:100px;font-family:inherit;resize:none;outline:none" oninput="this.style.height=&#39;auto&#39;;this.style.height=Math.min(this.scrollHeight,100)+&#39;px&#39;"></textarea>
+            <button class="ob-send off" id="ob-nb" onclick="obSend()" style="width:38px;height:38px;border-radius:50%;border:none;background:#0A7C4A;display:flex;align-items:center;justify-content:center;cursor:pointer;align-self:flex-end"><svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+          </div>
+          <div id="ob-hint" style="font-size:11px;color:#C0BDB8;padding:4px 2px 0">Complete each step to continue</div>
+        </div>
+      </div>
+      <!-- Dashboard (shown after onboarding completes) -->
+      <div id="db-wrap" class="db-wrap">
+        <div class="db-topbar">
+          <div class="db-brand">DP</div>
+          <div class="db-search"><svg class="db-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="Search"></div>
+          <div class="db-topbar-r">
+            <div class="db-help">?</div>
+            <div class="db-notif"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+            <div class="db-user">
+              <div class="db-user-av">J</div>
+              <div class="db-user-info"><div class="db-user-name">Jane Johnson</div><div class="db-user-role">DP Admin</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="db-body">
+          <div class="db-sidebar">
+            <button class="db-create-btn" onclick="switchTab('request')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Create</button>
+            <div class="db-nav-item active"><div class="db-nav-left active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</div></div>
+            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Requests</div><span class="db-badge">20</span></div>
+            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Projects</div><span class="db-badge" style="background:#6366F1">4</span></div>
+            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Brands</div></div>
+            <div class="db-sidebar-footer">
+              <div class="db-sidebar-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Billing</div>
+              <div class="db-sidebar-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Integrations</div>
+              <div class="db-sidebar-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>My Team</div>
+              <div class="db-sidebar-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>Settings</div>
+            </div>
+          </div>
+          <div class="db-main">
+            <div class="db-center">
+              <div class="db-page-title">Welcome, Jane <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              <div class="db-card">
+                <div class="db-card-hd"><span class="db-card-title">Requests</span><span class="db-view-all">View all</span></div>
+                <div class="db-status-row">
+                  <div class="db-stat-card"><div class="db-stat-n">Awaiting review</div><div class="db-stat-v">12</div><div class="db-stat-arr">↗</div></div>
+                  <div class="db-stat-card warn"><div class="db-stat-n">Needs more info</div><div class="db-stat-v">01</div><div class="db-stat-arr">↗</div></div>
+                </div>
+                <table class="db-table">
+                  <thead><tr><th>Priority</th><th>Title</th><th>Project</th><th>Category</th><th>Assignee</th><th>Last</th></tr></thead>
+                  <tbody>
+                    <tr><td>1</td><td><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></td><td>Youtube campaign</td><td>Marketing</td><td style="color:#AAA">Unassigned</td><td>—</td></tr>
+                    <tr><td>2</td><td><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></td><td>Youtube campaign</td><td>Marketing</td><td style="color:#AAA">Unassigned</td><td>—</td></tr>
+                    <tr><td>3</td><td><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></td><td>Youtube campaign</td><td>Marketing</td><td style="color:#AAA">Unassigned</td><td>—</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="db-card">
+                <div class="db-card-hd"><span class="db-card-title">Projects</span><span class="db-view-all">View all</span></div>
+                <table class="db-table">
+                  <thead><tr><th>Title</th><th># of Requests</th><th>Assets</th><th>Last Updated</th><th>Status</th><th>Complete</th></tr></thead>
+                  <tbody>
+                    <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>2</td><td>Sep 07, 2025</td><td><span class="db-tag in-progress">In Progress</span></td><td><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div></td></tr>
+                    <tr><td><div class="db-req-name">Project</div><div style="display:flex;gap:4px;margin-top:3px"><span class="db-tag in-progress" style="font-size:10px">Internal</span><span class="db-tag in-progress" style="font-size:10px">Graphic</span></div></td><td>8</td><td>2</td><td>Sep 07, 2025</td><td><span class="db-tag in-progress">In Progress</span></td><td><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="db-right">
+              <div class="db-right-card">
+                <div class="db-rc-hd"><span class="db-rc-title">Creative hours</span><span class="db-rc-action">+ Add hours</span></div>
+                <div class="db-hours-num">2 <span style="font-size:14px;font-weight:400;color:#AAA">hours/day</span></div>
+                <div class="db-hours-bar"><div class="db-hours-fill"></div></div>
+                <div style="font-size:11.5px;color:#AAA">Renews daily <span style="float:right">Base Platform</span></div>
+              </div>
+              <div class="db-right-card">
+                <div class="db-rc-hd"><span class="db-rc-title">My Team</span><span class="db-rc-action">View all</span></div>
+                <div id="db-team-rows"></div>
+              </div>
+              <div class="db-right-card">
+                <div class="db-rc-hd"><span class="db-rc-title">Request Usage</span><span class="db-rc-action" style="color:#555;font-size:11px">Last 7 days ▾</span></div>
+                <div class="db-chart-line"><div class="db-chart-area" id="db-chart"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="db-ai-fab" id="db-ai-fab" onclick="switchTab('request')" title="Open Request Agent">
+        <span class="db-ai-fab-label">AI</span>
+      </button>
+    </div><!-- /pane-onboarding -->
+
+  </div><!-- /agents-area -->
+
+<!-- ASSET FULLSCREEN MODAL -->
+<div class="asset-fs" id="asset-fs">
+  <div class="afs-top">
+    <span class="afs-title" id="afs-title">Asset preview</span>
+    <span class="afs-counter" id="afs-counter">1/3</span>
+    <div class="afs-top-btns">
+      <button class="afs-close" onclick="closeAssetModal()" title="Close">✕</button>
+    </div>
+  </div>
+  <div class="afs-body">
+    <!-- Canvas/preview area -->
+    <div class="afs-canvas-area" id="afs-canvas-area">
+      <button class="afs-prev" onclick="afsNav(-1)">‹</button>
+      <div class="afs-preview-wrap" id="afs-preview-wrap">
+        <div class="afs-preview-bg" id="afs-preview-bg" style="height:100%">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div class="afs-preview-label" id="afs-preview-label"></div>
+            <div class="afs-preview-name" id="afs-preview-name"></div>
+          </div>
+        </div>
+        <canvas class="afs-annotation-canvas" id="afs-canvas"></canvas>
+      </div>
+      <button class="afs-next" onclick="afsNav(1)">›</button>
+    </div>
+    <!-- Sidebar: notes + tools -->
+    <div class="afs-sidebar">
+      <div class="afs-sidebar-hd">
+        <div class="afs-sidebar-title">Annotations</div>
+      </div>
+      <div class="afs-notes" id="afs-notes">
+        <div class="afs-note-empty" id="afs-note-empty">Click anywhere on the image to drop a pin and add a note</div>
+      </div>
+      <!-- Toolbar -->
+      <div class="afs-toolbar">
+        <div class="afs-tb-row">
+          <span class="afs-tb-lbl">Tool</span>
+          <button class="afs-tool-btn active" id="tool-pin" onclick="setTool('pin')" title="Pin comment">📍</button>
+          <button class="afs-tool-btn" id="tool-pen" onclick="setTool('pen')" title="Draw">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+          </button>
+          <button class="afs-tool-btn" id="tool-eraser" onclick="setTool('eraser')" title="Erase">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H7L3 16l10-10 7 7-2.5 2.5"/><path d="M6.0001 17.9999l3-3"/></svg>
+          </button>
+          <button class="afs-tool-btn" onclick="clearAnnotations()" title="Clear all">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+          </button>
+        </div>
+        <div class="afs-tb-row">
+          <span class="afs-tb-lbl">Color</span>
+          <div class="afs-color-dot active" style="background:#FF3B30" onclick="setColor('#FF3B30',this)" data-color="#FF3B30"></div>
+          <div class="afs-color-dot" style="background:#FF9500" onclick="setColor('#FF9500',this)" data-color="#FF9500"></div>
+          <div class="afs-color-dot" style="background:#FFD60A" onclick="setColor('#FFD60A',this)" data-color="#FFD60A"></div>
+          <div class="afs-color-dot" style="background:#30D158" onclick="setColor('#30D158',this)" data-color="#30D158"></div>
+          <div class="afs-color-dot" style="background:#0A84FF" onclick="setColor('#0A84FF',this)" data-color="#0A84FF"></div>
+          <div class="afs-color-dot" style="background:#BF5AF2" onclick="setColor('#BF5AF2',this)" data-color="#BF5AF2"></div>
+        </div>
+        <div class="afs-tb-row">
+          <span class="afs-tb-lbl">Size</span>
+          <input class="afs-size-slider" type="range" min="1" max="12" value="3" id="afs-size" oninput="A.brushSize=+this.value">
+        </div>
+      </div>
+      <!-- Bottom -->
+      <div class="afs-bottom">
+        <div class="afs-bottom-left">
+          <button class="afs-send-notes" onclick="sendAnnotationsAsMessage()">Send notes to designer</button>
+        </div>
+        <div class="afs-bottom-right">
+          <button class="afs-reject-btn" id="afs-reject-btn" onclick="afsReject()">✕ Reject</button>
+          <button class="afs-approve-btn" id="afs-approve-btn" onclick="afsApprove()">✓ Approve</button>
+        </div>
+      </div>
+    </div>
+    </div><!-- /afs-body -->
+
+  </div><!-- /asset-fs -->
+
+  <!-- UPLOAD MODAL -->
+  <div class="upload-modal-back" id="upload-modal-back">
+    <div class="upload-modal">
+      <div class="um-hd"><span class="um-title">Select files to upload</span><button class="um-close" onclick="closeUploadModal()">&#x2715;</button></div>
+      <div class="um-drop" onclick="document.getElementById('um-file-input').click()">
+        <div class="um-drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></div>
+        <div class="um-drop-text">Drag and drop your file here or <a>choose file</a></div>
+        <div class="um-drop-sub">File must be <strong>PDF</strong> format</div>
+        <input type="file" id="um-file-input" style="display:none" accept=".pdf">
+      </div>
+      <div class="um-files-hd">Selected files</div>
+      <div class="um-file-row"><div class="um-file-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="um-file-inf"><div class="um-file-nm">File name.PDF</div><div class="um-file-sz">30 MB</div></div><button class="um-file-x">&#x2715;</button></div>
+      <div class="um-file-row"><div class="um-file-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="um-file-inf"><div class="um-file-nm">File name.PDF</div><div class="um-file-sz">30 MB</div></div><button class="um-file-x">&#x2715;</button></div>
+      <div class="um-actions"><button class="um-cancel" onclick="closeUploadModal()">Cancel</button><button class="um-select" onclick="closeUploadModal()">Select</button></div>
+    </div>
+  </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- TYPE PICKER MODAL -->
+<div class="modal-back" id="modal-back" onclick="handleBackdropClick(event)">
+  <div class="modal">
+    <div class="m-top"><div class="m-title">Select request type</div><input class="m-search" type="text" placeholder="🔍  Search request types…" id="m-search" oninput="filterModal(this.value)"><button class="m-x" onclick="closeModal()">✕</button></div>
+    <div class="m-body"><div class="m-cats" id="m-cats"></div><div class="m-gw"><div class="m-grid" id="m-grid"></div></div></div>
+    <div class="m-bot"><div class="m-sl-lbl" id="m-sl-lbl">No type selected</div><button class="m-conf" id="m-conf" onclick="confirmModalSelection()">Select type</button></div>
+  </div>
+</div>
+<script>
+/* ============================================================ MODULE: DATA */
+const CATS=[{name:'All'},{name:'Brand Identity'},{name:'Marketing & Advertising'},{name:'Digital & Web'},{name:'Ebooks & Digital Report'},{name:'Motion & Video'},{name:'Apparel & Merchandise'},{name:'Product & Packaging'},{name:'Corporate & Internal'},{name:'Environmental & Event'},{name:'Illustration & Artwork'},{name:'Presentations'},{name:'Print'}];
+const ALL_TYPES=[['Primary logo design','Brand Identity','logo'],['Secondary / Alternate logo','Brand Identity','logo'],['Logo refresh','Brand Identity','logo'],['Full rebrand','Brand Identity','logo'],['Brand guideline (full)','Brand Identity','logo'],['Brand guideline (lite)','Brand Identity','logo'],['Color palette definition','Brand Identity','logo'],['Typography system','Brand Identity','logo'],['Iconography system','Brand Identity','logo'],['Brand patterns','Brand Identity','logo'],['Sub-brand creation','Brand Identity','logo'],['Campaign brand identity','Brand Identity','logo'],['Brand audit','Brand Identity','logo'],['Logo usage rules','Brand Identity','logo'],['Brand asset cleanup','Brand Identity','logo'],['Brand color update','Brand Identity','logo'],['Font replacement','Brand Identity','logo'],['Static social ad (single)','Marketing & Advertising','social'],['Static social ad set','Marketing & Advertising','social'],['Paid ad copy','Marketing & Advertising','social'],['Headline variations','Marketing & Advertising','social'],['CTA variations','Marketing & Advertising','social'],['Social media post graphic','Marketing & Advertising','social'],['Social media post copy','Marketing & Advertising','social'],['Carousel ad (design)','Marketing & Advertising','social'],['Campaign concepting','Marketing & Advertising','social'],['Email marketing design','Marketing & Advertising','email'],['Email marketing copy','Marketing & Advertising','email'],['Display / banner ad','Marketing & Advertising','social'],['Other','Marketing & Advertising','social'],['Landing page design','Digital & Web','social'],['Website banner / hero','Digital & Web','social'],['Web illustration','Digital & Web','social'],['UI / UX mockup','Digital & Web','social'],['Icon set','Digital & Web','logo'],['App store screenshots','Digital & Web','social'],['Newsletter template','Digital & Web','email'],['Email signature','Digital & Web','email'],['Ebook design (full)','Ebooks & Digital Report','social'],['Ebook cover','Ebooks & Digital Report','social'],['Report / whitepaper','Ebooks & Digital Report','social'],['One-pager / data sheet','Ebooks & Digital Report','social'],['Infographic','Ebooks & Digital Report','social'],['Animated social ad','Motion & Video','social'],['Logo animation','Motion & Video','logo'],['GIF / cinemagraph','Motion & Video','social'],['Video thumbnail','Motion & Video','social'],['T-shirt / apparel design','Apparel & Merchandise','social'],['Merchandise graphic','Apparel & Merchandise','social'],['Sticker / patch design','Apparel & Merchandise','social'],['Product label design','Product & Packaging','social'],['Packaging design','Product & Packaging','social'],['Box / sleeve design','Product & Packaging','social'],['Presentation template','Corporate & Internal','social'],['Internal newsletter','Corporate & Internal','email'],['Office signage','Corporate & Internal','social'],['Trade show booth graphic','Environmental & Event','social'],['Event banner / signage','Environmental & Event','social'],['Custom illustration','Illustration & Artwork','social'],['Character design','Illustration & Artwork','logo'],['Pattern / surface design','Illustration & Artwork','logo'],['Pitch deck','Presentations','social'],['Sales deck','Presentations','social'],['Investor presentation','Presentations','social'],['Business card design','Print','logo'],['Brochure / flyer','Print','social'],['Poster design','Print','social'],['Menu design','Print','social']];
+
+const RECENTS={
+  social:[
+    {icon:'📱',bg:'#EEF2FF',title:'Summer Flash Sale — Acme Sneakers',desc:'Social ad set for a BOGO offer. Bold, energetic, urgency-driven creative for Gen Z across Instagram and Facebook.',age:'2 days ago',brand:'Acme Sneakers',bp:{title:'Summer Flash Sale — Acme Sneakers',description:'Social ad set for Acme Sneakers promoting a BOGO offer. Bold, energetic, urgency-driven creative for Gen Z across Instagram and Facebook.'}},
+    {icon:'📱',bg:'#EEF2FF',title:'Spring Collection Launch — Zara',desc:'Static social ad set for Spring/Summer 2025. Clean editorial aesthetic for Instagram.',age:'1 week ago',brand:'Zara',bp:{title:'Spring Collection Launch — Zara',description:'Static social ad set for Spring/Summer 2025. Clean editorial aesthetic for Instagram.'}},
+    {icon:'📱',bg:'#EEF2FF',title:'Black Friday Countdown — TechMart',desc:'5-day countdown series. High energy, bold type, urgent CTAs. Multiple paid social sizes.',age:'3 weeks ago',brand:'TechMart',bp:{title:'Black Friday Countdown — TechMart',description:'5-day countdown series for Black Friday. High energy, bold type, urgent CTAs.'}},
+  ],
+  logo:[
+    {icon:'🎨',bg:'#ECFDF5',title:'Vaultly — Primary Logo Design',desc:'Brand identity for Vaultly, a fintech startup. Trustworthy and modern.',age:'3 days ago',brand:'Vaultly',bp:{title:'Vaultly — Primary Logo Design',description:'Primary brand identity for Vaultly, a fintech startup. Trustworthy, modern — not like a traditional bank.'}},
+    {icon:'🎨',bg:'#ECFDF5',title:'Bloom — Brand Identity System',desc:'Full brand system for Bloom, a mental wellness app. Warm and organic.',age:'2 weeks ago',brand:'Bloom',bp:{title:'Bloom — Brand Identity System',description:'Full brand system for Bloom, a mental wellness app. Warm, organic, approachable.'}},
+    {icon:'🎨',bg:'#ECFDF5',title:'NovaBrew — Logo & Brand Mark',desc:'Logo for a specialty coffee roaster. Artisanal, premium, minimal.',age:'1 month ago',brand:'NovaBrew',bp:{title:'NovaBrew — Logo & Brand Mark',description:'Logo for a specialty coffee roaster. Artisanal, premium, minimal.'}},
+  ],
+  email:[
+    {icon:'📧',bg:'#FFF7ED',title:'Bloom App — Launch Announcement Email',desc:'Launch email to existing waitlist. Personal, warm, drives app downloads.',age:'1 day ago',brand:'Bloom',bp:{title:'Bloom App — Launch Announcement Email',description:'Launch email to existing waitlist. Drive app downloads through genuine celebration — personal and warm.'}},
+    {icon:'📧',bg:'#FFF7ED',title:'TechMart — Black Friday Email',desc:'Promotional email for Black Friday deals. High urgency, bold design.',age:'3 weeks ago',brand:'TechMart',bp:{title:'TechMart — Black Friday Email',description:'Promotional email for Black Friday deals. High urgency, bold design.'}},
+    {icon:'📧',bg:'#FFF7ED',title:'Vaultly — Waitlist Welcome Email',desc:'Welcome email for Vaultly waitlist. Warm, confident, fintech-forward.',age:'1 month ago',brand:'Vaultly',bp:{title:'Vaultly — Waitlist Welcome Email',description:'Welcome email for users who joined the Vaultly waitlist. Warm, confident, fintech-forward.'}},
+  ],
+};
+
+const ROLES={
+  social:[
+    {num:1,ini:'VG',clr:'#2563EB',name:'Victor Glee',role:'Marketing Manager',badge:'You',bc:'b-you'},
+    {num:2,ini:'SJ',clr:'#7C3AED',name:'Sarah Jane',role:'Copywriter',badge:'Your team',bc:'b-team',est:'EST 1 day'},
+    {num:3,ini:'JG',clr:'#059669',name:'James Gun',role:'Motion Designer',badge:'Design Pickle',bc:'b-dp',est:'EST 4 days'},
+    {num:4,ini:'JF',clr:'#059669',name:'Jake Free',role:'Graphic Designer',badge:'Design Pickle',bc:'b-dp',est:'EST 2 days'},
+    {num:5,ini:'JG',clr:'#7C3AED',name:'James Gun',role:'Creative Director (QA)',badge:'Your team',bc:'b-team',est:'EST 1 day'},
+    {num:6,ini:'VG',clr:'#2563EB',name:'Victor Glee',role:'Final Review',badge:'You',bc:'b-you',est:'EST 1 day'},
+    {num:7,ini:'G',clr:'#EA4335',name:'Delivery',role:'Google Drive',badge:'You',bc:'b-you'},
+  ],
+  logo:[
+    {num:1,ini:'VG',clr:'#2563EB',name:'Victor Glee',role:'Marketing Manager',badge:'You',bc:'b-you'},
+    {num:2,ini:'JF',clr:'#059669',name:'Jake Free',role:'Graphic Designer',badge:'Design Pickle',bc:'b-dp',est:'EST 3 days'},
+    {num:3,ini:'JG',clr:'#059669',name:'James Gun',role:'Creative Director (QA)',badge:'Design Pickle',bc:'b-dp',est:'EST 1 day'},
+    {num:4,ini:'JG',clr:'#7C3AED',name:'James Gun',role:'Brand Reviewer',badge:'Your team',bc:'b-team',est:'EST 1 day'},
+    {num:5,ini:'VG',clr:'#2563EB',name:'Victor Glee',role:'Final Review',badge:'You',bc:'b-you',est:'EST 1 day'},
+    {num:6,ini:'G',clr:'#EA4335',name:'Delivery',role:'Google Drive',badge:'You',bc:'b-you'},
+  ],
+  email:[
+    {num:1,ini:'VG',clr:'#2563EB',name:'Victor Glee',role:'Marketing Manager',badge:'You',bc:'b-you'},
+    {num:2,ini:'SJ',clr:'#7C3AED',name:'Sarah Jane',role:'Copywriter',badge:'Your team',bc:'b-team',est:'EST 1 day'},
+    {num:3,ini:'JF',clr:'#059669',name:'Jake Free',role:'Graphic Designer',badge:'Design Pickle',bc:'b-dp',est:'EST 2 days'},
+    {num:4,ini:'JG',clr:'#7C3AED',name:'James Gun',role:'Creative Director (QA)',badge:'Your team',bc:'b-team',est:'EST 1 day'},
+    {num:5,ini:'VG',clr:'#2563EB',name:'Victor Glee',role:'Final Review',badge:'You',bc:'b-you',est:'EST 1 day'},
+    {num:6,ini:'G',clr:'#EA4335',name:'Delivery',role:'Google Drive',badge:'You',bc:'b-you'},
+  ],
+};
+
+const ASSETS={
+  social:{assets:[
+    {name:'Summer Flash Sale — Feed Ad',label:'Feed 1:1',type:'Image',g:'linear-gradient(135deg,#1A1A1A 0%,#C41230 60%,#E31837 100%)',tc:'rgba(255,255,255,.8)'},
+    {name:'Summer Flash Sale — Story Ad',label:'Story 9:16',type:'Image',g:'linear-gradient(180deg,#E31837 0%,#111 100%)',tc:'rgba(255,255,255,.8)'},
+    {name:'Summer Flash Sale — Landscape',label:'Landscape 16:9',type:'Image',g:'linear-gradient(90deg,#111 0%,#8B0000 50%,#E31837 100%)',tc:'rgba(255,255,255,.8)'},
+  ]},
+  logo:{assets:[
+    {name:'Vaultly — Primary Logo (Light)',label:'Light Mode',type:'Image',g:'linear-gradient(135deg,#F0F4FF 0%,#E0EAFF 100%)',tc:'rgba(30,64,175,.6)'},
+    {name:'Vaultly — Primary Logo (Dark)',label:'Dark Mode',type:'Image',g:'linear-gradient(135deg,#0F172A 0%,#1E293B 100%)',tc:'rgba(255,255,255,.7)'},
+    {name:'Vaultly — App Icon',label:'App Icon',type:'Image',g:'linear-gradient(135deg,#0A7C4A 0%,#14B870 100%)',tc:'rgba(255,255,255,.8)'},
+  ]},
+  email:{assets:[
+    {name:'Bloom — Desktop Email',label:'Desktop',type:'Image',g:'linear-gradient(160deg,#F0FDF4 0%,#D1FAE5 40%,#FFF1F2 100%)',tc:'rgba(6,78,59,.7)'},
+    {name:'Bloom — Mobile Email',label:'Mobile',type:'Image',g:'linear-gradient(180deg,#ECFDF5 0%,#FFF1F2 100%)',tc:'rgba(6,78,59,.7)'},
+    {name:'Bloom — HTML File',label:'HTML+CSS',type:'HTML',g:'linear-gradient(135deg,#1E293B 0%,#0F172A 100%)',tc:'rgba(255,255,255,.8)'},
+  ]},
+};
+
+const IN_PROGRESS=[
+  {id:'ipr-logo',icon:'🎨',iconBg:'#ECFDF5',title:'Vaultly — Primary Logo Design',type:'Logo & Brand Identity',status:'awaiting',statusLabel:'Awaiting approval',assetKey:'logo',
+    brief:{type:'Primary Logo Design',description:'Primary brand identity for Vaultly, a fintech startup. Trustworthy, modern — not like a traditional bank. Targeting first-time investors 20–35.',style:'Sleek, Premium',personality:'Approachable, Confident',palette:'Deep navy / midnight blue. Warm gold accent. No red.',avoid:'Literal vault/lock iconography, traditional banking aesthetic',assignee:'DP Creative',formats:'AI, EPS, SVG, PNG, PDF'},
+    thread:[
+      {role:'ai',text:"Hey! Jake just finished the Vaultly logo designs — he put serious thought into the brand mark. Tap on any asset to see it full screen and drop annotations for changes. 🎨"},
+      {role:'assets'},
+      {role:'user',text:"These look amazing! Love the dark mode version. Can we try the wordmark in a slightly lighter weight?"},
+      {role:'ai',text:"Great eye — a lighter wordmark will give it a more premium, refined feel. I've passed that note to Jake. He'll have a revised version over to you shortly."},
+    ]
+  },
+  {id:'ipr-email',icon:'📧',iconBg:'#FFF7ED',title:'Bloom App — Launch Email',type:'Email Design',status:'revision',statusLabel:'In revision',assetKey:'email',
+    brief:{type:'Email Marketing Design',description:'Launch announcement email for Bloom, a mental wellness app. Personal and warm, not a standard product blast.',audience:'Women 25–40, mindfulness & self-improvement',style:'Soft, Organic',personality:'Warm, Approachable',palette:'Soft sage green, warm cream, blush pink',avoid:'Corporate tone, garish colors, generic wellness stock photography',assignee:'DP Creative',formats:'HTML + PNG preview'},
+    thread:[
+      {role:'ai',text:"Your Bloom launch email designs are in — the botanical illustration style came out beautifully! Tap any asset for a full-screen look and annotate anything you want changed 🌸"},
+      {role:'assets'},
+      {role:'user',text:"Oh wow, these are gorgeous! Love the feel. Can we make the CTA button bigger and bolder though?"},
+      {role:'ai',text:"Totally agree — a bigger CTA will really help conversions. I've flagged it to the designer. Bumping up the button size and contrast now."},
+    ]
+  },
+];
+
+const SCENARIOS={
+  social:{
+    ai:["What format and channel set?","File formats?","Who's the target audience?","What copy should appear?","Brand profile, or start from scratch?","Visual style and things to avoid?","Any reference links?","Brief is ready — want a peek?","Anything to adjust?","Ready to lock and send?"],
+    steps:[
+      {o:[["Static Social Ad Set — feed + stories, Instagram & Facebook",{type:"Static Social Ad Set",sizes:"Feed 1080×1080, Stories 1080×1920",channels:"Instagram, Facebook"}],["Animated / motion social ads",{type:"Animated Social Ads",channels:"Instagram, Facebook"}],["Single static ad — one size only",{type:"Static Social Ad (single)"}]],m:[["Carousel ad design",{type:"Carousel Ad Design"}],["Stories-only set (9:16)",{type:"Stories Ad Set"}],["Mixed: static + animated",{type:"Mixed Static + Motion Ad Set"}]]},
+      {o:[["PNG + PDF",{formats:"PNG, PDF"}],["PNG only",{formats:"PNG"}],["PNG, PDF + source files",{formats:"PNG, PDF, AI/PSD"}]],m:[["All formats: PNG, JPG, PDF, AI",{formats:"PNG, JPG, PDF, AI"}],["JPG + PDF",{formats:"JPG, PDF"}],["PNG + WebP",{formats:"PNG, WebP"}]]},
+      {o:[["Gen Z and young millennials — energetic, premium, urgency-driven",{audience:"Gen Z, Young Millennials"}],["Broad adult audience — deal urgency is the hook",{audience:"Broad adult audience, deal-focused"}],["Fashion-forward 20s–30s — premium and sporty",{audience:"Fashion-forward adults, 20s–30s"}]],m:[["College students / 18–24",{audience:"College students, 18–24"}],["Parents buying for teens",{audience:"Parents buying for teens"}],["Active lifestyle adults, 25–40",{audience:"Active lifestyle adults, 25–40"}]]},
+      {o:[["Headline: BUY ONE GET ONE FREE\nSub: 48 Hours Only\nCTA: Shop Now — acme.com/summer",{copy:"Headline: BUY ONE GET ONE FREE\nSub: 48 Hours Only\nCTA: Shop Now — acme.com/summer"}],["Headline: BOGO SUMMER SALE\nSub: Shop before it's gone\nCTA: acme.com/summer",{copy:"Headline: BOGO SUMMER SALE\nSub: Shop before it's gone\nCTA: acme.com/summer"}],["Headline: 2 FOR 1 — THIS WEEKEND\nCTA: acme.com/summer",{copy:"Headline: 2 FOR 1 — THIS WEEKEND\nCTA: acme.com/summer"}]],m:[["Headline: SUMMER'S BEST DEAL\nSub: BOGO — 48 hours only",{copy:"Headline: SUMMER'S BEST DEAL\nSub: BOGO — 48 hours only"}],["Headline: DOUBLE UP THIS SUMMER\nSub: Buy 1, get 1 free — ends Sunday",{copy:"Headline: DOUBLE UP THIS SUMMER"}],["Headline: THE DEAL OF THE SUMMER\nSub: BOGO — 48 hours only",{copy:"Headline: THE DEAL OF THE SUMMER"}]]},
+      {o:[["Use Brand Profile 1 — lean Energetic",{brand:"Brand Profile 1",personality:"Energetic"}],["Use Brand Profile 2",{brand:"Brand Profile 2"}],["Define visual direction from scratch",{brand:"Custom"}]],m:[["Brand Profile 1 — keep Professional",{brand:"Brand Profile 1",personality:"Professional"}],["Use Brand Profile 3",{brand:"Brand Profile 3"}],["Create a new brand profile",{brand:"New brand profile"}]]},
+      {o:[["Bold and graphic — no stock photos, avoid clashing neons",{style:"Bold",avoid:"Stock photography, clashing neons, discount-flyer aesthetic"}],["Clean and minimal — premium product focus",{style:"Minimal",avoid:"Clutter, generic stock imagery"}],["Loud and energetic — big type, high contrast",{style:"Exciting",avoid:"Soft colors, understated layouts"}]],m:[["Street fashion editorial — dark tones",{style:"Editorial",avoid:"Bright backgrounds, lifestyle clichés"}],["Bright summer vibes — warm palette",{style:"Modern",avoid:"Dark heavy tones"}],["Sport/performance — dynamic, motion-forward",{style:"Bold",avoid:"Static flat compositions"}]]},
+      {o:[["Nike SNKRS campaign energy",{refs:"Nike SNKRS campaign"}],["Adidas Originals social aesthetic",{refs:"Adidas Originals social"}],["Jordan Brand Instagram editorial",{refs:"Jordan Brand Instagram editorial"}]],m:[["Fear of God x sneaker campaign",{refs:"Fear of God sneaker campaign"}],["New Balance premium lifestyle",{refs:"New Balance premium lifestyle"}],["Vans — youth culture creative",{refs:"Vans social aesthetic"}]]},
+      {o:[["Yes — show me the draft brief ✓",{},"show"],["Lock it now — it's ready",{},"lock"],["Let me add one more detail",{}]],m:[["Yes, show me everything",{},"show"],["Skip preview and lock",{},"lock"],["One more detail first",{}]]},
+      {o:[["Add: primary color = brand yellow with black",{palette:"Brand yellow + black for contrast"}],["Looks perfect — ready to lock 🔒",{},"lock"],["More urgency emphasis",{avoid:"Anything understated — urgency must come through"}]],m:[["Add: headline always all-caps",{copy:"Note: headline always all-caps"}],["Add: landscape crop (1200×628) too",{sizes:"Feed 1080×1080, Landscape 1200×628, Stories 1080×1920"}],["Remove personality override",{personality:"Default (Brand Profile 1)"}]]},
+      {o:[["🔒 Lock it and send to my designer!",{},"lock"],["One final tweak",{}],["Save as draft",{},"lock"]],m:[["Lock and send — this is ready",{},"lock"],["Lock it!",{},"lock"],["Lock and add a note",{},"lock"]]},
+    ]
+  },
+  logo:{
+    ai:["Who's the assignee and what file formats?","Logo format preference?","What visual personality fits the brand?","Color direction — or colors to avoid?","Anything to steer clear of visually?","Light and dark mode variants?","Brief ready — want a peek?","Anything to refine?","Ready to lock and send?"],
+    steps:[
+      {o:[["DP Creative — AI, EPS, SVG, PNG, PDF",{assignee:"DP Creative",formats:"AI, EPS, SVG, PNG, PDF",type:"Primary Logo Design"}],["DP Creative — PNG and PDF only",{assignee:"DP Creative",formats:"PNG, PDF",type:"Primary Logo Design"}],["DP Creative — full package + source files",{assignee:"DP Creative",formats:"AI, EPS, SVG, PNG, PDF + source",type:"Primary Logo Design"}]],m:[["My team — all vector formats",{assignee:"My Team",formats:"AI, EPS, SVG, PNG"}],["DP Creative — SVG + PNG",{assignee:"DP Creative",formats:"SVG, PNG"}],["DP Creative — standard logo package",{assignee:"DP Creative",formats:"AI, PNG, PDF"}]]},
+      {o:[["Icon + wordmark — standalone icon plus the name",{}],["Wordmark only — stylised text treatment",{}],["Abstract mark — symbol only",{}]],m:[["Lettermark — monogram or initials",{}],["Icon + wordmark stacked",{}],["Combination mark — flexible multi-lockup",{}]]},
+      {o:[["Sleek and premium but approachable — Robinhood or Wise energy",{style:"Sleek, Premium",personality:"Approachable, Confident",refs:"Robinhood, Wise"}],["Clean and minimal — calm, trustworthy",{style:"Minimal",personality:"Trustworthy, Premium"}],["Bold and confident — strong, assertive",{style:"Bold",personality:"Confident, Energetic"}]],m:[["Warm and human — friendly, inviting",{style:"Modern",personality:"Approachable, Warm"}],["Editorial and sophisticated",{style:"Editorial",personality:"Premium, Experimental"}],["Playful and accessible",{style:"Playful",personality:"Approachable, Energetic"}]]},
+      {o:[["Deep navy / midnight blue — warm gold or green — no red",{palette:"Deep navy / midnight blue. Warm gold or green. No red."}],["Forest green — white and cream accents",{palette:"Forest green + white and cream."}],["Charcoal and white — vivid accent",{palette:"Charcoal + white. Vivid accent."}]],m:[["Warm white and sand — subtle gold",{palette:"Warm white + sand + gold."}],["Midnight black — bold neon-lime",{palette:"Midnight black + neon-lime."}],["Soft slate blue — brushed copper",{palette:"Slate blue + off-white + copper."}]]},
+      {o:[["No literal vault or lock icons — nothing like a traditional bank",{avoid:"Literal vault/lock iconography, traditional banking aesthetic"}],["No piggy banks, coins, or old-money metaphors",{avoid:"Piggy banks, coins, old-money visual metaphors"}],["Must scale to 16px app icon",{avoid:"Complex illustrative marks — must work at small sizes"}]],m:[["Avoid serif fonts — modern and digital only",{avoid:"Serif typography, legacy-finance aesthetics"}],["No gradients or drop shadows",{avoid:"Gradients, drop shadows, skeuomorphic elements"}],["Avoid looking like Robinhood or Coinbase",{avoid:"Visual similarity to Robinhood or Coinbase"}]]},
+      {o:[["Yes — full light and dark mode variants",{copy:"Deliverables: light + dark mode variants"}],["Light mode only",{copy:"Deliverables: light mode only"}],["Dark mode primary, light as secondary",{copy:"Deliverables: dark mode primary + light secondary"}]],m:[["Yes — plus reversed and full-color",{copy:"Deliverables: light, dark, reversed, full-color"}],["Light + dark + monochrome",{copy:"Deliverables: light, dark, and monochrome"}],["Primary color version only",{copy:"Deliverables: primary color version only"}]]},
+      {o:[["Yes — show me the draft brief ✓",{},"show"],["Lock it now",{},"lock"],["Let me add one more note",{}]],m:[["Yes, show me everything",{},"show"],["Skip preview — send it",{},"lock"],["One more thing first",{}]]},
+      {o:[["Looks exactly right — ready to lock 🔒",{},"lock"],["Add: must work at 16px app icon",{avoid:"Anything that doesn't work at 16px"}],["Tighten personality — Approachable over Confident",{personality:"Approachable, Trustworthy"}]],m:[["Add: horizontal and vertical lockup variants",{copy:"Include horizontal and vertical lockup variations"}],["Add: icon must work independently",{copy:"Icon must work independently, without wordmark"}],["Remove competitor references",{refs:"No competitor references — fully original"}]]},
+      {o:[["🔒 Lock it and send to my designer!",{},"lock"],["One final tweak",{}],["This is ready — send it",{},"lock"]],m:[["Lock and send!",{},"lock"],["Looks perfect — lock it",{},"lock"],["Lock and send now",{},"lock"]]},
+    ]
+  },
+  email:{
+    ai:["Who's the assignee and what format?","Target audience and tone?","What copy should appear?","Brand profile or visual direction?","Which visual style fits?","Anything to steer clear of?","Brief ready — want a peek?","Anything to refine?","Ready to lock and send?"],
+    steps:[
+      {o:[["DP Creative — HTML file + PNG preview",{assignee:"DP Creative",formats:"HTML + PNG preview",type:"Email Marketing Design"}],["DP Creative — PNG only",{assignee:"DP Creative",formats:"PNG preview only",type:"Email Marketing Design"}],["DP Creative — HTML, plain text + PNG",{assignee:"DP Creative",formats:"HTML, plain text, PNG",type:"Email Marketing Design"}]],m:[["My team — HTML + PNG",{assignee:"My Team",formats:"HTML + PNG preview"}],["DP Creative — HTML + mobile PNG",{assignee:"DP Creative",formats:"HTML + mobile PNG preview"}],["DP Creative — HTML only",{assignee:"DP Creative",formats:"HTML file"}]]},
+      {o:[["Women 25–40 into mindfulness — warm, like a friend",{audience:"Women 25–40, mindfulness & self-improvement"}],["Broad wellness audience 22–45 — encouraging, empathetic",{audience:"Wellness-focused adults, 22–45"}],["Existing waitlist subscribers — already bought in",{audience:"Existing waitlist subscribers (pre-engaged)"}]],m:[["Young professionals 28–38 seeking calm",{audience:"Young professionals, 28–38"}],["Parents 30–45 wanting practical mindfulness",{audience:"Parents 30–45, practical mindfulness"}],["Millennial women who use Headspace or Calm",{audience:"Millennial women, existing wellness app users"}]]},
+      {o:[["Subject: You're in 🌸 Bloom is finally here\nHeadline: The wait is over — welcome to your new daily ritual\nCTA: Download Bloom — Free on iOS & Android",{copy:"Subject: You're in 🌸 Bloom is finally here\nHeadline: The wait is over — welcome to your new daily ritual\nCTA: Download Bloom — Free on iOS & Android"}],["Subject: It's here — your Bloom invitation 🌿\nHeadline: You waited. It's worth it.\nCTA: Open Bloom — Free to download",{copy:"Subject: It's here — your Bloom invitation 🌿\nHeadline: You waited. It's worth it.\nCTA: Open Bloom"}],["Subject: 🌸 Your daily ritual starts today\nHeadline: Bloom is live — and it's yours\nCTA: Download Free — iOS & Android",{copy:"Subject: 🌸 Your daily ritual starts today\nHeadline: Bloom is live — and it's yours\nCTA: Download Free"}]],m:[["Subject: Welcome to Bloom 🌿\nHeadline: A place to breathe. Finally yours.\nCTA: Download Bloom",{copy:"Subject: Welcome to Bloom 🌿\nHeadline: A place to breathe. Finally yours.\nCTA: Download Bloom"}],["Subject: Today's the day 🌷\nHeadline: Bloom is here — you're already in\nCTA: Start your first session",{copy:"Subject: Today's the day 🌷\nCTA: Start your first session"}],["Subject: You're a founding user 🌸\nHeadline: Welcome to Bloom\nCTA: Download & explore",{copy:"Subject: You're a founding user 🌸\nHeadline: Welcome to Bloom\nCTA: Download & explore"}]]},
+      {o:[["Custom direction — sage green, warm cream, blush pink. Calm and organic.",{brand:"Custom direction.",palette:"Soft sage green, warm cream, blush pink"}],["Use Brand Profile 1 with Bloom-specific mood notes",{brand:"Brand Profile 1 + campaign mood adjustments"}],["No saved profile — describe visual direction fully",{brand:"Custom (full description to follow)"}]],m:[["Use Brand Profile 2",{brand:"Brand Profile 2"}],["Brand Profile 1 — keep as-is",{brand:"Brand Profile 1"}],["Create a new brand profile for Bloom",{brand:"New Bloom brand profile"}]]},
+      {o:[["Soft and organic — earthy, botanical, illustration-led. Think Headspace but warmer.",{style:"Soft, Organic",personality:"Warm, Approachable",refs:"Headspace aesthetic — softer, earthier, botanical."}],["Clean and minimal — white space, calming geometry",{style:"Minimal",personality:"Trustworthy, Premium"}],["Warm editorial — rich textures, hand-drawn feel",{style:"Editorial",personality:"Approachable, Experimental"}]],m:[["Playful and gentle — soft color fills, rounded shapes",{style:"Playful",personality:"Approachable, Energetic"}],["Modern and clean — structured grid, elegant type",{style:"Modern",personality:"Premium, Trustworthy"}],["Naturalist — botanical illustration, earthy tones",{style:"Soft, Organic",personality:"Approachable, Trustworthy"}]]},
+      {o:[["No corporate tone, garish colors, or generic wellness stock photography",{avoid:"Corporate tone, garish colors, generic wellness stock photography"}],["Nothing clinical — warm and personal, not a therapy app",{avoid:"Clinical visual language, cold colors, chart-like layouts"}],["No bright or garish colors outside the palette",{avoid:"Colors outside the sage, cream, blush palette"}]],m:[["Avoid photography entirely — illustration only",{avoid:"Photography — illustration and graphic elements only"}],["No tech-startup aesthetics — no gradients, abstract blobs",{avoid:"Tech-startup clichés: gradients, abstract blobs, SaaS purple"}],["Avoid Calm app's dark-blue nature-photography style",{avoid:"Visual similarity to Calm app aesthetic"}]]},
+      {o:[["Yes — show me the draft brief ✓",{},"show"],["Lock it now",{},"lock"],["Let me add one more detail",{}]],m:[["Show me everything before we lock",{},"show"],["Skip the preview and send",{},"lock"],["One more thing first",{}]]},
+      {o:[["Looks exactly right — ready to lock 🔒",{},"lock"],["Add: email must be mobile-optimized (iOS primary)",{copy:"Note: fully mobile-optimized — primary device is iOS"}],["Make it feel more personal",{avoid:"Anything that reads like a broadcast — must feel personal"}]],m:[["Add: desktop and mobile PNG previews",{formats:"HTML + desktop PNG + mobile PNG"}],["Add: plain-text version for non-HTML clients",{formats:"HTML + plain text + PNG"}],["Remove the Headspace reference — fully original",{refs:"No competitor references — original visual direction"}]]},
+      {o:[["🔒 Lock it and send to my designer!",{},"lock"],["One final tweak",{}],["This is ready — send it",{},"lock"]],m:[["Lock and send!",{},"lock"],["Looks perfect — lock it",{},"lock"],["Lock and send now",{},"lock"]]},
+    ]
+  },
+};
+
+const BRIEF_FIELDS={title:"Request title",assignee:"Assignee",type:"Request type",sizes:"Sizes",formats:"Formats",channels:"Channels",audience:"Target audience",description:"Description",copy:"Copy / text",brand:"Brand profile",style:"Visual style",personality:"Brand personality",palette:"Color palette",avoid:"Things to avoid",refs:"Visual references"};
+const BRIEF_SECTIONS={"REQUEST DETAILS":["title","assignee","type","sizes","formats","channels","audience"],"DIRECTIONS":["description","copy"],"INSPIRATION & VISUAL STYLE":["brand","style","personality","palette","avoid","refs"]};
+/* ============================================================ MODULE: STATE */
+const S={scenario:null,phase:0,brief:{},anim:false,inputEnabled:false,activeCard:null,modalCat:'All',modalSel:null,modalQ:''};
+/* ============================================================ MODULE: ANNOTATION STATE */
+const A={tool:'pin',color:'#FF3B30',brushSize:3,isDrawing:false,paths:[],currentPath:null,pins:[],currentAssetKey:null,currentAssetIdx:0};
+/* ============================================================ MODULE: SCREENS */
+function setMode(m){document.getElementById('content').className='content mode-'+m;}
+/* ============================================================ MODULE: WELCOME */
+function pickType(key,name){
+  S.scenario=key;S.brief={type:name};setMode('chat');
+  document.getElementById('right-panel').classList.remove('hidden');
+  renderBrief();enableInput();addUser(name);
+  addAI("Describe what you want to create — or pick a recent request below to get started fast.");
+  addRecentCards();
+}
+function wResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,80)+'px';}
+function wCheck(){const ok=document.getElementById('w-input').value.trim().length>0;document.getElementById('w-send').classList.toggle('off',!ok);}
+function wKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitWelcome();}}
+function submitWelcome(){
+  const txt=document.getElementById('w-input').value.trim();if(!txt)return;
+  // infer scenario from keywords
+  const lower=txt.toLowerCase();
+  let key='social';
+  if(/logo|brand|mark|icon|identity/.test(lower))key='logo';
+  else if(/email|newsletter|launch|waitlist/.test(lower))key='email';
+  S.scenario=key;S.brief={description:txt,title:txt.split('\n')[0]};
+  setMode('chat');
+  document.getElementById('right-panel').classList.remove('hidden');
+  renderBrief();enableInput();addUser(txt);S.phase=0;
+  addAI('Great start! Just to confirm the request type — does this look right?\n\nI\'ve matched this as: '+({social:'Social Media Ads',logo:'Logo & Brand Identity',email:'Email Design'}[key]));
+  addTypeConfirmCards(key);
+}
+function addTypeConfirmCards(inferredKey){
+  const msgs=document.getElementById('msgs');
+  const wrap=document.createElement('div');wrap.className='oc-wrap';
+  wrap.innerHTML='<div class="oc-lbl">✦ Confirm request type</div>';
+  const types=[['social','📱 Social Media Ads'],['logo','🎨 Logo & Brand Identity'],['email','📧 Email Design']];
+  types.forEach(([k,label],i)=>{
+    const card=document.createElement('div');card.className='oc'+(k===inferredKey?' sel':'');
+    const lt=document.createElement('div');lt.className='oc-lt';lt.textContent=['A','B','C'][i];
+    const tx=document.createElement('div');tx.className='oc-tx';tx.textContent=label+(k===inferredKey?' ← suggested':'');
+    card.appendChild(lt);card.appendChild(tx);
+    card.addEventListener('click',()=>{
+      wrap.querySelectorAll('.oc').forEach(c=>c.classList.remove('sel'));card.classList.add('sel');
+      setTimeout(()=>wrap.classList.add('used'),320);
+      S.scenario=k;S.brief.type={social:'Social Media Ads',logo:'Logo & Brand Identity',email:'Email Design'}[k];
+      addUser(label);renderBrief();S.phase=0;runAI();
+    });
+    wrap.appendChild(card);
+  });
+  msgs.appendChild(wrap);S.activeCard=wrap;scrB();
+}
+/* ============================================================ MODULE: CHAT */
+function enableInput(){S.inputEnabled=true;const fi=document.getElementById('fi');fi.classList.remove('off');fi.placeholder='Describe what you want to create…';fi.focus();}
+function sendMessage(){
+  if(!S.inputEnabled||S.anim)return;const fi=document.getElementById('fi');const txt=fi.value.trim();if(!txt)return;
+  if(S.activeCard){S.activeCard.classList.add('used');S.activeCard=null;}
+  fi.value='';autoResize(fi);checkSend();
+  Object.assign(S.brief,{title:txt.split('\n')[0],description:txt});addUser(txt);renderBrief();S.phase=0;runAI();
+}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function checkSend(){const ok=S.inputEnabled&&document.getElementById('fi').value.trim().length>0&&!S.anim;document.getElementById('nb').classList.toggle('off',!ok);}
+/* ============================================================ MODULE: RECENTS */
+function addRecentCards(){
+  const msgs=document.getElementById('msgs');const recs=RECENTS[S.scenario]||[];
+  const wrap=document.createElement('div');wrap.className='rc-wrap';
+  wrap.innerHTML='<div class="rc-lbl">✦ Recent requests — pick one or describe your own below</div>';
+  recs.forEach(r=>{
+    const card=document.createElement('div');card.className='rc';
+    card.innerHTML=`<div class="rc-icon" style="background:${r.bg}">${r.icon}</div><div class="rc-body"><div class="rc-title">${esc(r.title)}</div><div class="rc-desc">${esc(r.desc)}</div><div class="rc-meta"><span>${esc(r.brand)}</span><span class="rc-dot"></span><span>${esc(r.age)}</span></div></div>`;
+    card.addEventListener('click',()=>{
+      if(S.anim)return;wrap.querySelectorAll('.rc').forEach(c=>c.classList.remove('sel'));card.classList.add('sel');
+      setTimeout(()=>wrap.classList.add('used'),350);S.activeCard=null;
+      Object.assign(S.brief,r.bp);addUser(r.title+'\n\n'+r.desc);renderBrief();S.phase=0;runAI();
+    });
+    wrap.appendChild(card);
+  });
+  const or=document.createElement('div');or.className='rc-or';
+  or.innerHTML='<div class="rc-or-line"></div><span class="rc-or-text">or type your own below</span><div class="rc-or-line"></div>';
+  wrap.appendChild(or);msgs.appendChild(wrap);S.activeCard=wrap;scrB();
+}
+/* ============================================================ MODULE: AI FLOW */
+function runAI(){
+  const sc=SCENARIOS[S.scenario];if(S.phase>=sc.ai.length)return;
+  S.anim=true;document.getElementById('fi').value='';document.getElementById('nb').classList.add('off');setHint('');
+  const td=addTyping();
+  setTimeout(()=>{
+    td.remove();addAI(sc.ai[S.phase]);const step=sc.steps[S.phase];
+    if(!step){S.anim=false;scrB();return;}
+    S.activeCard=addOptCard(S.phase,0);setHint('↑ Select an option, or type your own below');
+    prog();S.anim=false;scrB();
+  },1100+Math.random()*500);scrB();
+}
+function addOptCard(stepIdx,batchNum){
+  const msgs=document.getElementById('msgs');const step=SCENARIOS[S.scenario].steps[stepIdx];
+  const opts=batchNum===0?step.o:step.m;const hasMore=batchNum===0&&step.m&&step.m.length>0;
+  const lts=['A','B','C','D','E'];const wrap=document.createElement('div');wrap.className='oc-wrap';
+  let h='<div class="oc-lbl">✦ Pick the closest fit</div>';
+  opts.forEach((opt,i)=>{h+=`<div class="oc"><div class="oc-lt">${lts[i]}</div><div class="oc-tx">${esc(opt[0])}</div></div>`;});
+  h+='<div class="oc-ex"><button class="xbtn" data-a="none">None of the above</button>';
+  if(hasMore)h+='<button class="xbtn" data-a="more">Generate more options</button>';
+  h+='<button class="xbtn" data-a="own">I\'ll type my own</button></div>';
+  wrap.innerHTML=h;
+  wrap.querySelectorAll('.oc').forEach((card,i)=>card.addEventListener('click',()=>pickOpt(wrap,stepIdx,i,batchNum)));
+  wrap.querySelector('[data-a="none"]').addEventListener('click',()=>typeOwn(wrap));
+  if(hasMore)wrap.querySelector('[data-a="more"]').addEventListener('click',()=>genMore(wrap,stepIdx));
+  wrap.querySelector('[data-a="own"]').addEventListener('click',()=>typeOwn(wrap));
+  msgs.appendChild(wrap);scrB();return wrap;
+}
+function pickOpt(cardEl,stepIdx,optIdx,batchNum){
+  if(S.anim)return;const opts=batchNum===0?SCENARIOS[S.scenario].steps[stepIdx].o:SCENARIOS[S.scenario].steps[stepIdx].m;
+  const[text,bp,action]=opts[optIdx];
+  cardEl.querySelectorAll('.oc').forEach((el,i)=>{if(i===optIdx)el.classList.add('sel');});
+  setTimeout(()=>cardEl.classList.add('used'),320);if(S.activeCard===cardEl)S.activeCard=null;
+  setTimeout(()=>{
+    addUser(text);if(bp&&Object.keys(bp).length){Object.assign(S.brief,bp);renderBrief();}
+    if(action==='show')glowBrief();if(action==='lock'){showRolesModal();return;}
+    S.phase=stepIdx+1;runAI();
+  },180);
+}
+function genMore(cardEl,stepIdx){cardEl.classList.add('used');if(!SCENARIOS[S.scenario].steps[stepIdx].m)return;S.activeCard=addOptCard(stepIdx,1);}
+function typeOwn(cardEl){if(cardEl){cardEl.classList.add('used');if(S.activeCard===cardEl)S.activeCard=null;}document.getElementById('fi').focus();setHint('Press Enter to send');}
+/* ============================================================ MODULE: ROLES */
+function showRolesModal(){
+  const list=document.getElementById('roles-list');list.innerHTML='';
+  (ROLES[S.scenario]||ROLES.social).forEach(r=>{
+    const row=document.createElement('div');row.className='role-row';
+    row.innerHTML=`<div class="rn">${r.num}</div><div class="rav" style="background:${r.clr}">${r.ini}</div><div class="ri"><div class="rn2">${r.name}</div><div class="rm2"><span>${r.role}</span>${r.est?`<span class="rm2-dot"></span><span>${r.est}</span>`:''}</div></div><span class="rb ${r.bc}">${r.badge}</span>`;
+    list.appendChild(row);
+  });
+  document.getElementById('roles-ov').classList.add('show');
+}
+function confirmRoles(){document.getElementById('roles-ov').classList.remove('show');deliverAssets();}
+/* ============================================================ MODULE: ASSETS */
+function deliverAssets(){
+  S.anim=true;setHint('');document.getElementById('fi').value='';document.getElementById('nb').classList.add('off');
+  const td=addTyping();
+  setTimeout(()=>{
+    td.remove();
+    const badge=document.getElementById('rp-badge');badge.textContent='🔒 Locked';badge.classList.add('locked');
+    const viewReq=document.getElementById('rp-view-req');if(viewReq)viewReq.style.display='inline';
+    const body=document.getElementById('rp-body');const banner=document.createElement('div');
+    banner.className='brief-locked-banner';banner.innerHTML='<span>🔒</span><span>Brief locked — sent to your designer</span>';
+    body.insertBefore(banner,body.firstChild);
+    addAI('Your designer nailed it 🎉 Here are the assets from your brief — have a look!\n\nTap any asset to open it full screen, annotate feedback, or just approve / reject inline.');
+    addInlineAssets(S.scenario);enrichBriefPanel(S.scenario);
+    S.anim=false;S.inputEnabled=true;
+    const fi=document.getElementById('fi');fi.classList.remove('off');fi.placeholder='Reply to your designer…';
+    document.getElementById('nb').classList.remove('off');
+    setHint('Tap an asset to review full screen, or approve/reject inline');prog100();scrB();
+  },1400+Math.random()*600);scrB();
+}
+function addInlineAssets(assetKey,container){
+  const msgs=container||document.getElementById('msgs');const assets=ASSETS[assetKey].assets;
+  const wrap=document.createElement('div');wrap.className='ia-wrap';wrap.id='ia-wrap-'+assetKey+'_'+(container?'req':'main');
+  wrap.innerHTML='<div class="ia-lbl">✦ Assets ready for your review — tap to open full screen</div>';
+  assets.forEach((a,i)=>{
+    const card=document.createElement('div');card.className='ia-card';card.id='ia-card-'+assetKey+'-'+i;
+    card.innerHTML=`<div class="ia-thumb" style="background:${a.g}"><span style="color:${a.tc}">${a.label.split(' ')[0]}</span><div class="ia-thumb-expand">⛶</div></div><div class="ia-info"><div class="ia-name">${esc(a.name)}</div><div class="ia-type">${a.type} · <span class="ia-expand-hint">Open full screen</span></div></div><div class="ia-btns"><button class="ia-approve" onclick="iApprove(event,'${assetKey}',${i})">✓</button><button class="ia-reject" onclick="iReject(event,'${assetKey}',${i})">✕</button></div>`;
+    // Click opens fullscreen modal
+    card.addEventListener('click',(e)=>{if(e.target.classList.contains('ia-approve')||e.target.classList.contains('ia-reject'))return;openAssetModal(assetKey,i);});
+    wrap.appendChild(card);
+  });
+  const footer=document.createElement('div');footer.className='ia-footer';footer.id='ia-footer-'+assetKey;
+  footer.innerHTML=`<button class="ia-approve-all" onclick="approveAll('${assetKey}')">Approve all ✓</button><button class="ia-req-btn" onclick="requestChanges()">Request changes</button>`;
+  wrap.appendChild(footer);msgs.appendChild(wrap);scrB();
+}
+function iApprove(e,ak,idx){e.stopPropagation();const c=document.getElementById('ia-card-'+ak+'-'+idx);if(c)c.classList.add('approved');}
+function iReject(e,ak,idx){e.stopPropagation();const c=document.getElementById('ia-card-'+ak+'-'+idx);if(c)c.classList.add('rejected');}
+function approveAll(assetKey){
+  document.querySelectorAll('[id^="ia-card-'+assetKey+'"]').forEach(c=>c.classList.add('approved'));
+  const footer=document.getElementById('ia-footer-'+assetKey);
+  if(footer){const btn=footer.querySelector('.ia-approve-all');if(btn){btn.textContent='✓ All approved!';btn.classList.add('done');}const r=footer.querySelector('.ia-req-btn');if(r)r.style.display='none';}
+  const badge=document.getElementById('rp-badge');badge.textContent='✓ Approved';badge.className='rp-badge approved';
+  const body=document.getElementById('rp-body');const ban=body.querySelector('.brief-locked-banner');
+  if(ban){ban.className='brief-approved-banner';ban.innerHTML='<span>✓</span><span>Assets approved — files going to Drive</span>';}
+  setTimeout(()=>{addAI("Yes! 🙌 Assets approved — final files are heading to your Google Drive. Your designer will be stoked.");setTimeout(()=>addInProgressSection(),1800);},600);scrB();
+}
+function requestChanges(){addAI("No worries at all! Tell me what you'd like changed and I'll loop the designer back in.");setHint('Describe the changes you want →');scrB();}
+/* ============================================================ MODULE: ASSET FULLSCREEN MODAL + ANNOTATION */
+function openAssetModal(assetKey,idx){
+  A.currentAssetKey=assetKey;A.currentAssetIdx=idx;A.paths=[];A.pins=[];
+  renderAssetModal();
+  document.getElementById('asset-fs').classList.add('show');
+  initAnnotationCanvas();
+}
+function renderAssetModal(){
+  const ak=A.currentAssetKey;const i=A.currentAssetIdx;const assets=ASSETS[ak].assets;const a=assets[i];
+  document.getElementById('afs-title').textContent=a.name;
+  document.getElementById('afs-counter').textContent=(i+1)+'/'+assets.length;
+  const bg=document.getElementById('afs-preview-bg');
+  bg.style.background=a.g;bg.style.width='100%';bg.style.height='100%';
+  document.getElementById('afs-preview-label').textContent=a.label;
+  document.getElementById('afs-preview-label').style.color=a.tc;
+  document.getElementById('afs-preview-name').textContent=a.name.split(' — ').pop();
+  document.getElementById('afs-preview-name').style.color=a.tc;
+  // Reset approve/reject buttons
+  const apBtn=document.getElementById('afs-approve-btn');
+  const rjBtn=document.getElementById('afs-reject-btn');
+  const card=document.getElementById('ia-card-'+ak+'-'+i);
+  if(card&&card.classList.contains('approved')){apBtn.textContent='✓ Approved';apBtn.className='afs-approved-state';}
+  else{apBtn.textContent='✓ Approve';apBtn.className='afs-approve-btn';}
+  if(card&&card.classList.contains('rejected')){rjBtn.textContent='✕ Rejected';rjBtn.style.opacity='0.5';}
+  else{rjBtn.textContent='✕ Reject';rjBtn.style.opacity='1';}
+  // Clear annotation notes panel
+  document.getElementById('afs-notes').innerHTML='<div class="afs-note-empty" id="afs-note-empty">Click anywhere on the image to drop a pin and add a note</div>';
+  clearCanvasOnly();
+}
+function closeAssetModal(){document.getElementById('asset-fs').classList.remove('show');}
+function afsNav(dir){
+  const assets=ASSETS[A.currentAssetKey].assets;
+  A.currentAssetIdx=(A.currentAssetIdx+dir+assets.length)%assets.length;
+  A.paths=[];A.pins=[];renderAssetModal();initAnnotationCanvas();
+}
+function afsApprove(){
+  iApprove({stopPropagation:()=>{}},A.currentAssetKey,A.currentAssetIdx);
+  const btn=document.getElementById('afs-approve-btn');
+  btn.textContent='✓ Approved';btn.className='afs-approved-state';
+}
+function afsReject(){
+  iReject({stopPropagation:()=>{}},A.currentAssetKey,A.currentAssetIdx);
+  const btn=document.getElementById('afs-reject-btn');
+  btn.textContent='✕ Rejected';btn.style.opacity='0.5';
+}
+function sendAnnotationsAsMessage(){
+  const notes=document.querySelectorAll('.afs-note-input');
+  const texts=[];notes.forEach((n,i)=>{ if(n.value.trim()) texts.push((i+1)+'. '+n.value.trim()); });
+  const msg=texts.length>0?'Feedback on '+ASSETS[A.currentAssetKey].assets[A.currentAssetIdx].name+':\n\n'+texts.join('\n'):'Closing full screen — see inline annotations.';
+  closeAssetModal();addUser(msg);addAI("Got it! I've captured your feedback and sent it to the designer. They'll get back to you with revisions.");scrB();
+}
+// Canvas / Pin annotation
+function initAnnotationCanvas(){
+  const wrap=document.getElementById('afs-preview-wrap');
+  const canvas=document.getElementById('afs-canvas');
+  canvas.width=wrap.offsetWidth;canvas.height=wrap.offsetHeight;
+  // Remove old listeners by cloning
+  const newCanvas=canvas.cloneNode(true);canvas.parentNode.replaceChild(newCanvas,canvas);
+  const c=document.getElementById('afs-canvas');
+  c.addEventListener('mousedown',afsMouseDown);
+  c.addEventListener('mousemove',afsMouseMove);
+  c.addEventListener('mouseup',afsMouseUp);
+  c.addEventListener('mouseleave',afsMouseUp);
+  c.addEventListener('touchstart',afsTouchStart,{passive:false});
+  c.addEventListener('touchmove',afsTouchMove,{passive:false});
+  c.addEventListener('touchend',afsMouseUp);
+  clearCanvasOnly();
+}
+function afsMouseDown(e){
+  const rect=e.target.getBoundingClientRect();const x=e.clientX-rect.left;const y=e.clientY-rect.top;
+  if(A.tool==='pin'){dropPin(x,y,e.target);}
+  else if(A.tool==='pen'||A.tool==='eraser'){
+    A.isDrawing=true;A.currentPath={tool:A.tool,color:A.color,size:A.brushSize,points:[{x,y}]};
+  }
+}
+function afsMouseMove(e){
+  if(!A.isDrawing||!A.currentPath)return;
+  const rect=e.target.getBoundingClientRect();const x=e.clientX-rect.left;const y=e.clientY-rect.top;
+  A.currentPath.points.push({x,y});redrawCanvas(e.target);
+}
+function afsMouseUp(){
+  if(A.isDrawing&&A.currentPath&&A.currentPath.points.length>0){A.paths.push(A.currentPath);}
+  A.isDrawing=false;A.currentPath=null;
+}
+function afsTouchStart(e){e.preventDefault();const t=e.touches[0];afsMouseDown({clientX:t.clientX,clientY:t.clientY,target:e.target});}
+function afsTouchMove(e){e.preventDefault();const t=e.touches[0];afsMouseMove({clientX:t.clientX,clientY:t.clientY,target:e.target});}
+function dropPin(x,y,canvas){
+  const pinNum=A.pins.length+1;A.pins.push({x,y,color:A.color,num:pinNum});
+  // Draw pin marker on canvas
+  const ctx=canvas.getContext('2d');
+  ctx.beginPath();ctx.arc(x,y,12,0,Math.PI*2);ctx.fillStyle=A.color;ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='bold 10px DM Sans,system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(pinNum,x,y);
+  // Add note in sidebar
+  addNoteToSidebar(pinNum,A.color);
+}
+function addNoteToSidebar(pinNum,color){
+  const notes=document.getElementById('afs-notes');
+  const empty=document.getElementById('afs-note-empty');if(empty)empty.remove();
+  const note=document.createElement('div');note.className='afs-note';note.id='afs-note-'+pinNum;
+  note.innerHTML=`<div class="afs-note-num"><div class="afs-note-pin" style="background:${color}">${pinNum}</div><span class="afs-note-idx">Pin ${pinNum}</span><span class="afs-note-del" onclick="deletePin(${pinNum})">✕</span></div><textarea class="afs-note-input" placeholder="Describe the change you want here…" oninput="autoResize(this)"></textarea>`;
+  notes.appendChild(note);note.querySelector('textarea').focus();
+}
+function deletePin(pinNum){
+  const note=document.getElementById('afs-note-'+pinNum);if(note)note.remove();
+  A.pins=A.pins.filter(p=>p.num!==pinNum);
+  // Redraw canvas without that pin
+  const canvas=document.getElementById('afs-canvas');redrawCanvas(canvas);
+}
+function redrawCanvas(canvas){
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);
+  A.paths.forEach(path=>{
+    if(path.points.length<2)return;
+    ctx.beginPath();ctx.lineWidth=path.tool==='eraser'?path.size*4:path.size;ctx.lineCap='round';ctx.lineJoin='round';
+    if(path.tool==='eraser'){ctx.globalCompositeOperation='destination-out';ctx.strokeStyle='rgba(0,0,0,1)';}
+    else{ctx.globalCompositeOperation='source-over';ctx.strokeStyle=path.color;}
+    ctx.moveTo(path.points[0].x,path.points[0].y);
+    path.points.forEach(pt=>ctx.lineTo(pt.x,pt.y));ctx.stroke();
+  });
+  if(A.currentPath&&A.currentPath.points.length>=2){
+    ctx.beginPath();ctx.lineWidth=A.currentPath.tool==='eraser'?A.currentPath.size*4:A.currentPath.size;ctx.lineCap='round';ctx.lineJoin='round';
+    if(A.currentPath.tool==='eraser'){ctx.globalCompositeOperation='destination-out';ctx.strokeStyle='rgba(0,0,0,1)';}
+    else{ctx.globalCompositeOperation='source-over';ctx.strokeStyle=A.currentPath.color;}
+    ctx.moveTo(A.currentPath.points[0].x,A.currentPath.points[0].y);
+    A.currentPath.points.forEach(pt=>ctx.lineTo(pt.x,pt.y));ctx.stroke();
+  }
+  ctx.globalCompositeOperation='source-over';
+  // Redraw pins
+  A.pins.forEach(p=>{
+    ctx.beginPath();ctx.arc(p.x,p.y,12,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 10px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(p.num,p.x,p.y);
+  });
+}
+function clearCanvasOnly(){const canvas=document.getElementById('afs-canvas');if(!canvas)return;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);}
+function clearAnnotations(){
+  A.paths=[];A.pins=[];clearCanvasOnly();
+  document.getElementById('afs-notes').innerHTML='<div class="afs-note-empty" id="afs-note-empty">Click anywhere on the image to drop a pin and add a note</div>';
+}
+function setTool(t){
+  A.tool=t;['pin','pen','eraser'].forEach(id=>{const btn=document.getElementById('tool-'+id);if(btn)btn.classList.toggle('active',id===t);});
+  const canvas=document.getElementById('afs-canvas');
+  if(canvas)canvas.style.cursor=t==='pin'?'crosshair':(t==='eraser'?'cell':'crosshair');
+}
+function setColor(c,el){
+  A.color=c;document.querySelectorAll('.afs-color-dot').forEach(d=>d.classList.remove('active'));el.classList.add('active');
+}
+/* ============================================================ MODULE: IN-PROGRESS REQUESTS */
+function addInProgressSection(){
+  if(!IN_PROGRESS.length)return;
+  addAI('By the way, you\'ve got '+IN_PROGRESS.length+' other requests waiting for your eye 👀');
+  const msgs=document.getElementById('msgs');const wrap=document.createElement('div');wrap.className='ip-wrap';
+  wrap.innerHTML='<div class="ip-lbl">✦ Requests in progress</div>';
+  IN_PROGRESS.forEach(req=>{
+    const card=document.createElement('div');card.className='ip-card';card.id='ip-card-'+req.id;
+    card.innerHTML=`<div class="ip-icon" style="background:${req.iconBg}">${req.icon}</div><div class="ip-info"><div class="ip-title">${esc(req.title)}</div><div class="ip-type">${esc(req.type)}</div></div><span class="ip-badge ${req.status}">${esc(req.statusLabel)}</span><span class="ip-arrow">›</span>`;
+    card.addEventListener('click',()=>loadInProgressRequest(req));
+    wrap.appendChild(card);
+  });
+  msgs.appendChild(wrap);scrB();
+}
+function loadInProgressRequest(req){
+  document.querySelectorAll('.ip-card').forEach(c=>c.classList.remove('active'));
+  const ac=document.getElementById('ip-card-'+req.id);if(ac)ac.classList.add('active');
+  loadBriefFor(req);
+  const msgs=document.getElementById('msgs');
+  const backBtn=document.createElement('div');backBtn.className='back-btn';backBtn.innerHTML='‹ All requests';
+  backBtn.addEventListener('click',()=>{
+    backBtn.remove();divider.remove();const t=document.getElementById('thread-'+req.id);if(t)t.remove();
+    if(ac)ac.classList.remove('active');renderBriefFromState();
+  });
+  msgs.appendChild(backBtn);
+  const divider=document.createElement('div');divider.className='thread-div';
+  divider.innerHTML=`<div class="td-line"></div><span class="td-txt">${esc(req.title)}</span><div class="td-line"></div>`;
+  msgs.appendChild(divider);
+  const threadWrap=document.createElement('div');threadWrap.id='thread-'+req.id;msgs.appendChild(threadWrap);
+  req.thread.forEach(msg=>{
+    if(msg.role==='ai'){const w=document.createElement('div');w.className='msg ai';w.innerHTML=`<div class="av ai">DP</div><div class="bub">${esc(msg.text)}</div>`;threadWrap.appendChild(w);}
+    else if(msg.role==='user'){const w=document.createElement('div');w.className='msg user';w.innerHTML=`<div class="av us">YOU</div><div class="bub">${esc(msg.text)}</div>`;threadWrap.appendChild(w);}
+    else if(msg.role==='assets'){addInlineAssets(req.assetKey,threadWrap);}
+  });
+  setHint('Replying to: '+req.title);document.getElementById('fi').placeholder='Reply to this thread…';scrB();
+}
+/* ============================================================ MODULE: BRIEF PANEL */
+function renderBrief(){
+  if(!Object.keys(S.brief).some(k=>S.brief[k]))return;
+  const body=document.getElementById('rp-body');
+  Array.from(body.children).forEach(c=>{if(!c.classList.contains('brief-locked-banner')&&!c.classList.contains('brief-approved-banner')&&c.id!=='brief-assets-sec'&&c.id!=='brief-wf-sec')c.remove();});
+  renderBriefData(S.brief,body);
+}
+function renderBriefData(bd,container){
+  for(const[sn,fields]of Object.entries(BRIEF_SECTIONS)){
+    const active=fields.filter(f=>bd[f]);if(!active.length)continue;
+    const sec=document.createElement('div');sec.className='bsec';
+    let h=`<div class="bsect">${sn}</div>`;
+    active.forEach(f=>{h+=`<div class="brow"><div class="brl">${BRIEF_FIELDS[f]}</div><div class="brv">${esc(bd[f])}</div></div>`;});
+    sec.innerHTML=h;container.appendChild(sec);
+  }
+}
+function renderBriefFromState(){
+  const body=document.getElementById('rp-body');body.innerHTML='';renderBriefData(S.brief,body);
+  const badge=document.getElementById('rp-badge');
+  if(badge.classList.contains('locked')||badge.classList.contains('approved')){
+    const banner=document.createElement('div');banner.className=badge.classList.contains('approved')?'brief-approved-banner':'brief-locked-banner';
+    banner.innerHTML=badge.classList.contains('approved')?'<span>✓</span><span>Assets approved</span>':'<span>🔒</span><span>Brief locked</span>';
+    body.insertBefore(banner,body.firstChild);enrichBriefPanel(S.scenario,true);
+  }
+}
+function enrichBriefPanel(assetKey,skipIfExists){
+  const body=document.getElementById('rp-body');if(skipIfExists&&document.getElementById('brief-assets-sec'))return;
+  const asSec=document.createElement('div');asSec.className='bsec';asSec.id='brief-assets-sec';
+  const assets=ASSETS[assetKey].assets;let h='<div class="bsect">Assets</div>';
+  assets.forEach(a=>{h+=`<div class="bai"><div class="bai-th" style="background:${a.g}"><span style="color:${a.tc};font-size:8px;text-align:center;line-height:1.1">${a.label.split(' ')[0]}</span></div><div style="flex:1;min-width:0"><div class="bai-nm">${esc(a.name)}</div><div class="bai-tp">${a.type}</div></div><button class="bai-dl">↓</button></div>`;});
+  asSec.innerHTML=h;body.appendChild(asSec);
+  const wfSec=document.createElement('div');wfSec.className='bsec';wfSec.id='brief-wf-sec';
+  const rd=ROLES[assetKey]||ROLES.social;
+  const avs=rd.slice(0,3).map(r=>`<div class="bwi-av" style="background:${r.clr}">${r.ini}</div>`).join('');
+  wfSec.innerHTML=`<div class="bsect">Workflows</div><div class="bwi"><div class="bwi-avs">${avs}</div><div style="flex:1;min-width:0"><div class="bwi-nm">Team</div><div class="bwi-mt">Design Pickle · Your team · You</div></div></div>`;
+  body.appendChild(wfSec);
+}
+function loadBriefFor(req){
+  const body=document.getElementById('rp-body');body.innerHTML='';
+  const badge=document.getElementById('rp-badge');badge.textContent=req.status==='revision'?'In revision':'Awaiting approval';badge.className='rp-badge '+(req.status==='revision'?'progress':'locked');
+  const banner=document.createElement('div');banner.className='brief-locked-banner';
+  banner.style.background=req.status==='revision'?'#7C3AED':'#0A7C4A';
+  banner.innerHTML=`<span>${req.status==='revision'?'✏':'⏳'}</span><span>${req.status==='revision'?'In revision with designer':'Awaiting your approval'}</span>`;
+  body.appendChild(banner);renderBriefData(req.brief,body);
+  const asSec=document.createElement('div');asSec.className='bsec';const assets=ASSETS[req.assetKey].assets;
+  let h='<div class="bsect">Assets</div>';
+  assets.forEach(a=>{h+=`<div class="bai"><div class="bai-th" style="background:${a.g}"><span style="color:${a.tc};font-size:8px;text-align:center;line-height:1.1">${a.label.split(' ')[0]}</span></div><div style="flex:1;min-width:0"><div class="bai-nm">${esc(a.name)}</div><div class="bai-tp">${a.type}</div></div><button class="bai-dl">↓</button></div>`;});
+  asSec.innerHTML=h;body.appendChild(asSec);
+  const wfSec=document.createElement('div');wfSec.className='bsec';const rd=ROLES[req.assetKey]||ROLES.social;
+  const avs=rd.slice(0,3).map(r=>`<div class="bwi-av" style="background:${r.clr}">${r.ini}</div>`).join('');
+  wfSec.innerHTML=`<div class="bsect">Workflows</div><div class="bwi"><div class="bwi-avs">${avs}</div><div style="flex:1;min-width:0"><div class="bwi-nm">Team</div><div class="bwi-mt">Design Pickle · Your team · You</div></div></div>`;
+  body.appendChild(wfSec);
+}
+function glowBrief(){const rp=document.getElementById('right-panel');rp.style.background='#E6F3EC';setTimeout(()=>rp.style.background='',1200);}
+/* ============================================================ MODULE: MODAL */
+function buildModal(){
+  const catEl=document.getElementById('m-cats');catEl.innerHTML='';
+  CATS.forEach(c=>{
+    const el=document.createElement('div');el.className='cat-item'+(c.name===S.modalCat?' on':'');el.textContent=c.name;
+    el.addEventListener('click',()=>{S.modalCat=c.name;document.getElementById('m-search').value='';S.modalQ='';renderModalGrid();catEl.querySelectorAll('.cat-item').forEach(x=>x.classList.toggle('on',x.textContent===c.name));});
+    catEl.appendChild(el);
+  });renderModalGrid();
+}
+function renderModalGrid(){
+  const grid=document.getElementById('m-grid');grid.innerHTML='';
+  const q=S.modalQ.trim().toLowerCase();
+  const list=ALL_TYPES.filter(([n,c])=>(S.modalCat==='All'||c===S.modalCat)&&(!q||n.toLowerCase().includes(q)||c.toLowerCase().includes(q)));
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;padding:32px;text-align:center;color:#AAA;font-size:13px">No types match.</div>';return;}
+  list.forEach(([name,cat,key])=>{
+    const card=document.createElement('div');card.className='mt-card'+(S.modalSel&&S.modalSel[0]===name?' sel':'');
+    card.innerHTML=`<div class="chk"><span class="chk-tick">✓</span></div><div class="mt-nm">${esc(name)}</div>`;
+    card.addEventListener('click',()=>{S.modalSel=[name,cat,key];grid.querySelectorAll('.mt-card').forEach(c=>c.classList.remove('sel'));card.classList.add('sel');updateModalBottom();});
+    grid.appendChild(card);
+  });
+}
+function filterModal(q){S.modalQ=q;if(q.trim()){S.modalCat='All';document.querySelectorAll('.cat-item').forEach(x=>x.classList.toggle('on',x.textContent==='All'));}renderModalGrid();}
+function updateModalBottom(){const lbl=document.getElementById('m-sl-lbl'),btn=document.getElementById('m-conf');if(S.modalSel){lbl.innerHTML=`Selected: <span>${esc(S.modalSel[0])}</span>`;btn.classList.add('ready');}else{lbl.textContent='No type selected';btn.classList.remove('ready');}}
+function openModal(){S.modalSel=null;S.modalQ='';S.modalCat='All';document.getElementById('m-search').value='';document.getElementById('m-conf').classList.remove('ready');document.getElementById('m-sl-lbl').textContent='No type selected';buildModal();document.getElementById('modal-back').classList.add('open');}
+function closeModal(){document.getElementById('modal-back').classList.remove('open');}
+function handleBackdropClick(e){if(e.target===e.currentTarget)closeModal();}
+function confirmModalSelection(){if(!S.modalSel)return;closeModal();pickType(S.modalSel[2],S.modalSel[0]);}
+/* ============================================================ MODULE: UTILS */
+function addAI(text){const msgs=document.getElementById('msgs');const w=document.createElement('div');w.className='msg ai';w.innerHTML=`<div class="av ai">DP</div><div class="bub">${esc(text)}</div>`;msgs.appendChild(w);scrB();}
+function addUser(text){const msgs=document.getElementById('msgs');const w=document.createElement('div');w.className='msg user';w.innerHTML=`<div class="av us">YOU</div><div class="bub">${esc(text)}</div>`;msgs.appendChild(w);scrB();}
+function addTyping(){const msgs=document.getElementById('msgs');const w=document.createElement('div');w.className='tw';w.innerHTML='<div class="av ai">DP</div><div class="dots"><span></span><span></span><span></span></div>';msgs.appendChild(w);scrB();return w;}
+function setHint(t){document.getElementById('hint').textContent=t;}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
+function scrB(){setTimeout(()=>{const m=document.getElementById('msgs');m.scrollTop=m.scrollHeight;},40);}
+function prog(){if(!S.scenario)return;document.getElementById('pf').style.width=Math.round((S.phase/SCENARIOS[S.scenario].ai.length)*88)+'%';}
+function prog100(){document.getElementById('pf').style.width='100%';}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+
+
+
+/* ============================================================
+   MODULE: LAYOUT SIZER
+   ============================================================ */
+// No-op: layout handled by position:absolute in agents-area);
+/* ============================================================
+   MODULE: AGENT TABS
+   ============================================================ */
+function switchTab(tab) {
+  document.getElementById('db-ai-fab')?.classList.remove('visible');
+  const pr = document.getElementById('pane-request');
+  const po = document.getElementById('pane-onboarding');
+  pr.style.display = tab === 'request' ? 'flex' : 'none';
+  po.style.display = tab === 'onboarding' ? 'flex' : 'none';
+  document.getElementById('tab-request').classList.toggle('active', tab === 'request');
+  document.getElementById('tab-onboarding').classList.toggle('active', tab === 'onboarding');
+  if (tab === 'onboarding') {
+    // Hide dashboard, show onboarding (welcome or chat depending on progress)
+    document.getElementById('db-wrap').style.display = 'none';
+    const chatStarted = document.getElementById('ob-chat').style.display === 'flex' ||
+                        document.getElementById('ob-msgs').children.length > 0;
+    if (chatStarted) {
+      document.getElementById('ob-welcome').style.display = 'none';
+      document.getElementById('ob-chat').style.display = 'flex';
+      document.getElementById('ob-chat').style.flexDirection = 'column';
+      document.getElementById('ob-chat').style.flex = '1';
+      document.getElementById('ob-chat').style.overflow = 'hidden';
+    } else {
+      document.getElementById('ob-welcome').style.display = 'flex';
+      document.getElementById('ob-chat').style.display = 'none';
+    }
+  }
+}
+function showDashboard() {
+  document.getElementById('pane-request').style.display = 'none';
+  document.getElementById('pane-onboarding').style.display = 'flex';
+  document.getElementById('tab-request').classList.remove('active');
+  document.getElementById('tab-onboarding').classList.remove('active');
+  document.getElementById('ob-welcome').style.display = 'none';
+  document.getElementById('ob-chat').style.display = 'none';
+  const db = document.getElementById('db-wrap');
+  db.style.display = 'flex';
+  db.style.flexDirection = 'column';
+  document.getElementById('db-ai-fab')?.classList.add('visible');
+  buildDbChart();
+}
+// Init: show dashboard on load
+document.addEventListener('DOMContentLoaded', function() {
+  showDashboard();
+});
+
+/* ============================================================
+   MODULE: ONBOARDING AGENT — Sarah Pickle
+   ============================================================ */
+const OB = {
+  step: 0,
+  data: { timezone:'EST (US Eastern)', urls:[], project:'', categories:{}, emails:[], integrations:[], files:[] },
+  emailError: null,
+};
+
+const OB_STEPS = [
+  { id:'timezone', q:"What's your preferred timezone?", hint:"We'll use this to deliver work in your preferred working hours." },
+  { id:'website',  q:"Enter your website", hint:"We'll analyze your site to create your brand profile using your colors, logos, images, and fonts." },
+  { id:'project',  q:"Start your first project", hint:"Choose at least 3 types of request you'll need for your project." },
+  { id:'team',     q:"Invite members to your team", hint:"You can add up to 4 members" },
+  { id:'integrations', q:"Would you like to integrate any of these tools?", hint:"Connect your tools to get a full view of your workflow in one place." },
+  { id:'video',    q:"Message from our CEO Russ Perry", hint:"A personal welcome from our founder." },
+];
+
+const OB_CAT_SUBS = {
+  'Brand & Identity': ['Logo','Visual Identity Systems','Brand Guidelines','Business Card','Stationery','Corporate Collateral'],
+  'Marketing & Advertising': ['Social Media Ads','Email Campaign','Banner Ads','Flyer','Brochure'],
+  'Digital & Web': ['Landing Page','Website Banner','Icon Set','App Screenshot'],
+  'Apparel & Merchandise': ['T-Shirt Design','Hat Design','Tote Bag','Sticker'],
+  'Corporate & Internal': ['Presentation','Internal Newsletter','Org Chart','Signage'],
+  'Ebooks & Digital Report': ['Ebook Design','Report Layout','Infographic','One-Pager'],
+  'Environmental & Event': ['Event Banner','Trade Show Booth','Stage Backdrop'],
+  'Illustration & Artwork': ['Custom Illustration','Character Design','Pattern Design'],
+  'Motion & Video': ['Animated Ad','Logo Animation','GIF','Video Thumbnail'],
+  'Presentations': ['Pitch Deck','Sales Deck','Investor Presentation'],
+  'Print': ['Poster','Postcard','Business Card','Menu Design'],
+  'Product & Packaging': ['Product Label','Packaging Design','Box Design'],
+};
+
+const OB_TZONES = ['EST (US Eastern)','PST (US Pacific)','CST (US Central)','MST (US Mountain)','UK (BST/GMT)','CET (Central European)','ACST (Australia Central)','JST (Japan Standard)'];
+
+const OB_SA_MSGS = [
+  "Perfect! I'll make sure your work arrives during your working hours.",
+  "Great! I'm analyzing your brand to get everything set up.",
+  "Nice! Your first project is ready to go.",
+  "Invites sent! Your team will be able to collaborate in no time.",
+  "Awesome! Your tools are connected. Everything in one place.",
+  "Wasn't that great? Russ is excited to have you on board. You're all set!"
+];
+
+function obStart() {
+  document.getElementById('ob-welcome').style.display = 'none';
+  const chat = document.getElementById('ob-chat');
+  chat.style.display = 'flex'; chat.style.flexDirection = 'column';
+  OB.step = 0;
+  obRunStep(0);
+}
+
+function obRunStep(i) {
+  if (i >= OB_STEPS.length) { obFinish(); return; }
+  const step = OB_STEPS[i];
+  OB.step = i;
+  obUpdateProgress(i);
+  // Sarah greeting message
+  const greetings = [
+    "First things first — let's make sure you get your work at the right time.",
+    "Now let me analyze your brand! Drop in your website URL and I'll pull your colors, logos, and fonts.",
+    "Let's get your first project set up. I just need a name and the types of design work you'll need.",
+    "Who else should have access? I can send invites right now.",
+    "Want to connect any of your tools? It makes everything so much smoother.",
+    "Before you dive in, a personal welcome from our CEO Russ Perry. He's excited to have you on board!",
+  ];
+  obAddAI(greetings[i]);
+  // Show step card
+  setTimeout(() => { obAddStepCard(step, i); scrOB(); }, 400);
+}
+
+function obAddAI(text) {
+  const msgs = document.getElementById('ob-msgs');
+  const w = document.createElement('div'); w.className = 'msg ai';
+  w.innerHTML = `<div class="av ai" style="background:#0A7C4A;font-size:8px">SP</div><div class="bub">${esc(text)}</div>`;
+  msgs.appendChild(w); scrOB();
+}
+function obAddUser(text) {
+  const msgs = document.getElementById('ob-msgs');
+  const w = document.createElement('div'); w.className = 'msg user';
+  w.innerHTML = `<div class="av us">YOU</div><div class="bub">${esc(text)}</div>`;
+  msgs.appendChild(w); scrOB();
+}
+function scrOB() { setTimeout(() => { const m=document.getElementById('ob-msgs'); m.scrollTop=m.scrollHeight; },40); }
+
+function obUpdateProgress(i) {
+  document.getElementById('ob-pf').style.width = Math.round(((i) / OB_STEPS.length) * 100) + '%';
+}
+
+function obAddStepCard(step, i) {
+  const msgs = document.getElementById('ob-msgs');
+  const card = document.createElement('div');
+  card.className = 'ob-step-card';
+  card.id = 'ob-card-' + i;
+
+  let body = `<div class="ob-sc-body"><div class="ob-sc-q">${step.q}</div><div class="ob-sc-hint">${step.hint}</div>`;
+
+  if (step.id === 'timezone') {
+    body += `<div class="ob-dropdown-wrap">
+      <button class="ob-dropdown-btn" id="ob-tz-btn" onclick="obToggleDD('ob-tz-menu','ob-tz-btn')">
+        <span id="ob-tz-val">EST (US Eastern)</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="ob-dropdown-menu" id="ob-tz-menu" style="display:none">
+        ${OB_TZONES.map(tz => `<div class="ob-dd-item${tz===OB.data.timezone?' sel':''}" onclick="obSelectTZ('${tz}')">${tz}${tz===OB.data.timezone?'<svg class="ob-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>':''}</div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (step.id === 'website') {
+    body += `<div id="ob-url-container">
+      <div class="ob-url-row"><input class="ob-url-input" id="ob-url-0" placeholder="https://www.example.com" type="url" oninput="obUrlChange(this.value)"><button class="ob-url-icon-btn" onclick="obAddUrlField()" title="Add another URL">+</button></div>
+    </div>
+    <div style="margin-top:8px"><span class="ob-upload-link" onclick="openUploadModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Or &nbsp; Upload file</span></div>
+    <div id="ob-brand-preview"></div>`;
+  }
+
+  if (step.id === 'project') {
+    body += `<input class="ob-proj-name" id="ob-proj-name" placeholder="Project name (e.g. Social media campaign)" value="${esc(OB.data.project)}" oninput="OB.data.project=this.value">
+    <div class="ob-cats-grid" id="ob-cats-grid">
+      ${Object.keys(OB_CAT_SUBS).map(cat => {
+        const count = (OB.data.categories[cat]||[]).length;
+        return `<div class="ob-cat-pill${count>0?' sel':''}" id="obcat-${esc(cat)}" onclick="obToggleCat(event,'${cat}')">
+          ${esc(cat)} ${count>0?`<span class="ob-pill-count">${count}</span>`:''}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  if (step.id === 'team') {
+    body += `<div class="ob-email-wrap" id="ob-email-wrap" onclick="document.getElementById('ob-email-input').focus()">
+      <input class="ob-email-input" id="ob-email-input" placeholder="Email address" onkeydown="obEmailKey(event)" onblur="obEmailBlur()">
+      <button style="margin-left:auto;padding:5px 12px;border:0.5px solid #D5D2CC;border-radius:9999px;background:#fff;font-family:inherit;font-size:11.5px;color:#555;cursor:pointer;flex-shrink:0" onclick="obSendInvites()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-right:4px;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Send invites
+      </button>
+    </div>
+    <div id="ob-email-error" class="ob-email-error" style="display:none"></div>
+    <div id="ob-pending-list" style="display:none">
+      <div class="ob-pending" id="ob-pending-inner">
+        <div class="ob-pending-hd">Pending invitations (<span id="ob-pending-count">0</span>)</div>
+        <div class="ob-pending-sub">You can always manage or remove team members later in settings</div>
+        <div id="ob-pending-rows"></div>
+      </div>
+    </div>`;
+  }
+
+  if (step.id === 'integrations') {
+    body += `<div class="ob-integ-grid">
+      <div class="ob-integ-tile" id="ob-integ-slack" onclick="obToggleInteg('slack')">
+        <div class="ob-integ-check">&#x2713;</div>
+        <div class="ob-integ-icon" style="background:#F0EDE8">
+          <svg width="28" height="28" viewBox="0 0 24 24"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z" fill="#E01E5A"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" fill="#E01E5A"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z" fill="#2EB67D"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z" fill="#2EB67D"/><path d="M10 4.5C10 3.67 10.67 3 11.5 3S13 3.67 13 4.5V6H11.5c-.83 0-1.5-.67-1.5-1.5z" fill="#ECB22E"/><path d="M10 9.5v-1.5H4.5C3.67 8 3 8.67 3 9.5S3.67 11 4.5 11h5c.83 0 1.5-.67 1.5-1.5z" fill="#ECB22E"/><path d="M14 19.5c0 .83-.67 1.5-1.5 1.5S11 20.33 11 19.5V18h1.5c.83 0 1.5.67 1.5 1.5z" fill="#36C5F0"/><path d="M14 14.5V16h5.5c.83 0 1.5-.67 1.5-1.5S20.33 13 19.5 13H14c-.83 0-1.5.67-1.5 1.5z" fill="#36C5F0"/></svg>
+        </div>
+        <div class="ob-integ-name">Slack</div>
+      </div>
+      <div class="ob-integ-tile" id="ob-integ-teams" onclick="obToggleInteg('teams')">
+        <div class="ob-integ-check">&#x2713;</div>
+        <div class="ob-integ-icon" style="background:#F0EDE8">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#5059C9"><path d="M20 4h-7a4 4 0 0 0-4 4v4a4 4 0 0 0 4 4h7a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4z" opacity=".4"/><path d="M14 4a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM0 13a4 4 0 0 1 4-4h4v8H4a4 4 0 0 1-4-4z" fill="#7B83EB"/><circle cx="6" cy="9" r="3" fill="#7B83EB"/></svg>
+        </div>
+        <div class="ob-integ-name">Microsoft Teams</div>
+      </div>
+      <div class="ob-integ-tile" id="ob-integ-zapier" onclick="obToggleInteg('zapier')">
+        <div class="ob-integ-check">&#x2713;</div>
+        <div class="ob-integ-icon" style="background:#FFF0E6">
+          <div style="width:44px;height:44px;border-radius:10px;background:#FF4A00;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff">Z</div>
+        </div>
+        <div class="ob-integ-name">Zapier</div>
+      </div>
+    </div>`;
+  }
+
+  if (step.id === 'video') {
+    body += `<div class="ob-video-placeholder">
+      <div style="position:absolute;top:16px;left:0;right:0;text-align:center;font-size:13px;font-weight:600;color:rgba(255,255,255,.7)">Russ Perry, CEO &amp; Founder</div>
+      <div style="width:100%;height:100%;background:linear-gradient(180deg,#3A3A3A 0%,#1A1A1A 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border-radius:12px">
+        <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#555,#333);display:flex;align-items:center;justify-content:center;font-size:28px">👤</div>
+        <button class="ob-play-btn"></button>
+      </div>
+    </div>`;
+  }
+
+  body += `</div>`;
+
+  // Footer
+  const isFirst = i === 0;
+  const isLast = i === OB_STEPS.length - 1;
+  body += `<div class="ob-sc-footer">
+    ${!isFirst ? `<button class="ob-back-btn" onclick="obGoBack(${i})">&#x2039; Back</button>` : ''}
+    <button class="ob-next-btn" id="ob-next-${i}" onclick="obNext(${i})">${isLast ? 'Continue &#x203A;' : 'Next &#x203A;'}</button>
+  </div>`;
+
+  card.innerHTML = body;
+  msgs.appendChild(card);
+  scrOB();
+}
+
+function obToggleDD(menuId, btnId) {
+  const menu = document.getElementById(menuId);
+  const btn = document.getElementById(btnId);
+  const isOpen = menu.style.display !== 'none';
+  menu.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    // close on outside click
+    setTimeout(() => {
+      document.addEventListener('click', function closer(e) {
+        if (!menu.contains(e.target) && !btn.contains(e.target)) { menu.style.display='none'; btn.classList.remove('open'); document.removeEventListener('click',closer); }
+      });
+    }, 10);
+  }
+}
+
+function obSelectTZ(tz) {
+  OB.data.timezone = tz;
+  document.getElementById('ob-tz-val').textContent = tz;
+  const menu = document.getElementById('ob-tz-menu');
+  const btn = document.getElementById('ob-tz-btn');
+  menu.style.display = 'none'; btn.classList.remove('open');
+  menu.querySelectorAll('.ob-dd-item').forEach(el => {
+    const isSel = el.textContent.replace('✓','').trim() === tz;
+    el.classList.toggle('sel', isSel);
+    el.innerHTML = tz === el.textContent.replace('✓','').trim() ? tz + '<svg class="ob-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' : el.textContent.replace('✓','').trim();
+  });
+}
+
+function obAddUrlField() {
+  const container = document.getElementById('ob-url-container');
+  const count = container.querySelectorAll('.ob-url-row').length;
+  const row = document.createElement('div'); row.className='ob-url-row';
+  row.innerHTML = `<input class="ob-url-input" id="ob-url-${count}" placeholder="https://www.example.com" type="url" oninput="obUrlChange()"><button class="ob-url-icon-btn" onclick="this.parentElement.remove()" title="Remove">&#x2715;</button>`;
+  container.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+let _obBrandTimer = null;
+function obUrlChange(val) {
+  clearTimeout(_obBrandTimer);
+  const preview = document.getElementById('ob-brand-preview');
+  if (!preview) return;
+  const url = (val || '').trim();
+  if (!url || !url.includes('.')) { preview.innerHTML = ''; return; }
+  // Show loading state after short pause
+  _obBrandTimer = setTimeout(() => obScanBrand(url), 600);
+}
+function obScanBrand(url) {
+  const preview = document.getElementById('ob-brand-preview');
+  if (!preview) return;
+  let domain = url.replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0];
+  preview.innerHTML = `<div class="ob-brand-scan">
+    <div class="ob-brand-scan-head">
+      <div class="ob-brand-scan-dot"></div>
+      <div class="ob-brand-scan-label">Analyzing</div>
+      <div class="ob-brand-scan-url">${domain}</div>
+    </div>
+    <div class="ob-brand-loading">
+      <div class="ob-brand-bar"><div class="ob-brand-bar-fill" id="ob-bar-fill"></div></div>
+      <div class="ob-brand-scan-msg" id="ob-scan-msg">Fetching homepage…</div>
+    </div>
+  </div>`;
+  // Animate scan messages
+  const msgs = ['Fetching homepage…','Reading colors…','Extracting logo…','Detecting fonts…','Building brand profile…'];
+  let mi = 0;
+  const msgEl = document.getElementById('ob-scan-msg');
+  const msgInt = setInterval(() => { mi++; if(msgEl && msgs[mi]) msgEl.textContent = msgs[mi]; }, 340);
+  setTimeout(() => {
+    clearInterval(msgInt);
+    obShowBrandResult(domain);
+  }, 1900);
+}
+function obShowBrandResult(domain) {
+  const preview = document.getElementById('ob-brand-preview');
+  if (!preview) return;
+  // Deterministic palette from domain string
+  const palettes = [
+    ['#1A1A2E','#16213E','#0F3460','#E94560','#F5F5F5'],
+    ['#2D6A4F','#40916C','#74C69D','#B7E4C7','#F0F4F8'],
+    ['#F72585','#7209B7','#3A0CA3','#4361EE','#4CC9F0'],
+    ['#E63946','#457B9D','#1D3557','#F1FAEE','#A8DADC'],
+    ['#FF6B35','#F7C59F','#EFEFD0','#004E89','#1A936F'],
+    ['#264653','#2A9D8F','#E9C46A','#F4A261','#E76F51'],
+    ['#3D405B','#81B29A','#F2CC8F','#E07A5F','#F4F1DE'],
+    ['#6A0572','#AB83A1','#F15BB5','#FEE440','#00BBF9'],
+  ];
+  const fonts = [['Inter','Helvetica Neue'],['Söhne','GT America'],['Freight Display','Proxima Nova'],['Circular','Apercu'],['Canela','Graphik'],['Tiempos','Basis Grotesque']];
+  let hash = 0; for(let c of domain) hash = (hash * 31 + c.charCodeAt(0)) & 0xFFFFFF;
+  const palette = palettes[hash % palettes.length];
+  const fontPair = fonts[(hash >> 4) % fonts.length];
+  const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+  preview.innerHTML = `<div class="ob-brand-scan" style="border-color:#D5F0E4">
+    <div class="ob-brand-scan-head" style="background:#F0FAF5;border-bottom-color:#D5F0E4">
+      <div class="ob-brand-scan-dot"></div>
+      <div class="ob-brand-scan-label" style="color:#0A7C4A">Brand profile ready</div>
+      <div class="ob-brand-scan-url">${domain}</div>
+    </div>
+    <div class="ob-brand-result">
+      <div class="ob-brand-logo-row">
+        <div class="ob-brand-favicon"><img src="${faviconUrl}" onerror="this.style.display='none';this.parentElement.textContent='${domain[0].toUpperCase()}'"></div>
+        <div><div class="ob-brand-domain">${domain}</div><div class="ob-brand-domain-sub">Homepage analyzed</div></div>
+      </div>
+      <div class="ob-brand-section">
+        <div class="ob-brand-section-lbl">Brand Colors</div>
+        <div class="ob-brand-colors">${palette.map(c=>`<div class="ob-brand-swatch" style="background:${c}" title="${c}"><span class="ob-brand-swatch-hex">${c}</span></div>`).join('')}</div>
+      </div>
+      <div class="ob-brand-section">
+        <div class="ob-brand-section-lbl">Typography</div>
+        <div class="ob-brand-fonts">${fontPair.map(f=>`<div class="ob-brand-font-tag">${f}</div>`).join('')}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// Category pill
+let obOpenCatMenu = null;
+function obToggleCat(e, cat) {
+  e.stopPropagation();
+  const pill = document.getElementById('obcat-' + cat);
+  // Close any open menu
+  if (obOpenCatMenu && obOpenCatMenu !== cat) {
+    const old = document.getElementById('obcatmenu-' + obOpenCatMenu);
+    if (old) old.remove();
+    obOpenCatMenu = null;
+  }
+  // Toggle menu
+  const existing = document.getElementById('obcatmenu-' + cat);
+  if (existing) { existing.remove(); obOpenCatMenu = null; return; }
+  const subs = OB_CAT_SUBS[cat] || [];
+  const selected = OB.data.categories[cat] || [];
+  const menu = document.createElement('div'); menu.className='ob-cat-dropdown'; menu.id='obcatmenu-'+cat;
+  menu.innerHTML = subs.map(s => `<label class="ob-cat-sub"><input type="checkbox" ${selected.includes(s)?'checked':''} onchange="obToggleSub('${cat}','${s}',this.checked)"> ${s}</label>`).join('');
+  // Portal to body so overflow:hidden on .ob-step-card doesn't clip the dropdown
+  const rect = pill.getBoundingClientRect();
+  menu.style.position = 'fixed';
+  menu.style.top = (rect.bottom + 6) + 'px';
+  menu.style.left = rect.left + 'px';
+  menu.style.zIndex = '9999';
+  document.body.appendChild(menu);
+  obOpenCatMenu = cat;
+  setTimeout(() => {
+    document.addEventListener('click', function closer(ev) {
+      if (!menu.contains(ev.target) && !pill.contains(ev.target)) { menu.remove(); obOpenCatMenu=null; document.removeEventListener('click',closer); }
+    });
+  }, 10);
+}
+function obToggleSub(cat, sub, checked) {
+  if (!OB.data.categories[cat]) OB.data.categories[cat] = [];
+  if (checked) { if (!OB.data.categories[cat].includes(sub)) OB.data.categories[cat].push(sub); }
+  else { OB.data.categories[cat] = OB.data.categories[cat].filter(s=>s!==sub); }
+  // Update pill UI
+  const pill = document.getElementById('obcat-'+cat);
+  const count = OB.data.categories[cat].length;
+  if (pill) {
+    pill.classList.toggle('sel', count > 0);
+    const countEl = pill.querySelector('.ob-pill-count');
+    if (count > 0) {
+      if (countEl) countEl.textContent = count;
+      else {
+        const sp = document.createElement('span'); sp.className='ob-pill-count'; sp.textContent=count;
+        pill.insertBefore(sp, pill.querySelector('svg'));
+      }
+    } else if (countEl) countEl.remove();
+  }
+}
+
+// Email invite
+function obEmailKey(e) {
+  if (e.key === ',' || e.key === 'Enter' || e.key === 'Tab') {
+    e.preventDefault();
+    obAddEmailTag();
+  }
+}
+function obEmailBlur() { obAddEmailTag(); }
+function obAddEmailTag() {
+  const input = document.getElementById('ob-email-input');
+  const val = input.value.trim().replace(',','');
+  if (!val) return;
+  const isValid = /^[^ @]+@[^ @]+\.[^ @]+$/.test(val);
+  const wrap = document.getElementById('ob-email-wrap');
+  const errEl = document.getElementById('ob-email-error');
+  if (!isValid) {
+    // Show error
+    errEl.style.display = 'flex';
+    errEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>&nbsp;' + val + ' is invalid email format.';
+    const tag = document.createElement('span'); tag.className='ob-email-tag invalid';
+    tag.innerHTML = val + ' <span class="ob-email-tag-x" onclick="this.parentElement.remove()">&#x2715;</span>';
+    wrap.insertBefore(tag, input);
+    input.value = '';
+    return;
+  }
+  errEl.style.display = 'none';
+  OB.data.emails.push(val);
+  const tag = document.createElement('span'); tag.className='ob-email-tag';
+  tag.textContent = val;
+  const x = document.createElement('span'); x.className='ob-email-tag-x'; x.textContent='\u00d7';
+  x.addEventListener('click', function(){ obRemoveEmail(x, val); });
+  tag.appendChild(x);
+  wrap.insertBefore(tag, input);
+  input.value = '';
+}
+function obRemoveEmail(el, email) {
+  OB.data.emails = OB.data.emails.filter(e=>e!==email);
+  el.parentElement.remove();
+}
+function obSendInvites() {
+  const input = document.getElementById('ob-email-input');
+  if (input.value.trim()) obAddEmailTag();
+  if (!OB.data.emails.length) return;
+  const pending = document.getElementById('ob-pending-list');
+  const rows = document.getElementById('ob-pending-rows');
+  const count = document.getElementById('ob-pending-count');
+  count.textContent = OB.data.emails.length;
+  rows.innerHTML = OB.data.emails.map((e,i) => `
+    <div class="ob-invite-row" id="ob-inv-${i}">
+      <div>
+        <div class="ob-invite-email">${esc(e)}</div>
+        ${i===0?'<div style="font-size:11.5px;color:#AAA;margin-top:2px">Cancel invitation? This person won&#39;t be able to join unless you re-invite them.</div>':''}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+        <button class="ob-invite-cancel" onclick="obCancelInvite(${i},'${esc(e)}')">&#x2715; Cancel invite</button>
+        ${i===0?'<button class="ob-invite-cancel" style="border-color:#0A7C4A;color:#0A7C4A">&#x2713; Keep invite</button>':''}
+      </div>
+    </div>`).join('');
+  pending.style.display = 'block';
+}
+function obCancelInvite(i, email) {
+  OB.data.emails = OB.data.emails.filter(e=>e!==email);
+  const row = document.getElementById('ob-inv-'+i);
+  if (row) row.remove();
+  const count = document.getElementById('ob-pending-count');
+  if (count) count.textContent = OB.data.emails.length;
+  // Also remove tag from wrap
+  const tags = document.querySelectorAll('.ob-email-tag');
+  tags.forEach(t => { if (t.textContent.includes(email)) t.remove(); });
+}
+function obToggleInteg(name) {
+  const tile = document.getElementById('ob-integ-' + name);
+  const idx = OB.data.integrations.indexOf(name);
+  if (idx === -1) { OB.data.integrations.push(name); tile.classList.add('sel'); }
+  else { OB.data.integrations.splice(idx,1); tile.classList.remove('sel'); }
+}
+function obGoBack(i) {
+  const card = document.getElementById('ob-card-'+i);
+  if (card) card.classList.add('used');
+  obRunStep(i-1);
+}
+function obNext(i) {
+  const step = OB_STEPS[i];
+  let userMsg = '';
+  if (step.id === 'timezone') userMsg = OB.data.timezone;
+  else if (step.id === 'website') {
+    const inputs = document.querySelectorAll('.ob-url-input');
+    const urls = [];
+    inputs.forEach(inp => { if(inp.value.trim()) urls.push(inp.value.trim()); });
+    if (urls.length > 0) { OB.data.urls = urls; userMsg = urls.join(', '); }
+    else userMsg = 'Uploading brand files';
+  }
+  else if (step.id === 'project') {
+    const nm = document.getElementById('ob-proj-name')?.value||'';
+    OB.data.project = nm;
+    const selCats = Object.entries(OB.data.categories).filter(([,v])=>v.length>0).map(([k])=>k);
+    userMsg = (nm ? nm + ' — ' : '') + (selCats.length ? selCats.join(', ') : 'Project created');
+  }
+  else if (step.id === 'team') {
+    const input = document.getElementById('ob-email-input');
+    if (input?.value.trim()) obAddEmailTag();
+    userMsg = OB.data.emails.length ? OB.data.emails.join(', ') : 'Skip for now';
+  }
+  else if (step.id === 'integrations') userMsg = OB.data.integrations.length ? OB.data.integrations.join(', ') + ' connected' : 'Skip for now';
+  else if (step.id === 'video') userMsg = "Let's get started!";
+
+  // Mark card used
+  const card = document.getElementById('ob-card-'+i);
+  if (card) card.classList.add('used');
+  // User message
+  if (userMsg) obAddUser(userMsg);
+  // AI confirmation
+  setTimeout(() => {
+    if (i < OB_SA_MSGS.length) obAddAI(OB_SA_MSGS[i]);
+    setTimeout(() => obRunStep(i+1), 500);
+  }, 300);
+}
+function obFinish() {
+  obUpdateProgress(OB_STEPS.length);
+  obAddAI("You're all set! 🎉 Your account is fully configured and your Design Pickle workspace is ready. Click below to go to your dashboard.");
+  setTimeout(() => {
+    const feed = document.getElementById('ob-msgs');
+    const card = document.createElement('div');
+    card.style.cssText = 'display:flex;justify-content:center;padding:16px 20px 24px;';
+    card.innerHTML = `<button onclick="obGoToDashboard()" style="background:#111;color:#fff;border:none;border-radius:8px;padding:14px 32px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,0.25);">Go to Dashboard <span style="font-size:18px;">→</span></button>`;
+    feed.appendChild(card);
+    feed.scrollTop = feed.scrollHeight;
+  }, 800);
+}
+function obGoToDashboard() {
+  document.getElementById('ob-chat').style.display = 'none';
+  const db = document.getElementById('db-wrap');
+  db.style.display = 'flex';
+  db.style.flexDirection = 'column';
+  const teamRows = document.getElementById('db-team-rows');
+  const emails = OB.data.emails.length ? OB.data.emails : ['alex@designpickle.com','mike@designpickle.com'];
+  teamRows.innerHTML = emails.map(e => `
+    <div class="db-team-row">
+      <div class="db-team-av">${e[0].toUpperCase()}</div>
+      <div class="db-team-inf"><div class="db-team-email">${e}</div><div class="db-team-status">Invite pending</div></div>
+      <button class="db-resend">Resend</button>
+    </div>`).join('');
+  buildDbChart();
+}
+function obResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
+function obSend() {}
+function obKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();} }
+function openUploadModal() { document.getElementById('upload-modal-back').classList.add('show'); }
+function closeUploadModal() { document.getElementById('upload-modal-back').classList.remove('show'); }
+
+/* ============================================================
+   MODULE: DASHBOARD CHART
+   ============================================================ */
+function buildDbChart() {
+  const container = document.getElementById('db-chart');
+  if (!container) return;
+  const vals = [30,50,45,70,55,80,60,90,75,85,65,70,80,100];
+  const max = 100;
+  container.innerHTML = vals.map((v,i) => {
+    const h = Math.round((v/max)*70);
+    return `<div class="db-chart-bar${i===vals.length-1?' today':''}" style="height:${h}px"></div>`;
+  }).join('');
+}
+
+</script>
+</body>
+</html>
