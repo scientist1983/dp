@@ -88,9 +88,36 @@ Font size tokens in `px`. Four density modes match Corner Radius.
 
 ---
 
-## Spacing & Visibility
+## Spacing
 
-> Screenshots pending — 13 Spacing tokens and 2 Visibility tokens not yet captured.
+Layout spacing tokens in `px`. Same four density modes as Corner Radius and Size.
+
+| Token | Standard | Expanded (+4) | Expanded (+8) | Condensed (-4) |
+|-------|---------|--------------|--------------|----------------|
+| `spacing/0` | 0 | 0 | 0 | 0 |
+| `spacing/2` | 2 | 4 | 8 | 0 |
+| `spacing/4` | 4 | 8 | 12 | 0 |
+| `spacing/8` | 8 | 12 | 16 | 4 |
+| `spacing/10` | 10 | 14 | 18 | 6 |
+| `spacing/12` | 12 | 16 | 20 | 8 |
+| `spacing/16` | 16 | 20 | 24 | 12 |
+| `spacing/20` | 20 | 24 | 28 | 16 |
+| `spacing/24` | 24 | 28 | 32 | 20 |
+| `spacing/28` | 28 | 32 | 36 | 24 |
+| `spacing/40` | 40 | 44 | 48 | 36 |
+| `spacing/48` | 48 | 52 | 56 | 44 |
+| `spacing/80` | 80 | 84 | 88 | 0 |
+
+---
+
+## Visibility
+
+Boolean tokens used to show/hide elements. Two separate collections with identical structure.
+
+| Collection | Token | True mode | False mode |
+|-----------|-------|-----------|------------|
+| Visibility 1 | `visibility 1` | `True` | `False` |
+| Visibility 2 | `visibility 2` | `True` | `False` |
 
 ---
 
