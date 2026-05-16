@@ -341,6 +341,41 @@ body.col-resizing{cursor:col-resize;user-select:none}
 
 @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+
+/* Another request prompt */
+.ra-another-prompt{display:flex;flex-direction:column;gap:10px;padding:16px;background:var(--ra-card);border:1px solid var(--ra-border);border-radius:14px;animation:fadeUp .2s ease}
+.ra-another-prompt-text{font-size:13.5px;color:var(--ra-text);line-height:1.5}
+.ra-another-btns{display:flex;gap:8px}
+.ra-another-yes{flex:1;padding:9px 14px;border-radius:9999px;background:var(--color-primary);border:none;color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .12s}
+.ra-another-yes:hover{opacity:.85}
+.ra-another-no{flex:1;padding:9px 14px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
+.ra-another-no:hover{border-color:var(--ra-text);color:var(--ra-text)}
+
+/* Project panel */
+.ra-project-panel{display:none;flex-direction:column;flex-shrink:0;border-bottom:1px solid var(--ra-border)}
+.ra-project-hd{padding:14px 16px 10px;display:flex;align-items:center;gap:8px}
+.ra-project-hd-text{flex:1;min-width:0}
+.ra-project-title{font-size:14px;font-weight:700;color:var(--ra-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-project-meta{font-size:11px;color:var(--ra-muted)}
+.ra-project-body{max-height:240px;overflow-y:auto;padding:0 14px 12px;display:flex;flex-direction:column;gap:6px}
+.ra-project-body::-webkit-scrollbar{width:3px}
+.ra-project-body::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
+.ra-project-section-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ra-muted);margin-top:4px;margin-bottom:2px}
+.ra-req-card{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;transition:background .12s;cursor:default}
+.ra-req-card:hover{background:var(--ra-card2)}
+.ra-req-card-icon{width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ra-req-card-body{flex:1;min-width:0}
+.ra-req-card-name{font-size:13px;font-weight:700;color:var(--ra-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-req-card-meta{font-size:11.5px;color:var(--ra-muted);margin-top:1px}
+.ra-req-card-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:9999px;flex-shrink:0;margin-top:2px}
+.ra-req-card-status.sent{background:rgba(113,221,140,.15);color:var(--color-green)}
+.ra-req-card-status.draft{background:rgba(44,58,255,.15);color:var(--color-primary)}
+.ra-project-add-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:12px;border:1.5px dashed var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;width:100%}
+.ra-project-add-btn:hover{border-color:var(--color-primary);color:var(--color-primary);background:rgba(44,58,255,.05)}
+.ra-project-add-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none}
+.ra-project-footer{padding:12px 14px;border-top:1px solid var(--ra-border);flex-shrink:0}
+.ra-project-view-btn{width:100%;padding:9px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-text);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
+.ra-project-view-btn:hover{background:var(--ra-hover)}
 </style>
 </head>
 <body>
@@ -489,6 +524,20 @@ body.col-resizing{cursor:col-resize;user-select:none}
         </button>
         <button class="ra-save-btn" onclick="saveDraft()">Save as Draft</button>
       </div>
+
+      <!-- PROJECT PANEL (shown after user confirms another request) -->
+      <div class="ra-project-panel" id="project-panel">
+        <div class="ra-project-hd">
+          <div class="ra-project-hd-text">
+            <div class="ra-project-title" id="project-name">Project</div>
+            <div class="ra-project-meta" id="project-meta">0 requests</div>
+          </div>
+          <button class="ra-project-add-btn" style="width:auto;padding:6px 10px;font-size:11.5px" onclick="addAnotherFromProject()">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add
+          </button>
+        </div>
+        <div class="ra-project-body" id="project-req-list"></div>
+      </div>
     </aside>
   </div>
 </div>
@@ -601,7 +650,8 @@ const S = {
   type:null, typeEmoji:null, pkg:null,
   roles:[{name:'Jane Johnson',color:'#E05A2B',initial:'J',label:'Requester'}],
   history:[], deliverables:[], approvals:{},
-  fsCurrent:0, fsPins:[], fsColor:'#EF4444', fsTool:'pin'
+  fsCurrent:0, fsPins:[], fsColor:'#EF4444', fsTool:'pin',
+  project:[], projectName:'New Project'
 };
 const brands=['Nike.com','Bloom App','TechMart','Vaultly']; let brandIdx=0;
 function cycleBrand(){brandIdx=(brandIdx+1)%brands.length;document.getElementById('brand-label').textContent=brands[brandIdx];}
@@ -882,10 +932,139 @@ function toggleApproval(idx,action){
 }
 function approveAll(){
   S.deliverables.forEach((_,i)=>{S.approvals[i]='approve';toggleApproval(i,'approve');});
-  showTyping(()=>addMsg('All assets approved ✓ Your request is marked complete. Great work!','ai'),600);
+  showTyping(()=>{
+    addMsg('All assets approved ✓ Your request is marked complete. Great work!','ai');
+    setTimeout(askAnotherRequest, 900);
+  },600);
 }
 function requestChanges(){
   showTyping(()=>addMsg('No problem — annotate the specific changes on each asset using the fullscreen viewer, then tap "Send notes to designer".','ai'),600);
+}
+
+function askAnotherRequest(){
+  const wrap=document.createElement('div');
+  wrap.className='ra-another-prompt';
+  wrap.id='another-prompt';
+  wrap.innerHTML=`
+    <div class="ra-another-prompt-text">Would you like to create another request? I can add it to the same project so everything stays together.</div>
+    <div class="ra-another-btns">
+      <button class="ra-another-yes" onclick="confirmAnotherRequest()">Yes, add another</button>
+      <button class="ra-another-no" onclick="declineAnotherRequest()">No, I'm done</button>
+    </div>`;
+  msgs().appendChild(wrap);
+  scrollChat();
+}
+
+function confirmAnotherRequest(){
+  document.getElementById('another-prompt').remove();
+  // Save current request to project
+  const title=document.getElementById('bf-title').textContent||S.pkg?.name||'Untitled Request';
+  const type=S.type||'Design';
+  const emoji=S.typeEmoji||'🎨';
+  S.project.push({title,type,emoji,status:'sent',accent:S.pkg?.accent||'#2C3AFF'});
+  if(S.project.length===1) S.projectName=brands[brandIdx]+' Project';
+  addMsg('Yes, add another','user');
+  showProjectPanel();
+  showTyping(()=>{
+    addMsg('Starting a new request — the brief panel is ready for your next one. What type of design do you need?','ai');
+    resetForNewRequest();
+  },700);
+}
+
+function declineAnotherRequest(){
+  document.getElementById('another-prompt').remove();
+  addMsg('No, I\'m done','user');
+  showTyping(()=>addMsg('You\'re all set! Head back to the dashboard whenever you\'re ready.','ai'),500);
+}
+
+function showProjectPanel(){
+  // Project panel sits at the top; brief header/body/footer shift below it
+  document.getElementById('project-panel').style.display='flex';
+  renderProjectPanel();
+}
+
+function renderProjectPanel(){
+  document.getElementById('project-name').textContent=S.projectName;
+  const count=S.project.length;
+  document.getElementById('project-meta').textContent=`${count} request${count!==1?'s':''} · In progress`;
+
+  const list=document.getElementById('project-req-list');
+  list.innerHTML='<div class="ra-project-section-label">Requests</div>'+
+    S.project.map((r,i)=>`
+      <div class="ra-req-card">
+        <div class="ra-req-card-icon" style="background:${r.accent}22">${r.emoji}</div>
+        <div class="ra-req-card-body">
+          <div class="ra-req-card-name">${r.title}</div>
+          <div class="ra-req-card-meta">${r.type}</div>
+        </div>
+        <div class="ra-req-card-status sent">Sent</div>
+      </div>`).join('');
+}
+
+function resetForNewRequest(){
+  // Reset state for a new request
+  S.type=null;S.typeEmoji=null;S.pkg=null;
+  S.deliverables=[];S.approvals={};S.fsPins=[];
+
+  // Clear brief fields
+  ['bf-title','bf-req-type','bf-sizes','bf-formats','bf-channels','bf-audience','bf-desc','bf-brand-profile','bf-visual-style','bf-avoid','bf-references'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.textContent='';
+  });
+  document.getElementById('bf-copy').value='';
+  document.getElementById('bf-due-date').value='';
+
+  // Show type picker in chat
+  const tp=document.createElement('div');
+  tp.className='ra-type-picker';tp.id='type-picker-2';
+  tp.innerHTML=`<div class="ra-type-picker-label"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Create</div>
+    <div class="ra-type-tiles">
+      <div class="ra-type-tile" style="background:linear-gradient(145deg,#5B5BD6,#8B5CF6)" onclick="selectTypeNew('Social Ads','📱',this)"><div class="ra-type-tile-emoji">📱</div><div class="ra-type-tile-name">Social Ads</div></div>
+      <div class="ra-type-tile" style="background:linear-gradient(145deg,#0A6E8A,#00B4D8)" onclick="selectTypeNew('Banner Ads','🖼',this)"><div class="ra-type-tile-emoji">🖼</div><div class="ra-type-tile-name">Banner Ads</div></div>
+      <div class="ra-type-tile" style="background:linear-gradient(145deg,#2A7A4B,#3CB371)" onclick="selectTypeNew('Logo','🎨',this)"><div class="ra-type-tile-emoji">🎨</div><div class="ra-type-tile-name">Logo</div></div>
+      <div class="ra-type-tile" style="background:linear-gradient(145deg,#E8520A,#F97316)" onclick="selectTypeNew('Email','✉️',this)"><div class="ra-type-tile-emoji">✉️</div><div class="ra-type-tile-name">Email</div></div>
+      <div class="ra-type-tile" style="background:linear-gradient(145deg,#1a6db5,#2C3AFF)" onclick="selectTypeNew('Video','🎬',this)"><div class="ra-type-tile-emoji">🎬</div><div class="ra-type-tile-name">Video</div></div>
+    </div>`;
+  msgs().appendChild(tp);
+  scrollChat();
+
+  // Show draft brief panel again inside project panel context
+  showNewBriefInProject();
+}
+
+function showNewBriefInProject(){
+  // Reset brief to draft state; project panel remains visible above
+  document.getElementById('brief-body').style.display='';
+  document.getElementById('brief-locked').classList.add('hidden');
+  document.getElementById('brief-sections').style.display='none';
+  document.getElementById('brief-empty').style.display='';
+  document.getElementById('brief-assets-section').classList.add('hidden');
+  document.getElementById('brief-workflows-section').classList.add('hidden');
+  document.querySelector('.ra-brief-footer').style.display='';
+  document.querySelector('.ra-brief-hd').style.display='';
+  document.getElementById('brief-badge').textContent='Draft';
+  document.getElementById('brief-badge').className='ra-brief-badge';
+  document.getElementById('submit-btn').disabled=true;
+  document.getElementById('submit-btn').style.background='';
+  document.getElementById('submit-btn').style.color='';
+  document.getElementById('submit-btn').innerHTML='<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Submit Request';
+}
+
+function selectTypeNew(type,emoji,el){
+  el.closest('.ra-type-picker').remove();
+  selectType(type,emoji);
+}
+
+function addAnotherFromProject(){
+  addMsg('Add another request','user');
+  showTyping(()=>{
+    addMsg('Starting a new request — what type of design do you need?','ai');
+    resetForNewRequest();
+  },600);
+}
+
+function openProjectView(){
+  addMsg('Opening project view…','user');
+  showTyping(()=>addMsg('Project view coming soon — for now all your requests are listed in the panel.','ai'),500);
 }
 
 /* ── DRAW THUMBNAIL CANVAS ── */
