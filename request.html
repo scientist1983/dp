@@ -1,7 +1,4 @@
 <!DOCTYPE html>
-<!--
-  JarCOS Request Agent — Design Pickle
--->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -13,18 +10,18 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 
-/* ── CSS TOKENS ── */
 :root{
   --ra-bg:#0C0C0C;
   --ra-sb:#111;
   --ra-card:#1C1C1C;
+  --ra-card2:#242424;
   --ra-border:rgba(255,255,255,.09);
   --ra-text:#fff;
   --ra-muted:rgba(255,255,255,.42);
   --ra-divider:rgba(255,255,255,.07);
   --ra-hover:rgba(255,255,255,.05);
   --ra-active:rgba(255,255,255,.1);
-  --ra-input:#222;
+  --ra-input:#1a1a1a;
   --color-primary:#2C3AFF;
   --color-volt:#D5FF02;
   --color-green:#71DD8C;
@@ -32,13 +29,14 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
   --color-purple:#B899EB;
 }
 .light{
-  --ra-bg:#F9F9FA;
-  --ra-sb:#fff;
+  --ra-bg:#F0EDE8;
+  --ra-sb:#FAFAF8;
   --ra-card:#fff;
+  --ra-card2:#F5F4F0;
   --ra-border:#E5E3DF;
-  --ra-text:#0B0C0B;
+  --ra-text:#111;
   --ra-muted:#888;
-  --ra-divider:#F0EDE8;
+  --ra-divider:#EDEAE4;
   --ra-hover:#F5F4F0;
   --ra-active:#EDEAE4;
   --ra-input:#F5F4F0;
@@ -48,162 +46,195 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 #ra-wrap{display:flex;flex-direction:column;height:100vh;background:var(--ra-bg)}
 
 /* Header */
-.ra-header{height:54px;background:var(--ra-sb);border-bottom:1px solid var(--ra-border);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;z-index:10}
-.ra-logo{font-size:20px;font-weight:900;letter-spacing:-.04em;line-height:1;text-decoration:none;cursor:pointer}
+.ra-header{height:52px;background:var(--ra-sb);border-bottom:1px solid var(--ra-border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:20}
+.ra-logo{font-size:20px;font-weight:900;letter-spacing:-.04em;text-decoration:none;line-height:1}
 #ra-wrap:not(.light) .ra-logo{color:var(--color-volt)}
 #ra-wrap.light .ra-logo{color:#0B0C0B}
-.ra-header-title{font-size:14px;font-weight:600;color:var(--ra-muted);flex:1}
+.ra-header-sep{width:1px;height:18px;background:var(--ra-border);margin:0 2px}
+.ra-header-title{font-size:13px;font-weight:600;color:var(--ra-muted)}
 .ra-header-r{display:flex;align-items:center;gap:6px;margin-left:auto}
-.ra-icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);transition:all .12s;text-decoration:none}
+.ra-icon-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);transition:all .12s;text-decoration:none}
 .ra-icon-btn:hover{background:var(--ra-hover);color:var(--ra-text)}
-.ra-icon-btn svg{width:16px;height:16px}
-.ra-theme-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);font-size:15px;transition:all .12s}
-.ra-theme-btn:hover{background:var(--ra-hover);color:var(--ra-text)}
+.ra-icon-btn svg{width:15px;height:15px;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.ra-theme-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);font-size:14px;transition:all .12s}
+.ra-theme-btn:hover{background:var(--ra-hover)}
 
-/* Body: two-pane */
+/* Body two-pane */
 .ra-body{flex:1;display:flex;overflow:hidden}
 
 /* ── CHAT PANE ── */
-.ra-chat{flex:1;min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--ra-border)}
-.ra-chat-msgs{flex:1;overflow-y:auto;padding:20px 20px 8px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.ra-chat{flex:1;min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--ra-border);background:var(--ra-bg)}
+.ra-chat-msgs{flex:1;overflow-y:auto;padding:24px 20px 12px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth}
 .ra-chat-msgs::-webkit-scrollbar{width:4px}
 .ra-chat-msgs::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
 
-/* Messages */
-.ra-msg{display:flex;gap:10px;animation:fadeUp .18s ease}
-.ra-msg.user{flex-direction:row-reverse}
-.ra-msg-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+/* Welcome block */
+.ra-welcome{display:flex;flex-direction:column;gap:14px;animation:fadeUp .22s ease}
+.ra-welcome-heading{font-size:28px;font-weight:900;color:var(--ra-text);letter-spacing:-.02em}
+.ra-welcome-sub{font-size:14px;color:var(--ra-muted);margin-top:-8px}
+.ra-speech{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;border-bottom-left-radius:4px;padding:14px 18px;font-size:14px;line-height:1.6;color:var(--ra-text);max-width:520px}
+
+/* Type picker card */
+.ra-type-picker{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;max-width:600px;animation:fadeUp .22s ease}
+.ra-type-picker-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ra-muted);display:flex;align-items:center;gap:6px}
+.ra-type-picker-label svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+.ra-type-tiles{display:flex;gap:10px}
+.ra-type-tile{flex:1;aspect-ratio:1;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border:2px solid transparent;transition:transform .14s,border-color .14s;min-width:0}
+.ra-type-tile:hover{transform:translateY(-2px)}
+.ra-type-tile.selected{border-color:#fff}
+.ra-type-tile-emoji{font-size:28px;margin-bottom:6px;line-height:1}
+.ra-type-tile-name{font-size:12.5px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.ra-type-picker-footer{display:flex;align-items:center;justify-content:space-between}
+.ra-type-picker-meta{font-size:12px;color:var(--ra-muted);display:flex;align-items:center;gap:5px}
+.ra-type-picker-meta svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+.ra-view-all-btn{padding:6px 14px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;font-size:12.5px;color:var(--ra-text);cursor:pointer;font-family:inherit;transition:all .12s;white-space:nowrap}
+.ra-view-all-btn:hover{border-color:var(--color-primary);color:var(--color-primary)}
+
+/* AI message */
+.ra-msg{display:flex;gap:10px;animation:fadeUp .18s ease;max-width:560px}
+.ra-msg.user{flex-direction:row-reverse;align-self:flex-end;max-width:420px}
+.ra-msg-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:2px}
 .ra-msg-av.ai{background:linear-gradient(135deg,#F97316,#3B82F6);color:#fff}
 .ra-msg-av.user{background:#E05A2B;color:#fff}
-.ra-bubble{max-width:78%;padding:11px 14px;border-radius:16px;font-size:13.5px;line-height:1.55;color:var(--ra-text)}
+.ra-bubble{padding:11px 15px;border-radius:16px;font-size:13.5px;line-height:1.55;color:var(--ra-text)}
 .ra-msg.ai .ra-bubble{background:var(--ra-card);border:1px solid var(--ra-border);border-bottom-left-radius:4px}
 .ra-msg.user .ra-bubble{background:var(--color-primary);color:#fff;border-bottom-right-radius:4px}
 
-/* Quick-reply chips */
-.ra-chips{display:flex;flex-wrap:wrap;gap:7px;padding:4px 0 4px 40px}
-.ra-chip{padding:7px 14px;border-radius:9999px;border:1px solid var(--ra-border);background:var(--ra-card);font-size:12.5px;color:var(--ra-text);cursor:pointer;transition:all .12s;font-family:inherit}
-.ra-chip:hover{border-color:var(--color-primary);color:var(--color-primary)}
-.ra-chip.selected{background:rgba(44,58,255,.15);border-color:var(--color-primary);color:var(--color-primary)}
+/* Package cards */
+.ra-packages{display:flex;flex-direction:column;gap:8px;max-width:560px;animation:fadeUp .22s ease}
+.ra-packages-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--color-primary);display:flex;align-items:center;gap:6px}
+.ra-packages-label::before{content:'✦';font-size:10px}
+.ra-pkg-card{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:14px;padding:16px 18px;cursor:pointer;transition:all .14s;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden}
+.ra-pkg-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--pkg-accent,var(--color-primary));opacity:0;transition:opacity .14s}
+.ra-pkg-card:hover{border-color:var(--pkg-accent,var(--color-primary));background:var(--ra-card2);transform:translateX(2px)}
+.ra-pkg-card:hover::before{opacity:1}
+.ra-pkg-icon{width:52px;height:52px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;position:relative}
+.ra-pkg-icon-bg{position:absolute;inset:0;border-radius:12px;opacity:.18}
+.ra-pkg-icon-em{position:relative;z-index:1;font-size:24px}
+.ra-pkg-info{flex:1;min-width:0}
+.ra-pkg-name{font-size:14.5px;font-weight:700;color:var(--ra-text);margin-bottom:3px}
+.ra-pkg-desc{font-size:12.5px;color:var(--ra-muted);line-height:1.45;margin-bottom:7px}
+.ra-pkg-tags{display:flex;flex-wrap:wrap;gap:5px}
+.ra-pkg-tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:9999px;background:var(--ra-hover);border:1px solid var(--ra-border);color:var(--ra-muted)}
+.ra-pkg-arrow{color:var(--ra-muted);flex-shrink:0;font-size:18px;opacity:0;transition:opacity .14s}
+.ra-pkg-card:hover .ra-pkg-arrow{opacity:1}
+.ra-pkg-custom{border-style:dashed;background:transparent}
+.ra-pkg-custom:hover{background:var(--ra-hover)}
 
 /* Typing indicator */
-.ra-typing{display:flex;align-items:center;gap:4px;padding:10px 14px;background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;border-bottom-left-radius:4px;width:58px}
-.ra-dot{width:7px;height:7px;border-radius:50%;background:var(--ra-muted);animation:blink 1.2s infinite}
+.ra-typing-wrap{display:flex;gap:10px;animation:fadeUp .18s ease}
+.ra-typing{display:flex;align-items:center;gap:4px;padding:12px 16px;background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;border-bottom-left-radius:4px}
+.ra-dot{width:6px;height:6px;border-radius:50%;background:var(--ra-muted);animation:blink 1.2s infinite}
 .ra-dot:nth-child(2){animation-delay:.2s}
 .ra-dot:nth-child(3){animation-delay:.4s}
 
-/* Chat input bar */
-.ra-chat-bar{padding:12px 16px;border-top:1px solid var(--ra-border);display:flex;align-items:flex-end;gap:10px;background:var(--ra-sb)}
-.ra-chat-input{flex:1;min-height:40px;max-height:120px;resize:none;border:1px solid var(--ra-border);border-radius:12px;background:var(--ra-input);color:var(--ra-text);font-family:inherit;font-size:13.5px;padding:10px 14px;outline:none;line-height:1.45;overflow-y:auto;transition:border-color .12s}
+/* Chat input bar — always at bottom */
+.ra-chat-bar{padding:14px 16px;border-top:1px solid var(--ra-border);background:var(--ra-sb);flex-shrink:0}
+.ra-chat-bar-inner{display:flex;align-items:flex-end;gap:8px;background:var(--ra-input);border:1px solid var(--ra-border);border-radius:14px;padding:10px 12px;transition:border-color .12s}
+.ra-chat-bar-inner:focus-within{border-color:var(--color-primary)}
+.ra-chat-bar-left{display:flex;align-items:center;gap:6px}
+.ra-attach-btn{width:28px;height:28px;border-radius:7px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);transition:color .12s}
+.ra-attach-btn:hover{color:var(--ra-text)}
+.ra-attach-btn svg{width:15px;height:15px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+.ra-brand-pill{display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:9999px;border:1px solid var(--ra-border);background:var(--ra-hover);font-size:12px;font-weight:600;color:var(--ra-text);cursor:pointer;white-space:nowrap}
+.ra-brand-pill svg{width:11px;height:11px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none}
+.ra-chat-input{flex:1;border:none;background:transparent;outline:none;font-family:inherit;font-size:13.5px;color:var(--ra-text);resize:none;min-height:22px;max-height:110px;line-height:1.5;overflow-y:auto}
 .ra-chat-input::placeholder{color:var(--ra-muted)}
-.ra-chat-input:focus{border-color:var(--color-primary)}
-.ra-send-btn{width:40px;height:40px;border-radius:10px;background:var(--color-primary);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s}
+.ra-send-btn{width:34px;height:34px;border-radius:9px;background:var(--color-primary);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s}
 .ra-send-btn:hover{background:#2834E5}
-.ra-send-btn svg{width:16px;height:16px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
-.ra-attach-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);transition:all .12s}
-.ra-attach-btn:hover{background:var(--ra-hover);color:var(--ra-text)}
-.ra-attach-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+.ra-send-btn svg{width:15px;height:15px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
 
 /* ── BRIEF PANEL ── */
-.ra-brief{width:340px;min-width:340px;background:var(--ra-sb);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
-.ra-brief-hd{padding:16px 18px 12px;border-bottom:1px solid var(--ra-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.ra-brief{width:330px;min-width:330px;background:var(--ra-sb);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.ra-brief-hd{padding:14px 18px 12px;border-bottom:1px solid var(--ra-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .ra-brief-title{font-size:14px;font-weight:700;color:var(--ra-text)}
-.ra-brief-status{font-size:11.5px;padding:3px 9px;border-radius:9999px;background:rgba(44,58,255,.15);color:var(--color-primary);font-weight:600}
-.ra-brief-body{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:16px}
+.ra-brief-badge{font-size:11px;padding:3px 9px;border-radius:9999px;font-weight:700;background:rgba(44,58,255,.15);color:var(--color-primary)}
+.ra-brief-badge.ready{background:rgba(113,221,140,.15);color:var(--color-green)}
+.ra-brief-badge.submitted{background:rgba(113,221,140,.2);color:var(--color-green)}
+.ra-brief-body{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:14px}
 .ra-brief-body::-webkit-scrollbar{width:4px}
 .ra-brief-body::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
+.ra-bf-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;color:var(--ra-muted);text-align:center;padding:24px}
+.ra-bf-empty svg{width:36px;height:36px;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;fill:none;opacity:.4}
+.ra-bf-empty p{font-size:13px;line-height:1.55;max-width:200px}
 
 /* Brief fields */
-.ra-field{display:flex;flex-direction:column;gap:6px}
-.ra-field-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ra-muted)}
-.ra-field-value{font-size:13.5px;color:var(--ra-text);line-height:1.4}
-.ra-field-empty{font-size:13px;color:var(--ra-muted);font-style:italic}
-.ra-field-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:9999px;background:rgba(44,58,255,.14);color:var(--color-primary);font-size:12px;font-weight:600}
-.ra-field-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:9999px;border:1px solid var(--ra-border);font-size:12px;color:var(--ra-text);margin:2px 3px 2px 0}
+.ra-field{display:flex;flex-direction:column;gap:5px}
+.ra-field-label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ra-muted)}
+.ra-field-value{font-size:13.5px;color:var(--ra-text);line-height:1.45}
 .ra-field-divider{border:none;border-top:1px solid var(--ra-divider);margin:0 -18px}
+.ra-field-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:9999px;background:rgba(44,58,255,.14);color:var(--color-primary);font-size:12px;font-weight:700}
+.ra-field-tag{display:inline-flex;padding:3px 9px;border-radius:9999px;border:1px solid var(--ra-border);font-size:11.5px;color:var(--ra-text);margin:2px 3px 2px 0}
+.ra-pkg-selected-banner{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:2px}
+.ra-pkg-selected-icon{width:38px;height:38px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative}
+.ra-pkg-selected-name{font-size:13px;font-weight:700;color:var(--ra-text)}
+.ra-pkg-selected-type{font-size:11.5px;color:var(--ra-muted)}
 
-/* Asset grid */
-.ra-assets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+/* Assets grid */
+.ra-assets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .ra-asset-thumb{aspect-ratio:1;border-radius:8px;border:1px solid var(--ra-border);background:var(--ra-hover);overflow:hidden;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;color:var(--ra-muted)}
 .ra-asset-thumb img{width:100%;height:100%;object-fit:cover}
-.ra-asset-thumb:hover .ra-asset-overlay{opacity:1}
-.ra-asset-overlay{position:absolute;inset:0;background:rgba(44,58,255,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;border-radius:8px}
-.ra-asset-overlay svg{width:20px;height:20px;stroke:#fff;stroke-width:2;stroke-linecap:round;fill:none}
 .ra-add-asset{border:1px dashed var(--ra-border);background:transparent;cursor:pointer;transition:all .12s;font-family:inherit}
-.ra-add-asset:hover{border-color:var(--color-primary);background:rgba(44,58,255,.07);color:var(--color-primary)}
+.ra-add-asset:hover{border-color:var(--color-primary);color:var(--color-primary);background:rgba(44,58,255,.07)}
 
 /* Roles */
 .ra-roles-row{display:flex;align-items:center;gap:8px}
-.ra-role-av{width:28px;height:28px;border-radius:50%;background:var(--ra-hover);border:1px solid var(--ra-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.ra-role-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;flex-shrink:0;color:#fff}
 .ra-role-name{font-size:13px;color:var(--ra-text);flex:1}
 .ra-role-label{font-size:11px;color:var(--ra-muted)}
 .ra-add-role{padding:5px 12px;border-radius:9999px;border:1px dashed var(--ra-border);background:transparent;font-size:12px;color:var(--ra-muted);cursor:pointer;font-family:inherit;transition:all .12s;display:inline-flex;align-items:center;gap:5px}
 .ra-add-role:hover{border-color:var(--color-primary);color:var(--color-primary)}
 
 /* Brief footer */
-.ra-brief-footer{padding:14px 18px;border-top:1px solid var(--ra-border);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.ra-brief-footer{padding:12px 18px;border-top:1px solid var(--ra-border);display:flex;flex-direction:column;gap:7px;flex-shrink:0}
 .ra-submit-btn{width:100%;padding:12px;border-radius:10px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background .12s;display:flex;align-items:center;justify-content:center;gap:8px}
-.ra-submit-btn:hover{background:#2834E5}
-.ra-submit-btn:disabled{opacity:.45;cursor:not-allowed}
-.ra-submit-btn svg{width:15px;height:15px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;fill:none}
-.ra-save-btn{width:100%;padding:10px;border-radius:10px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
+.ra-submit-btn:hover:not(:disabled){background:#2834E5}
+.ra-submit-btn:disabled{opacity:.35;cursor:not-allowed}
+.ra-submit-btn svg{width:14px;height:14px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;fill:none}
+.ra-save-btn{width:100%;padding:9px;border-radius:10px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
 .ra-save-btn:hover{border-color:var(--color-primary);color:var(--color-primary)}
 
 /* ── MODALS ── */
-.ra-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.ra-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
 .ra-modal-bg.hidden{display:none}
-.ra-modal{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;width:100%;max-width:480px;overflow:hidden;animation:fadeUp .18s ease}
-.ra-modal-hd{padding:18px 20px 14px;border-bottom:1px solid var(--ra-divider);display:flex;align-items:center;justify-content:space-between}
+.ra-modal{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;width:100%;max-width:460px;overflow:hidden;animation:fadeUp .18s ease}
+.ra-modal-hd{padding:16px 20px 12px;border-bottom:1px solid var(--ra-divider);display:flex;align-items:center;justify-content:space-between}
 .ra-modal-title{font-size:15px;font-weight:700;color:var(--ra-text)}
-.ra-modal-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);font-size:16px;line-height:1;transition:all .12s}
+.ra-modal-close{width:26px;height:26px;border-radius:6px;border:1px solid var(--ra-border);background:transparent;cursor:pointer;color:var(--ra-muted);font-size:16px;line-height:1;transition:all .12s;display:flex;align-items:center;justify-content:center}
 .ra-modal-close:hover{background:var(--ra-hover);color:var(--ra-text)}
-.ra-modal-body{padding:20px}
+.ra-modal-body{padding:18px 20px}
 
-/* Type picker */
-.ra-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.ra-type-card{border:1px solid var(--ra-border);border-radius:12px;padding:16px 12px;cursor:pointer;transition:all .12s;text-align:center;background:var(--ra-hover);display:flex;flex-direction:column;align-items:center;gap:8px}
-.ra-type-card:hover{border-color:var(--color-primary);background:rgba(44,58,255,.08)}
-.ra-type-card.selected{border-color:var(--color-primary);background:rgba(44,58,255,.15)}
-.ra-type-icon{width:40px;height:40px;border-radius:10px;background:rgba(44,58,255,.18);display:flex;align-items:center;justify-content:center;margin:0 auto}
-.ra-type-icon svg{width:20px;height:20px;stroke:var(--color-primary);stroke-width:1.8;stroke-linecap:round;fill:none}
-.ra-type-name{font-size:12.5px;font-weight:600;color:var(--ra-text)}
-.ra-type-sub{font-size:11px;color:var(--ra-muted)}
-
-/* Roles modal */
-.ra-roles-search{width:100%;padding:9px 14px;border-radius:10px;border:1px solid var(--ra-border);background:var(--ra-input);color:var(--ra-text);font-family:inherit;font-size:13px;outline:none;margin-bottom:14px;transition:border-color .12s}
-.ra-roles-search:focus{border-color:var(--color-primary)}
-.ra-roles-search::placeholder{color:var(--ra-muted)}
-.ra-role-option{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .1s}
-.ra-role-option:hover{background:var(--ra-hover)}
-.ra-role-option-av{width:32px;height:32px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-.ra-role-option-info{flex:1}
-.ra-role-option-name{font-size:13px;font-weight:600;color:var(--ra-text)}
-.ra-role-option-email{font-size:11.5px;color:var(--ra-muted)}
-.ra-role-check{width:18px;height:18px;border-radius:5px;border:1px solid var(--ra-border);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--color-primary)}
-
-/* Asset fullscreen */
-.ra-fs-modal{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;width:100%;max-width:600px;overflow:hidden;animation:fadeUp .18s ease}
-.ra-fs-img{width:100%;max-height:60vh;object-fit:contain;background:#0a0a0a;display:block}
-.ra-fs-footer{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--ra-divider)}
-.ra-fs-name{font-size:13px;font-weight:600;color:var(--ra-text)}
-.ra-fs-actions{display:flex;gap:8px}
-.ra-fs-act-btn{padding:6px 14px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;font-size:12.5px;color:var(--ra-muted);cursor:pointer;font-family:inherit;transition:all .12s}
-.ra-fs-act-btn:hover{border-color:var(--color-primary);color:var(--color-primary)}
-.ra-fs-act-btn.danger:hover{border-color:#EF4444;color:#EF4444}
+/* Full type grid modal */
+.ra-full-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ra-full-type-card{border:1px solid var(--ra-border);border-radius:11px;padding:14px 10px;cursor:pointer;transition:all .12s;text-align:center;background:var(--ra-hover);display:flex;flex-direction:column;align-items:center;gap:6px}
+.ra-full-type-card:hover{border-color:var(--color-primary);background:rgba(44,58,255,.08)}
+.ra-full-type-icon{font-size:22px}
+.ra-full-type-name{font-size:12px;font-weight:700;color:var(--ra-text)}
 
 /* Upload modal */
-.ra-drop-zone{border:2px dashed var(--ra-border);border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:10px}
-.ra-drop-zone:hover,.ra-drop-zone.drag-over{border-color:var(--color-primary);background:rgba(44,58,255,.07)}
-.ra-drop-zone svg{width:32px;height:32px;stroke:var(--ra-muted);stroke-width:1.5;stroke-linecap:round;fill:none}
+.ra-drop-zone{border:2px dashed var(--ra-border);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:8px}
+.ra-drop-zone:hover,.ra-drop-zone.drag-over{border-color:var(--color-primary);background:rgba(44,58,255,.06)}
+.ra-drop-zone svg{width:28px;height:28px;stroke:var(--ra-muted);stroke-width:1.6;stroke-linecap:round;fill:none}
 .ra-drop-zone p{font-size:13px;color:var(--ra-muted)}
-.ra-drop-zone strong{color:var(--color-primary);cursor:pointer}
-.ra-modal-footer{padding:14px 20px;border-top:1px solid var(--ra-divider);display:flex;justify-content:flex-end;gap:8px}
+.ra-drop-zone strong{color:var(--color-primary)}
+.ra-modal-footer{padding:12px 20px;border-top:1px solid var(--ra-divider);display:flex;justify-content:flex-end;gap:8px}
 .ra-btn-primary{padding:9px 20px;border-radius:9999px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:background .12s}
 .ra-btn-primary:hover{background:#2834E5}
 .ra-btn-secondary{padding:9px 20px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
 .ra-btn-secondary:hover{border-color:var(--color-primary);color:var(--color-primary)}
 
-@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* Roles modal */
+.ra-roles-search{width:100%;padding:9px 14px;border-radius:10px;border:1px solid var(--ra-border);background:var(--ra-input);color:var(--ra-text);font-family:inherit;font-size:13px;outline:none;margin-bottom:12px;transition:border-color .12s}
+.ra-roles-search:focus{border-color:var(--color-primary)}
+.ra-roles-search::placeholder{color:var(--ra-muted)}
+.ra-role-option{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .1s}
+.ra-role-option:hover{background:var(--ra-hover)}
+.ra-role-option-av{width:30px;height:30px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.ra-role-option-name{font-size:13px;font-weight:600;color:var(--ra-text)}
+.ra-role-option-email{font-size:11.5px;color:var(--ra-muted)}
+
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -212,134 +243,176 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
   <!-- HEADER -->
   <header class="ra-header">
     <a href="index.html" class="ra-logo">dp</a>
-    <div class="ra-header-title">Request Agent</div>
+    <div class="ra-header-sep"></div>
+    <span class="ra-header-title">Request Agent</span>
     <div class="ra-header-r">
-      <button class="ra-theme-btn" onclick="toggleTheme()" title="Toggle light/dark">☀</button>
+      <button class="ra-theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
       <a href="index.html" class="ra-icon-btn" title="Close">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </a>
     </div>
   </header>
 
-  <!-- BODY -->
   <div class="ra-body">
 
-    <!-- CHAT PANE -->
+    <!-- ── CHAT PANE ── -->
     <div class="ra-chat">
       <div class="ra-chat-msgs" id="chat-msgs">
 
-        <!-- AI greeting -->
-        <div class="ra-msg ai">
-          <div class="ra-msg-av ai">AI</div>
-          <div class="ra-bubble">Hey! I'm your Request Agent. I'll help you put together a creative brief — it only takes a few minutes.<br><br>Let's start: <strong>what type of creative asset</strong> do you need?</div>
+        <!-- Welcome -->
+        <div class="ra-welcome" id="welcome-block">
+          <div>
+            <div class="ra-welcome-heading">Welcome, Jane 👋</div>
+            <div class="ra-welcome-sub">I am <strong>John Pickle</strong>, your brief building agent</div>
+          </div>
+          <div class="ra-speech">To get started choose a request type below — or describe what you need in the box.</div>
         </div>
-        <div class="ra-chips" id="type-chips">
-          <button class="ra-chip" onclick="pickType('Social Media')">Social Media</button>
-          <button class="ra-chip" onclick="pickType('Video')">Video</button>
-          <button class="ra-chip" onclick="pickType('Print')">Print</button>
-          <button class="ra-chip" onclick="pickType('Presentation')">Presentation</button>
-          <button class="ra-chip" onclick="pickType('Illustration')">Illustration</button>
-          <button class="ra-chip" onclick="openTypeModal()">More types →</button>
+
+        <!-- Type picker -->
+        <div class="ra-type-picker" id="type-picker">
+          <div class="ra-type-picker-label">
+            <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Create
+          </div>
+          <div class="ra-type-tiles" id="type-tiles">
+            <div class="ra-type-tile" style="background:linear-gradient(145deg,#5B5BD6,#8B5CF6)" onclick="selectType('Social Ads','📱')">
+              <div class="ra-type-tile-emoji">📱</div>
+              <div class="ra-type-tile-name">Social Ads</div>
+            </div>
+            <div class="ra-type-tile" style="background:linear-gradient(145deg,#2A7A4B,#3CB371)" onclick="selectType('Logo','🎨')">
+              <div class="ra-type-tile-emoji">🎨</div>
+              <div class="ra-type-tile-name">Logo</div>
+            </div>
+            <div class="ra-type-tile" style="background:linear-gradient(145deg,#E8520A,#F97316)" onclick="selectType('Email','✉️')">
+              <div class="ra-type-tile-emoji">✉️</div>
+              <div class="ra-type-tile-name">Email</div>
+            </div>
+            <div class="ra-type-tile" style="background:linear-gradient(145deg,#1a6db5,#2C3AFF)" onclick="selectType('Video','🎬')">
+              <div class="ra-type-tile-emoji">🎬</div>
+              <div class="ra-type-tile-name">Video</div>
+            </div>
+            <div class="ra-type-tile" style="background:var(--ra-card2);border:1px solid var(--ra-border)" onclick="openModal('type-modal')">
+              <div style="font-size:22px;margin-bottom:6px;color:var(--ra-muted)">···</div>
+              <div class="ra-type-tile-name" style="color:var(--ra-muted)">More</div>
+            </div>
+          </div>
+          <div class="ra-type-picker-footer">
+            <div class="ra-type-picker-meta">
+              <svg viewBox="0 0 24 24"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
+              Ratio
+            </div>
+            <button class="ra-view-all-btn" onclick="openModal('type-modal')">View all request types →</button>
+          </div>
         </div>
 
       </div>
 
-      <!-- Chat input -->
+      <!-- Static input bar -->
       <div class="ra-chat-bar">
-        <button class="ra-attach-btn" onclick="openUploadModal()" title="Attach reference file">
-          <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-        </button>
-        <textarea class="ra-chat-input" id="chat-input" placeholder="Describe what you need…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="ra-send-btn" onclick="sendMessage()">
-          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
+        <div class="ra-chat-bar-inner">
+          <div class="ra-chat-bar-left">
+            <button class="ra-attach-btn" onclick="openModal('upload-modal')" title="Attach file">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <div class="ra-brand-pill" onclick="cycleBrand()">
+              <span id="brand-label">Nike.com</span>
+              <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <textarea class="ra-chat-input" id="chat-input" placeholder="Describe what you want to request…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="ra-send-btn" onclick="sendMessage()">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- BRIEF PANEL -->
+    <!-- ── BRIEF PANEL ── -->
     <aside class="ra-brief">
       <div class="ra-brief-hd">
         <span class="ra-brief-title">Creative Brief</span>
-        <span class="ra-brief-status" id="brief-status">Draft</span>
+        <span class="ra-brief-badge" id="brief-badge">Draft</span>
       </div>
-      <div class="ra-brief-body">
-
-        <!-- Type -->
-        <div class="ra-field">
-          <div class="ra-field-label">Type</div>
-          <div id="bf-type"><span class="ra-field-empty">Not set</span></div>
+      <div class="ra-brief-body" id="brief-body">
+        <div class="ra-bf-empty" id="brief-empty">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <p>Choose a request type and package to auto-fill your brief</p>
         </div>
+        <div id="brief-fields" style="display:none;flex-direction:column;gap:14px">
 
-        <hr class="ra-field-divider">
+          <!-- Package banner -->
+          <div id="bf-pkg-banner"></div>
 
-        <!-- Title -->
-        <div class="ra-field">
-          <div class="ra-field-label">Title</div>
-          <div id="bf-title"><span class="ra-field-empty">Not set</span></div>
-        </div>
-
-        <!-- Format / Size -->
-        <div class="ra-field">
-          <div class="ra-field-label">Format / Size</div>
-          <div id="bf-format"><span class="ra-field-empty">Not set</span></div>
-        </div>
-
-        <!-- Project -->
-        <div class="ra-field">
-          <div class="ra-field-label">Project</div>
-          <div id="bf-project"><span class="ra-field-empty">Not set</span></div>
-        </div>
-
-        <hr class="ra-field-divider">
-
-        <!-- Description -->
-        <div class="ra-field">
-          <div class="ra-field-label">Description</div>
-          <div id="bf-desc" style="font-size:13.5px;line-height:1.55;color:var(--ra-text)"><span class="ra-field-empty">Not set</span></div>
-        </div>
-
-        <hr class="ra-field-divider">
-
-        <!-- Reference assets -->
-        <div class="ra-field">
-          <div class="ra-field-label" style="margin-bottom:2px">Reference Assets</div>
-          <div class="ra-assets-grid" id="assets-grid">
-            <button class="ra-asset-thumb ra-add-asset" onclick="openUploadModal()" title="Add reference">
-              <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
+          <div class="ra-field">
+            <div class="ra-field-label">Type</div>
+            <div id="bf-type"></div>
           </div>
-        </div>
 
-        <hr class="ra-field-divider">
+          <hr class="ra-field-divider">
 
-        <!-- Team / Roles -->
-        <div class="ra-field">
-          <div class="ra-field-label" style="margin-bottom:8px">Team &amp; Roles</div>
-          <div id="roles-list" style="display:flex;flex-direction:column;gap:8px">
-            <div class="ra-roles-row">
-              <div class="ra-role-av" style="background:#E05A2B">J</div>
-              <div style="flex:1"><div class="ra-role-name">Jane Johnson</div><div class="ra-role-label">Requester</div></div>
+          <div class="ra-field">
+            <div class="ra-field-label">Title</div>
+            <div id="bf-title" class="ra-field-value"></div>
+          </div>
+
+          <div class="ra-field">
+            <div class="ra-field-label">Format / Size</div>
+            <div id="bf-format" class="ra-field-value"></div>
+          </div>
+
+          <div class="ra-field">
+            <div class="ra-field-label">Deliverables</div>
+            <div id="bf-deliverables" class="ra-field-value"></div>
+          </div>
+
+          <hr class="ra-field-divider">
+
+          <div class="ra-field">
+            <div class="ra-field-label">Description</div>
+            <div id="bf-desc" class="ra-field-value" style="line-height:1.55"></div>
+          </div>
+
+          <div class="ra-field">
+            <div class="ra-field-label">Tone &amp; Style</div>
+            <div id="bf-tone" class="ra-field-value"></div>
+          </div>
+
+          <hr class="ra-field-divider">
+
+          <div class="ra-field">
+            <div class="ra-field-label">Reference Assets</div>
+            <div class="ra-assets-grid" id="assets-grid">
+              <button class="ra-asset-thumb ra-add-asset" onclick="openModal('upload-modal')">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
             </div>
           </div>
-          <button class="ra-add-role" onclick="openRolesModal()" style="margin-top:8px">
-            <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add person
-          </button>
-        </div>
 
-        <hr class="ra-field-divider">
+          <hr class="ra-field-divider">
 
-        <!-- Tags -->
-        <div class="ra-field">
-          <div class="ra-field-label">Tags</div>
-          <div id="bf-tags" style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:2px">
-            <span class="ra-field-empty">No tags</span>
+          <div class="ra-field">
+            <div class="ra-field-label" style="margin-bottom:6px">Team</div>
+            <div id="roles-list" style="display:flex;flex-direction:column;gap:8px">
+              <div class="ra-roles-row">
+                <div class="ra-role-av" style="background:#E05A2B">J</div>
+                <div style="flex:1"><div class="ra-role-name">Jane Johnson</div><div class="ra-role-label">Requester</div></div>
+              </div>
+            </div>
+            <button class="ra-add-role" onclick="openModal('roles-modal')" style="margin-top:8px">
+              <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add person
+            </button>
           </div>
+
+          <hr class="ra-field-divider">
+
+          <div class="ra-field">
+            <div class="ra-field-label">Tags</div>
+            <div id="bf-tags" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:2px"></div>
+          </div>
+
         </div>
-
       </div>
-
-      <!-- Brief footer -->
       <div class="ra-brief-footer">
         <button class="ra-submit-btn" id="submit-btn" disabled onclick="submitRequest()">
           <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -351,60 +424,24 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
   </div>
 </div>
 
-<!-- ── MODAL: Type Picker ── -->
+<!-- ── MODAL: All Types ── -->
 <div class="ra-modal-bg hidden" id="type-modal">
   <div class="ra-modal">
     <div class="ra-modal-hd">
-      <span class="ra-modal-title">Choose Asset Type</span>
+      <span class="ra-modal-title">All Request Types</span>
       <button class="ra-modal-close" onclick="closeModal('type-modal')">×</button>
     </div>
     <div class="ra-modal-body">
-      <div class="ra-type-grid">
-        <div class="ra-type-card" onclick="pickType('Social Media')">
-          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
-          <div class="ra-type-name">Social Media</div>
-          <div class="ra-type-sub">Posts, stories, covers</div>
-        </div>
-        <div class="ra-type-card" onclick="pickType('Video')">
-          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
-          <div class="ra-type-name">Video</div>
-          <div class="ra-type-sub">Reels, ads, intros</div>
-        </div>
-        <div class="ra-type-card" onclick="pickType('Print')">
-          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
-          <div class="ra-type-name">Print</div>
-          <div class="ra-type-sub">Flyers, brochures, cards</div>
-        </div>
-        <div class="ra-type-card" onclick="pickType('Presentation')">
-          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><path d="M2 3h20v13H2z"/><path d="M8 21l4-5 4 5"/><path d="M12 16v2"/></svg></div>
-          <div class="ra-type-name">Presentation</div>
-          <div class="ra-type-sub">Slides, decks</div>
-        </div>
-        <div class="ra-type-card" onclick="pickType('Illustration')">
-          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-          <div class="ra-type-name">Illustration</div>
-          <div class="ra-type-sub">Custom artwork</div>
-        </div>
-        <div class="ra-type-card" onclick="pickType('Email')">
-          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-          <div class="ra-type-name">Email</div>
-          <div class="ra-type-sub">Templates, banners</div>
-        </div>
-        <div class="ra-type-card" onclick="pickType('Logo / Brand')">
-          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <div class="ra-type-name">Logo / Brand</div>
-          <div class="ra-type-sub">Identity, guidelines</div>
-        </div>
-        <div class="ra-type-card" onclick="pickType('Web / UI')">
-          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-          <div class="ra-type-name">Web / UI</div>
-          <div class="ra-type-sub">Banners, mockups</div>
-        </div>
-        <div class="ra-type-card" onclick="pickType('Photo Edit')">
-          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
-          <div class="ra-type-name">Photo Edit</div>
-          <div class="ra-type-sub">Retouching, composites</div>
-        </div>
+      <div class="ra-full-type-grid">
+        <div class="ra-full-type-card" onclick="selectType('Social Ads','📱');closeModal('type-modal')"><div class="ra-full-type-icon">📱</div><div class="ra-full-type-name">Social Ads</div></div>
+        <div class="ra-full-type-card" onclick="selectType('Logo','🎨');closeModal('type-modal')"><div class="ra-full-type-icon">🎨</div><div class="ra-full-type-name">Logo</div></div>
+        <div class="ra-full-type-card" onclick="selectType('Email','✉️');closeModal('type-modal')"><div class="ra-full-type-icon">✉️</div><div class="ra-full-type-name">Email</div></div>
+        <div class="ra-full-type-card" onclick="selectType('Video','🎬');closeModal('type-modal')"><div class="ra-full-type-icon">🎬</div><div class="ra-full-type-name">Video</div></div>
+        <div class="ra-full-type-card" onclick="selectType('Print','🖨️');closeModal('type-modal')"><div class="ra-full-type-icon">🖨️</div><div class="ra-full-type-name">Print</div></div>
+        <div class="ra-full-type-card" onclick="selectType('Illustration','✏️');closeModal('type-modal')"><div class="ra-full-type-icon">✏️</div><div class="ra-full-type-name">Illustration</div></div>
+        <div class="ra-full-type-card" onclick="selectType('Presentation','📊');closeModal('type-modal')"><div class="ra-full-type-icon">📊</div><div class="ra-full-type-name">Presentation</div></div>
+        <div class="ra-full-type-card" onclick="selectType('Web / UI','🖥️');closeModal('type-modal')"><div class="ra-full-type-icon">🖥️</div><div class="ra-full-type-name">Web / UI</div></div>
+        <div class="ra-full-type-card" onclick="selectType('Photo Edit','📸');closeModal('type-modal')"><div class="ra-full-type-icon">📸</div><div class="ra-full-type-name">Photo Edit</div></div>
       </div>
     </div>
   </div>
@@ -418,24 +455,12 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
       <button class="ra-modal-close" onclick="closeModal('roles-modal')">×</button>
     </div>
     <div class="ra-modal-body">
-      <input class="ra-roles-search" placeholder="Search by name or email…" oninput="filterRoles(this.value)">
+      <input class="ra-roles-search" placeholder="Search name or email…" oninput="filterRoles(this.value)">
       <div id="roles-options">
-        <div class="ra-role-option" onclick="addRole('Alex Chen','alex@designpickle.com','#5CD801')">
-          <div class="ra-role-option-av" style="background:#5CD801;color:#111">A</div>
-          <div class="ra-role-option-info"><div class="ra-role-option-name">Alex Chen</div><div class="ra-role-option-email">alex@designpickle.com</div></div>
-        </div>
-        <div class="ra-role-option" onclick="addRole('Maria Santos','maria@designpickle.com','#B899EB')">
-          <div class="ra-role-option-av" style="background:#B899EB;color:#111">M</div>
-          <div class="ra-role-option-info"><div class="ra-role-option-name">Maria Santos</div><div class="ra-role-option-email">maria@designpickle.com</div></div>
-        </div>
-        <div class="ra-role-option" onclick="addRole('Tom Bradley','tom@designpickle.com','#FFB55B')">
-          <div class="ra-role-option-av" style="background:#FFB55B;color:#111">T</div>
-          <div class="ra-role-option-info"><div class="ra-role-option-name">Tom Bradley</div><div class="ra-role-option-email">tom@designpickle.com</div></div>
-        </div>
-        <div class="ra-role-option" onclick="addRole('Sam Rivera','sam@designpickle.com','#00F6FF')">
-          <div class="ra-role-option-av" style="background:#00F6FF;color:#111">S</div>
-          <div class="ra-role-option-info"><div class="ra-role-option-name">Sam Rivera</div><div class="ra-role-option-email">sam@designpickle.com</div></div>
-        </div>
+        <div class="ra-role-option" onclick="addRole('Alex Chen','alex@designpickle.com','#5CD801')"><div class="ra-role-option-av" style="background:#5CD801;color:#111">A</div><div><div class="ra-role-option-name">Alex Chen</div><div class="ra-role-option-email">alex@designpickle.com</div></div></div>
+        <div class="ra-role-option" onclick="addRole('Maria Santos','maria@designpickle.com','#B899EB')"><div class="ra-role-option-av" style="background:#B899EB;color:#111">M</div><div><div class="ra-role-option-name">Maria Santos</div><div class="ra-role-option-email">maria@designpickle.com</div></div></div>
+        <div class="ra-role-option" onclick="addRole('Tom Bradley','tom@designpickle.com','#FFB55B')"><div class="ra-role-option-av" style="background:#FFB55B;color:#111">T</div><div><div class="ra-role-option-name">Tom Bradley</div><div class="ra-role-option-email">tom@designpickle.com</div></div></div>
+        <div class="ra-role-option" onclick="addRole('Sam Rivera','sam@designpickle.com','#00F6FF')"><div class="ra-role-option-av" style="background:#00F6FF;color:#111">S</div><div><div class="ra-role-option-name">Sam Rivera</div><div class="ra-role-option-email">sam@designpickle.com</div></div></div>
       </div>
     </div>
     <div class="ra-modal-footer">
@@ -448,17 +473,17 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 <div class="ra-modal-bg hidden" id="upload-modal">
   <div class="ra-modal">
     <div class="ra-modal-hd">
-      <span class="ra-modal-title">Add Reference Asset</span>
+      <span class="ra-modal-title">Add Reference</span>
       <button class="ra-modal-close" onclick="closeModal('upload-modal')">×</button>
     </div>
     <div class="ra-modal-body">
       <div class="ra-drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
         <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-        <p>Drag &amp; drop files here, or <strong>browse</strong></p>
-        <p style="font-size:11.5px">Supports PNG, JPG, GIF, PDF, AI, PSD</p>
+        <p>Drop files here or <strong>browse</strong></p>
+        <p style="font-size:11.5px">PNG, JPG, GIF, PDF, AI, PSD</p>
       </div>
       <input type="file" id="file-input" style="display:none" multiple accept="image/*,.pdf,.ai,.psd" onchange="handleFiles(this.files)">
-      <div id="upload-previews" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px"></div>
+      <div id="upload-previews" style="display:flex;flex-wrap:wrap;gap:7px;margin-top:10px"></div>
     </div>
     <div class="ra-modal-footer">
       <button class="ra-btn-secondary" onclick="closeModal('upload-modal')">Cancel</button>
@@ -467,352 +492,338 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
   </div>
 </div>
 
-<!-- ── MODAL: Asset Fullscreen ── -->
-<div class="ra-modal-bg hidden" id="fs-modal">
-  <div class="ra-fs-modal">
-    <div class="ra-modal-hd">
-      <span class="ra-modal-title" id="fs-modal-title">Asset Preview</span>
-      <button class="ra-modal-close" onclick="closeModal('fs-modal')">×</button>
-    </div>
-    <div id="fs-content" style="background:#0a0a0a;min-height:200px;display:flex;align-items:center;justify-content:center">
-      <img id="fs-img" class="ra-fs-img" src="" alt="">
-    </div>
-    <div class="ra-fs-footer">
-      <span class="ra-fs-name" id="fs-name">—</span>
-      <div class="ra-fs-actions">
-        <button class="ra-fs-act-btn" onclick="downloadAsset()">Download</button>
-        <button class="ra-fs-act-btn danger" onclick="removeAsset()">Remove</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
-/* ── State ── */
+/* ────────────────────────────────
+   STATE
+──────────────────────────────── */
 const state = {
-  type: null,
-  title: null,
-  format: null,
-  project: null,
-  desc: null,
-  tags: [],
-  assets: [],
-  roles: [{ name:'Jane Johnson', email:'jane@designpickle.com', color:'#E05A2B', initial:'J', label:'Requester' }],
-  step: 'type',
-  pendingFiles: []
+  type: null, typeEmoji: null,
+  package: null,
+  assets: [], pendingFiles: [],
+  roles: [{ name:'Jane Johnson', color:'#E05A2B', initial:'J', label:'Requester' }],
+  history: [] // learns from previous picks
 };
 
-let activeAssetIdx = null;
+const brands = ['Nike.com','Bloom App','TechMart','Vaultly'];
+let brandIdx = 0;
+function cycleBrand(){ brandIdx=(brandIdx+1)%brands.length; document.getElementById('brand-label').textContent=brands[brandIdx]; }
 
-/* ── Theme ── */
-function toggleTheme() {
-  const wrap = document.getElementById('ra-wrap');
-  wrap.classList.toggle('light');
-  document.querySelector('.ra-theme-btn').textContent = wrap.classList.contains('light') ? '🌙' : '☀';
+/* ────────────────────────────────
+   PACKAGE DATA
+──────────────────────────────── */
+const PACKAGES = {
+  'Social Ads': [
+    { id:'sa1', name:'Instagram Product Launch', desc:'Eye-catching single-image post announcing a new product. Hero visual, bold typography, price or CTA overlay.', format:'1080 × 1080 px (Square)', deliverables:'3 static image variants + 1 Story cut', tone:'Bold, aspirational, minimal copy', tags:['Instagram','Product','Launch'], accent:'#5B5BD6', emoji:'📱' },
+    { id:'sa2', name:'Facebook Ad — Conversion', desc:'Click-driven ad optimised for conversions. Strong headline, benefit copy, prominent CTA button.', format:'1200 × 628 px (16:9)', deliverables:'2 ad variants (image + text layout)', tone:'Direct, persuasive, benefit-led', tags:['Facebook','Ad','CTA'], accent:'#3B82F6', emoji:'🎯' },
+    { id:'sa3', name:'Instagram Stories Series', desc:'3-frame sequential story designed to guide a viewer to swipe up or tap. Motion-ready statics.', format:'1080 × 1920 px (Stories)', deliverables:'3 story frames (static, export-ready)', tone:'Energetic, fast, thumb-stopping', tags:['Stories','Series','Instagram'], accent:'#F97316', emoji:'📲' },
+    { id:'sa4', name:'LinkedIn Thought Leadership', desc:'Professional editorial post that builds brand authority. Headline card with supporting data visual.', format:'1200 × 627 px', deliverables:'1 hero card + 1 data/quote card', tone:'Professional, authoritative, clean', tags:['LinkedIn','B2B','Editorial'], accent:'#2C3AFF', emoji:'💼' },
+    { id:'sa5', name:'TikTok / Reels Cover', desc:'Thumbnail-style cover optimised for TikTok or Instagram Reels. High contrast, large text.', format:'1080 × 1920 px', deliverables:'2 cover variants (light + dark)', tone:'Gen-Z, vibrant, bold', tags:['TikTok','Reels','Cover'], accent:'#D5FF02', emoji:'🎵' },
+  ],
+  'Logo': [
+    { id:'lo1', name:'Primary Wordmark', desc:'Clean typographic logo with the brand name. Delivered in full colour, reversed (white), and single-colour (black) on transparent background.', format:'Vector (SVG, PDF) + PNG 2× & 4×', deliverables:'3 colour variants, all formats', tone:'Timeless, confident, refined', tags:['Wordmark','Identity'], accent:'#71DD8C', emoji:'🔤' },
+    { id:'lo2', name:'Icon + Wordmark Lockup', desc:'A custom graphic icon paired with the brand name. Horizontal and stacked arrangements. Full brand kit.', format:'SVG, PDF, PNG (all sizes)', deliverables:'2 lockup layouts × 3 colour variants', tone:'Modern, memorable, versatile', tags:['Lockup','Icon','Kit'], accent:'#B899EB', emoji:'🏷️' },
+    { id:'lo3', name:'Monogram / Lettermark', desc:'Initials-based logo mark — compact, works great as an avatar, favicon, or stamp.', format:'SVG, PNG (512 px, 1024 px)', deliverables:'1 monogram × 3 colour variants', tone:'Sophisticated, minimal, compact', tags:['Monogram','Favicon'], accent:'#FFB55B', emoji:'🔡' },
+    { id:'lo4', name:'Brand Refresh', desc:'Update and modernise an existing logo while maintaining brand equity. Provide current files in the references.', format:'SVG, PDF, PNG — all variants', deliverables:'Refined logo set + comparison sheet', tone:'Evolved, premium, on-trend', tags:['Refresh','Rebrand'], accent:'#F55200', emoji:'✨' },
+    { id:'lo5', name:'Sub-brand / Product Logo', desc:'A derivative logo for a product line, campaign, or division that sits within the parent brand system.', format:'SVG, PDF, PNG', deliverables:'Sub-brand lockup + usage guide', tone:'Consistent with parent brand', tags:['Sub-brand','Product'], accent:'#2C3AFF', emoji:'🌿' },
+  ],
+  'Email': [
+    { id:'em1', name:'Launch Announcement', desc:'Announcement email to existing subscribers or waitlist. Personal tone, hero image, single prominent CTA button.', format:'600 px wide, mobile responsive', deliverables:'Full email HTML + 1× header image asset', tone:'Warm, personal, excitement-building', tags:['Launch','Announcement'], accent:'#F97316', emoji:'🚀' },
+    { id:'em2', name:'Promotional Sale Email', desc:'High-urgency promotional design for a sale or limited offer. Bold product visuals, countdown-ready banner.', format:'600 px wide, mobile responsive', deliverables:'Email HTML + 3× product image slots', tone:'Urgent, bold, conversion-focused', tags:['Promo','Sale','Offer'], accent:'#EF4444', emoji:'🏷️' },
+    { id:'em3', name:'Welcome / Onboarding Email', desc:'First email a new user or customer receives. Warm welcome, next-steps layout, brand introduction.', format:'600 px wide, mobile responsive', deliverables:'Email HTML + welcome hero image', tone:'Friendly, helpful, encouraging', tags:['Welcome','Onboarding'], accent:'#71DD8C', emoji:'🤝' },
+    { id:'em4', name:'Newsletter Header Template', desc:'Reusable masthead and layout template for recurring newsletters. Section dividers, image placeholders, CTA block.', format:'600 px wide, exportable sections', deliverables:'Figma/HTML template + asset exports', tone:'Consistent, editorial, on-brand', tags:['Newsletter','Template'], accent:'#B899EB', emoji:'📰' },
+    { id:'em5', name:'Event Invitation', desc:'Premium invite email for a webinar, product launch, or brand event. RSVP CTA, date/location block, map graphic.', format:'600 px wide, mobile responsive', deliverables:'Email HTML + event hero image', tone:'Premium, exclusive, clear', tags:['Event','Invite','RSVP'], accent:'#2C3AFF', emoji:'🎟️' },
+  ],
+  'Video': [
+    { id:'vi1', name:'Social Ad — 15s Cut-down', desc:'Short punchy video ad for social feeds. Motion graphics, product highlight, end-card with CTA.', format:'1080 × 1080 or 9:16 (Stories), 15s', deliverables:'MP4 export × 2 aspect ratios', tone:'Fast, thumb-stopping, branded', tags:['15s','Ad','Motion'], accent:'#3B82F6', emoji:'⚡' },
+    { id:'vi2', name:'Brand Explainer — 60s', desc:'60-second animated or live-action explainer covering the product\'s core value proposition.', format:'1920 × 1080 (16:9), 60s', deliverables:'MP4 final + 30s cut-down', tone:'Clear, friendly, informative', tags:['Explainer','60s'], accent:'#5B5BD6', emoji:'💡' },
+    { id:'vi3', name:'YouTube Intro / Outro', desc:'5-second branded intro bumper and 10-second outro with subscribe CTA and social links.', format:'1920 × 1080, up to 15s total', deliverables:'Intro + Outro MP4 + After Effects source', tone:'Energetic, branded, professional', tags:['YouTube','Intro','Outro'], accent:'#F97316', emoji:'▶️' },
+    { id:'vi4', name:'Product Demo Walkthrough', desc:'Screen-recorded or animated product walkthrough with voiceover text overlays and branded endcard.', format:'1920 × 1080 (16:9), 60–120s', deliverables:'MP4 + chapter timestamps doc', tone:'Clear, confident, helpful', tags:['Demo','Product','Walkthrough'], accent:'#71DD8C', emoji:'🖥️' },
+    { id:'vi5', name:'Event Highlight Reel', desc:'Montage of event footage or photos cut to music, branded lower-thirds and endcard.', format:'1920 × 1080, up to 90s', deliverables:'MP4 final + 30s social cut', tone:'Energetic, celebratory, premium', tags:['Event','Reel','Highlight'], accent:'#D5FF02', emoji:'🎉' },
+  ],
+  'Print': [
+    { id:'pr1', name:'A4 Brochure (Trifold)', desc:'Three-panel folding brochure. Front cover, interior spread, and back panel. Print-ready PDF.', format:'A4 tri-fold (210 × 297 mm), 3mm bleed', deliverables:'Print-ready PDF + editable source file', tone:'Professional, informative, premium', tags:['Brochure','Print','A4'], accent:'#2C3AFF', emoji:'📄' },
+    { id:'pr2', name:'Event Flyer', desc:'Single-page event flyer. Key info hierarchy: event name, date, venue, ticket link.', format:'A5 (148 × 210 mm) or US Letter', deliverables:'Print-ready PDF × 2 sizes', tone:'Eye-catching, clear, energetic', tags:['Flyer','Event'], accent:'#F97316', emoji:'📋' },
+    { id:'pr3', name:'Business Card Set', desc:'Double-sided business card design. Front: logo + name. Back: contact details.', format:'85 × 55 mm, 3mm bleed, CMYK', deliverables:'Print-ready PDF (front + back) per person', tone:'Professional, minimal, brand-consistent', tags:['Business Card','Identity'], accent:'#71DD8C', emoji:'🪪' },
+    { id:'pr4', name:'Roll-up / Pull-up Banner', desc:'Vertical event banner. Logo at top, key visual in centre, tagline and website at base.', format:'850 × 2000 mm standard roll-up', deliverables:'Print-ready PDF, 300 dpi', tone:'Bold, legible at distance, branded', tags:['Banner','Event','Large Format'], accent:'#B899EB', emoji:'🪧' },
+    { id:'pr5', name:'Poster (A2)', desc:'Large-format promotional or informational poster. Strong headline, feature image, supporting copy.', format:'A2 (420 × 594 mm), 300 dpi, CMYK', deliverables:'Print-ready PDF + low-res digital preview', tone:'Impactful, visual, on-brand', tags:['Poster','Large Format'], accent:'#F55200', emoji:'🗺️' },
+  ],
+  'Illustration': [
+    { id:'il1', name:'Brand Character / Mascot', desc:'Custom illustrated brand character for use across digital and print. Multiple poses or expressions.', format:'SVG + PNG (transparent, 2× & 4×)', deliverables:'3 poses × layered source file', tone:'Friendly, on-brand, distinctive', tags:['Mascot','Character'], accent:'#FFB55B', emoji:'🤖' },
+    { id:'il2', name:'Icon Set (20 icons)', desc:'Custom line or filled icon set matching brand style. Covers product UI and marketing needs.', format:'SVG (24 × 24 px grid) + PNG sprite', deliverables:'20 icons × 2 styles (line + filled)', tone:'Consistent, minimal, geometric', tags:['Icons','UI','Set'], accent:'#2C3AFF', emoji:'🔲' },
+    { id:'il3', name:'Hero Illustration (Web)', desc:'Large editorial illustration for a landing page hero or About section. Narrative scene or abstract visual.', format:'SVG + PNG 2× (min 1440 px wide)', deliverables:'1 hero illo + 2 spot details', tone:'Creative, editorial, brand-expressive', tags:['Hero','Web','Illustration'], accent:'#5B5BD6', emoji:'🖼️' },
+    { id:'il4', name:'Infographic', desc:'Data or process visualisation. Up to 6 steps or data points with charts, icons, and branded layout.', format:'1200 × 2000 px PNG + PDF', deliverables:'1 infographic (vertical) + wide crop', tone:'Clear, informative, visually engaging', tags:['Infographic','Data','Process'], accent:'#71DD8C', emoji:'📊' },
+    { id:'il5', name:'Pattern / Texture Design', desc:'Seamless repeating pattern using brand colours and motifs. For packaging, backgrounds, or merchandise.', format:'SVG tile + seamless PNG 2×', deliverables:'1 pattern × 3 colour variants', tone:'Playful or refined (specify in notes)', tags:['Pattern','Texture','Brand'], accent:'#D5FF02', emoji:'🎨' },
+  ],
+  'Presentation': [
+    { id:'ppt1', name:'Pitch Deck Template (10 slides)', desc:'Investor or sales pitch deck. Cover, problem, solution, market, traction, team, ask. Fully editable.', format:'16:9 widescreen (1920 × 1080 px)', deliverables:'PPTX + Google Slides + PDF export', tone:'Professional, confident, investor-ready', tags:['Pitch','Deck','Investor'], accent:'#2C3AFF', emoji:'📈' },
+    { id:'ppt2', name:'Company Overview Deck', desc:'One-pager or multi-slide overview of the company, products, and team for partner or client meetings.', format:'16:9 (1920 × 1080 px)', deliverables:'PPTX + PDF export', tone:'Corporate, clear, trustworthy', tags:['Overview','Corporate'], accent:'#3B82F6', emoji:'🏢' },
+    { id:'ppt3', name:'Product Launch Keynote', desc:'High-design presentation for a product announcement. Big visuals, minimal text, reveal-style flow.', format:'16:9 (2560 × 1440 px for Retina)', deliverables:'Keynote + PPTX + PDF', tone:'Premium, Apple-style, dramatic', tags:['Keynote','Product','Launch'], accent:'#F97316', emoji:'🎙️' },
+    { id:'ppt4', name:'Report / Data Deck', desc:'Quarterly or annual report presentation. Charts, KPIs, branded data visualisations.', format:'16:9 (1920 × 1080 px)', deliverables:'PPTX + PDF, all charts editable', tone:'Analytical, clear, data-driven', tags:['Report','Data','KPI'], accent:'#71DD8C', emoji:'📋' },
+    { id:'ppt5', name:'Workshop / Training Deck', desc:'Interactive training or workshop slide deck. Activities, sections, exercises, icon-driven layout.', format:'16:9 (1920 × 1080 px)', deliverables:'PPTX + facilitator notes PDF', tone:'Engaging, educational, friendly', tags:['Training','Workshop'], accent:'#B899EB', emoji:'🎓' },
+  ],
+  'Web / UI': [
+    { id:'ui1', name:'Landing Page Design', desc:'Single-page marketing design: hero, features section, testimonials, pricing, footer. Desktop + mobile.', format:'1440 px desktop + 375 px mobile', deliverables:'Figma file + exported assets', tone:'Conversion-focused, modern, on-brand', tags:['Landing Page','Web'], accent:'#2C3AFF', emoji:'🌐' },
+    { id:'ui2', name:'Email Banner Set', desc:'Set of 5 reusable promotional banners for email headers and hero sections.', format:'600 × 200 px each', deliverables:'5 PNG exports + Figma source', tone:'Clean, branded, campaign-specific', tags:['Banner','Email'], accent:'#F97316', emoji:'🖼️' },
+    { id:'ui3', name:'App Screenshot Set', desc:'Polished app store screenshots for iOS or Android. 3–6 frames with device mockups and captions.', format:'6.7″ iPhone + 12.9″ iPad (App Store)', deliverables:'6 PNG screenshots per device size', tone:'Premium, benefit-focused, App Store-ready', tags:['App Store','Screenshots','iOS'], accent:'#71DD8C', emoji:'📱' },
+    { id:'ui4', name:'Dashboard UI Mockup', desc:'High-fidelity dashboard or admin panel mockup for a SaaS or internal tool.', format:'1440 px desktop, light + dark', deliverables:'Figma file (light + dark), interactive prototype', tone:'Clean, data-dense, professional', tags:['Dashboard','SaaS','UI'], accent:'#5B5BD6', emoji:'📊' },
+    { id:'ui5', name:'Error / Empty State Illustrations', desc:'Custom UI illustrations for 404, empty state, success, and error screens — matching product style.', format:'SVG + PNG 2× per illustration', deliverables:'4 illustrations × 2 colour modes', tone:'Friendly, on-brand, delightful', tags:['Illustration','UI','Empty State'], accent:'#B899EB', emoji:'🎨' },
+  ],
+  'Photo Edit': [
+    { id:'pe1', name:'Product Photo Retouch', desc:'Clean professional retouch of product photos. Background removal, colour correction, shadow.', format:'PNG (transparent BG) + JPEG, 300 dpi', deliverables:'Up to 5 images, 2 export versions each', tone:'Clean, accurate, commercial', tags:['Retouch','Product','Background Removal'], accent:'#2C3AFF', emoji:'📸' },
+    { id:'pe2', name:'Lifestyle / Campaign Composite', desc:'Composite multiple photos or place product into a lifestyle scene. Seamless blending, colour grading.', format:'JPEG / PNG, 300 dpi, as specified', deliverables:'3 composite variations', tone:'Aspirational, natural-looking, on-brand', tags:['Composite','Lifestyle','Grading'], accent:'#F97316', emoji:'🌅' },
+    { id:'pe3', name:'Headshot Polish', desc:'Professional headshot retouching for team pages or LinkedIn. Skin smoothing, background clean-up.', format:'JPEG, 1000 × 1000 px minimum', deliverables:'Up to 10 retouched headshots', tone:'Natural, professional, unforced', tags:['Headshot','Portrait','Team'], accent:'#71DD8C', emoji:'🙂' },
+    { id:'pe4', name:'Social Media Photo Set', desc:'Batch colour-grading and crop of a photo set for a consistent Instagram or campaign look.', format:'1080 × 1080 + 1080 × 1350 crops', deliverables:'Up to 12 images, 2 crops each', tone:'Consistent, vibrant, feed-ready', tags:['Instagram','Grading','Batch'], accent:'#D5FF02', emoji:'🎞️' },
+    { id:'pe5', name:'Before & After Infographic', desc:'Side-by-side visual transformation layout — product, space, or result. Clean split or overlay format.', format:'1200 × 630 px (social) + A4 (print)', deliverables:'2 export sizes', tone:'Clear, dramatic, trustworthy', tags:['Before/After','Infographic'], accent:'#B899EB', emoji:'🔄' },
+  ],
+};
+
+/* Default for unlisted types */
+function defaultPackages(type, emoji) {
+  return [
+    { id:'d1', name:`${type} — Standard`, desc:`A standard ${type.toLowerCase()} request. Full brief including dimensions, copy, and reference assets.`, format:'As specified in notes', deliverables:'Final files + source', tone:'On-brand, professional', tags:[type], accent:'#2C3AFF', emoji },
+    { id:'d2', name:`${type} — Express`, desc:`Faster turn-around ${type.toLowerCase()} with a focused single deliverable.`, format:'As specified', deliverables:'1 primary deliverable', tone:'Clean, efficient', tags:[type,'Express'], accent:'#71DD8C', emoji },
+    { id:'d3', name:`${type} — Premium`, desc:`High-detail ${type.toLowerCase()} with multiple revisions and full source file hand-off.`, format:'As specified', deliverables:'Multiple variants + source files', tone:'Premium, detailed', tags:[type,'Premium'], accent:'#B899EB', emoji },
+  ];
 }
 
-/* ── Chat helpers ── */
+/* ────────────────────────────────
+   CHAT HELPERS
+──────────────────────────────── */
 function addMsg(text, role) {
-  const container = document.getElementById('chat-msgs');
+  const msgs = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'ra-msg ' + role;
   const isUser = role === 'user';
-  const div = document.createElement('div');
-  div.className = 'ra-msg ' + role;
-  div.innerHTML = `<div class="ra-msg-av ${role}">${isUser ? 'J' : 'AI'}</div><div class="ra-bubble">${text}</div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
-
-function removeChips(id) {
-  const el = document.getElementById(id);
-  if (el) el.remove();
+  d.innerHTML = `<div class="ra-msg-av ${role}">${isUser ? 'J' : 'AI'}</div><div class="ra-bubble">${text}</div>`;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
 function showTyping(cb) {
-  const container = document.getElementById('chat-msgs');
-  const typing = document.createElement('div');
-  typing.className = 'ra-msg ai';
-  typing.id = 'typing-indicator';
-  typing.innerHTML = `<div class="ra-msg-av ai">AI</div><div class="ra-typing"><div class="ra-dot"></div><div class="ra-dot"></div><div class="ra-dot"></div></div>`;
-  container.appendChild(typing);
-  container.scrollTop = container.scrollHeight;
-  setTimeout(() => {
-    const t = document.getElementById('typing-indicator');
-    if (t) t.remove();
-    cb();
-  }, 900);
+  const msgs = document.getElementById('chat-msgs');
+  const t = document.createElement('div');
+  t.className = 'ra-typing-wrap'; t.id = 'typing';
+  t.innerHTML = `<div class="ra-msg-av ai">AI</div><div class="ra-typing"><div class="ra-dot"></div><div class="ra-dot"></div><div class="ra-dot"></div></div>`;
+  msgs.appendChild(t); msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => { const el = document.getElementById('typing'); if(el)el.remove(); cb(); }, 700);
 }
 
-function addChips(id, chips) {
-  const container = document.getElementById('chat-msgs');
-  const div = document.createElement('div');
-  div.className = 'ra-chips';
-  div.id = id;
-  chips.forEach(c => {
-    const btn = document.createElement('button');
-    btn.className = 'ra-chip';
-    btn.textContent = c.label;
-    btn.onclick = c.action;
-    div.appendChild(btn);
-  });
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
+/* ────────────────────────────────
+   TYPE SELECTION → show packages
+──────────────────────────────── */
+function selectType(type, emoji) {
+  if (state.type === type) return;
+  state.type = type; state.typeEmoji = emoji;
 
-/* ── Brief update helpers ── */
-function updateBrief(field, html) {
-  document.getElementById(field).innerHTML = html;
-}
+  // Highlight selected tile
+  document.querySelectorAll('.ra-type-tile').forEach(t => t.classList.remove('selected'));
+  event && event.currentTarget && event.currentTarget.classList.add('selected');
 
-function checkSubmitEnabled() {
-  const ready = state.type && state.title && state.desc;
-  document.getElementById('submit-btn').disabled = !ready;
-  if (ready) {
-    document.getElementById('brief-status').textContent = 'Ready';
-    document.getElementById('brief-status').style.background = 'rgba(113,221,140,.15)';
-    document.getElementById('brief-status').style.color = 'var(--color-green)';
-  }
-}
+  addMsg(`${emoji} ${type}`, 'user');
 
-/* ── Conversation flow ── */
-function pickType(type) {
-  state.type = type;
-  removeChips('type-chips');
-  addMsg(type, 'user');
-  updateBrief('bf-type', `<span class="ra-field-pill">${type}</span>`);
   showTyping(() => {
-    addMsg(`Great choice — <strong>${type}</strong> it is. What's a good working title for this request?`, 'ai');
-    state.step = 'title';
+    const history = state.history.filter(h => h.type === type);
+    let intro = history.length
+      ? `You've done <strong>${type}</strong> before. Here are 5 packages — pick the one that fits best and I'll build the brief instantly.`
+      : `Great — <strong>${type}</strong>. Here are 5 ready-to-go packages. Pick one and your brief will be filled out automatically.`;
+    addMsg(intro, 'ai');
+    showPackages(type, emoji);
   });
 }
 
-function pickTitle(title) {
-  state.title = title;
-  updateBrief('bf-title', `<span class="ra-field-value">${title}</span>`);
+function showPackages(type, emoji) {
+  const msgs = document.getElementById('chat-msgs');
+  const pkgs = PACKAGES[type] || defaultPackages(type, emoji);
+
+  // Remove old package list if present
+  const old = document.getElementById('pkg-list');
+  if (old) old.remove();
+
+  const wrap = document.createElement('div');
+  wrap.className = 'ra-packages'; wrap.id = 'pkg-list';
+
+  const label = document.createElement('div');
+  label.className = 'ra-packages-label';
+  label.innerHTML = `${type} Packages — PICK ONE OR DESCRIBE YOUR OWN BELOW`;
+  wrap.appendChild(label);
+
+  pkgs.forEach(pkg => {
+    const card = document.createElement('div');
+    card.className = 'ra-pkg-card';
+    card.style.setProperty('--pkg-accent', pkg.accent);
+    card.innerHTML = `
+      <div class="ra-pkg-icon">
+        <div class="ra-pkg-icon-bg" style="background:${pkg.accent}"></div>
+        <div class="ra-pkg-icon-em">${pkg.emoji}</div>
+      </div>
+      <div class="ra-pkg-info">
+        <div class="ra-pkg-name">${pkg.name}</div>
+        <div class="ra-pkg-desc">${pkg.desc}</div>
+        <div class="ra-pkg-tags">
+          ${pkg.tags.map(t=>`<span class="ra-pkg-tag">${t}</span>`).join('')}
+          <span class="ra-pkg-tag" style="border-color:${pkg.accent};color:${pkg.accent}">${pkg.format.split('(')[0].trim()}</span>
+        </div>
+      </div>
+      <div class="ra-pkg-arrow">›</div>`;
+    card.onclick = () => selectPackage(pkg, type, emoji);
+    wrap.appendChild(card);
+  });
+
+  // Custom option
+  const custom = document.createElement('div');
+  custom.className = 'ra-pkg-card ra-pkg-custom';
+  custom.style.setProperty('--pkg-accent', 'var(--ra-muted)');
+  custom.innerHTML = `<div class="ra-pkg-icon"><div class="ra-pkg-icon-em" style="opacity:.5">✏️</div></div><div class="ra-pkg-info"><div class="ra-pkg-name" style="color:var(--ra-muted)">Custom brief</div><div class="ra-pkg-desc">Describe exactly what you need in the chat below and I'll build the brief around your requirements.</div></div><div class="ra-pkg-arrow">›</div>`;
+  custom.onclick = () => {
+    document.getElementById('chat-input').focus();
+    addMsg('Sure — describe exactly what you need and I\'ll build a custom brief for you.', 'ai');
+  };
+  wrap.appendChild(custom);
+
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+/* ────────────────────────────────
+   PACKAGE SELECTION → fill brief
+──────────────────────────────── */
+function selectPackage(pkg, type, emoji) {
+  state.package = pkg;
+
+  // Save to history for learning
+  state.history.push({ type, pkgId: pkg.id, pkgName: pkg.name });
+
+  // Remove package list
+  const pl = document.getElementById('pkg-list');
+  if (pl) pl.remove();
+
+  addMsg(`${pkg.emoji} ${pkg.name}`, 'user');
+
   showTyping(() => {
-    addMsg(`Perfect. What <strong>format or dimensions</strong> do you need? (e.g. 1080×1080px, A4, 16:9 landscape)`, 'ai');
-    state.step = 'format';
-    addChips('format-chips', [
-      { label:'1080×1080 (Square)', action: () => pickFormat('1080×1080px') },
-      { label:'1920×1080 (16:9)', action: () => pickFormat('1920×1080px') },
-      { label:'Story (1080×1920)', action: () => pickFormat('1080×1920px') },
-      { label:'A4 Print', action: () => pickFormat('A4 (210×297mm)') },
-    ]);
+    addMsg(`Done — I've built the full brief for <strong>${pkg.name}</strong>. Review it on the right, tweak anything you need, then submit.`, 'ai');
+    fillBrief(pkg, type, emoji);
   });
 }
 
-function pickFormat(format) {
-  state.format = format;
-  removeChips('format-chips');
-  addMsg(format, 'user');
-  updateBrief('bf-format', `<span class="ra-field-value">${format}</span>`);
-  showTyping(() => {
-    addMsg(`Got it. Now <strong>describe</strong> what you need in detail — include the key message, style, tone, or any specific requirements.`, 'ai');
-    state.step = 'desc';
-  });
+function fillBrief(pkg, type, emoji) {
+  // Show fields, hide empty state
+  document.getElementById('brief-empty').style.display = 'none';
+  const fields = document.getElementById('brief-fields');
+  fields.style.display = 'flex';
+
+  // Package banner
+  document.getElementById('bf-pkg-banner').innerHTML = `
+    <div class="ra-pkg-selected-banner">
+      <div class="ra-pkg-selected-icon" style="background:${pkg.accent}22">
+        <span style="font-size:20px;position:relative;z-index:1">${pkg.emoji}</span>
+      </div>
+      <div>
+        <div class="ra-pkg-selected-name">${pkg.name}</div>
+        <div class="ra-pkg-selected-type">${type}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('bf-type').innerHTML = `<span class="ra-field-pill" style="background:${pkg.accent}22;color:${pkg.accent}">${emoji} ${type}</span>`;
+  document.getElementById('bf-title').textContent = pkg.name;
+  document.getElementById('bf-format').textContent = pkg.format;
+  document.getElementById('bf-deliverables').textContent = pkg.deliverables;
+  document.getElementById('bf-desc').textContent = pkg.desc;
+  document.getElementById('bf-tone').textContent = pkg.tone;
+
+  const tagsEl = document.getElementById('bf-tags');
+  tagsEl.innerHTML = pkg.tags.map(t=>`<span class="ra-field-tag">${t}</span>`).join('');
+
+  // Status
+  const badge = document.getElementById('brief-badge');
+  badge.textContent = 'Ready';
+  badge.className = 'ra-brief-badge ready';
+
+  // Enable submit
+  document.getElementById('submit-btn').disabled = false;
 }
 
-function pickDesc(desc) {
-  state.desc = desc;
-  updateBrief('bf-desc', `<div style="font-size:13.5px;line-height:1.55;color:var(--ra-text)">${desc}</div>`);
-  showTyping(() => {
-    addMsg(`Brilliant! Would you like to add any <strong>reference assets</strong>? (brand files, examples, mood board images)`, 'ai');
-    state.step = 'assets';
-    addChips('asset-chips', [
-      { label:'Add references', action: () => { removeChips('asset-chips'); openUploadModal(); } },
-      { label:'Skip for now', action: () => skipAssets() },
-    ]);
-  });
-}
-
-function skipAssets() {
-  removeChips('asset-chips');
-  addMsg('Skip for now', 'user');
-  finishBrief();
-}
-
-function finishBrief() {
-  showTyping(() => {
-    addMsg(`Your brief is looking great! 🎉 You can review it in the panel on the right. When you're happy, hit <strong>Submit Request</strong>.`, 'ai');
-    state.step = 'done';
-    checkSubmitEnabled();
-    addChips('final-chips', [
-      { label:'Add tags', action: () => { removeChips('final-chips'); promptTags(); } },
-      { label:'Assign someone', action: () => { removeChips('final-chips'); openRolesModal(); } },
-      { label:'Submit now', action: () => submitRequest() },
-    ]);
-  });
-}
-
-function promptTags() {
-  addMsg('What tags should I add? (comma-separated)', 'ai');
-  state.step = 'tags';
-}
-
-/* ── Send message ── */
+/* ────────────────────────────────
+   SEND MESSAGE
+──────────────────────────────── */
 function sendMessage() {
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if (!text) return;
-  input.value = '';
-  input.style.height = '';
+  input.value = ''; input.style.height = '';
   addMsg(text, 'user');
-
-  if (state.step === 'title') {
-    pickTitle(text);
-  } else if (state.step === 'format') {
-    removeChips('format-chips');
-    pickFormat(text);
-  } else if (state.step === 'desc') {
-    pickDesc(text);
-  } else if (state.step === 'tags') {
-    const tags = text.split(',').map(t => t.trim()).filter(Boolean);
-    state.tags = [...state.tags, ...tags];
-    renderTags();
-    showTyping(() => {
-      addMsg(`Added ${tags.length} tag${tags.length > 1 ? 's' : ''}. Anything else to tweak?`, 'ai');
-      state.step = 'done';
-      addChips('final-chips2', [
-        { label:'Assign someone', action: () => { removeChips('final-chips2'); openRolesModal(); } },
-        { label:'Submit', action: () => submitRequest() },
-      ]);
-    });
-  } else if (state.step === 'done') {
-    showTyping(() => {
-      addMsg(`The brief is ready to submit. Feel free to make any edits in the panel, then hit Submit Request.`, 'ai');
-    });
-  } else {
-    showTyping(() => {
-      addMsg(`Got it. Let's continue filling out your brief.`, 'ai');
-    });
-  }
+  showTyping(() => {
+    if (!state.type) {
+      addMsg('Got it. Which type of creative asset is this for? Pick one from the tiles above or tell me.', 'ai');
+    } else if (!state.package) {
+      addMsg(`I'll build a custom brief for that <strong>${state.type}</strong> request. Give me a moment…`, 'ai');
+      const custom = {
+        id:'custom', name: text.length > 60 ? text.slice(0,57)+'…' : text,
+        desc: text, format:'As specified', deliverables:'Final files + source',
+        tone:'To be discussed', tags:[state.type,'Custom'],
+        accent:state.typeEmoji ? '#2C3AFF' : '#2C3AFF', emoji: state.typeEmoji || '✏️'
+      };
+      fillBrief(custom, state.type, state.typeEmoji || '✏️');
+    } else {
+      addMsg(`Got it. I've noted that. Feel free to edit the brief panel directly or submit when ready.`, 'ai');
+    }
+  });
 }
 
 function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
 
 function autoResize(el) {
   el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
 }
 
-/* ── Tags ── */
-function renderTags() {
-  const el = document.getElementById('bf-tags');
-  if (!state.tags.length) { el.innerHTML = '<span class="ra-field-empty">No tags</span>'; return; }
-  el.innerHTML = state.tags.map(t => `<span class="ra-field-tag">${t}</span>`).join('') +
-    `<button onclick="removeLastTag()" style="font-size:11px;color:var(--ra-muted);background:none;border:none;cursor:pointer;padding:2px 4px">✕</button>`;
-}
-
-function removeLastTag() {
-  state.tags.pop();
-  renderTags();
-}
-
-/* ── Roles ── */
-function renderRoles() {
-  const list = document.getElementById('roles-list');
-  list.innerHTML = state.roles.map(r => `
-    <div class="ra-roles-row">
-      <div class="ra-role-av" style="background:${r.color}">${r.initial}</div>
-      <div style="flex:1"><div class="ra-role-name">${r.name}</div><div class="ra-role-label">${r.label || 'Collaborator'}</div></div>
-    </div>`).join('');
-}
-
+/* ────────────────────────────────
+   ROLES
+──────────────────────────────── */
 function addRole(name, email, color) {
-  const initial = name.charAt(0).toUpperCase();
-  const exists = state.roles.find(r => r.email === email);
-  if (!exists) {
-    state.roles.push({ name, email, color, initial, label: 'Collaborator' });
+  if (!state.roles.find(r => r.email === email)) {
+    state.roles.push({ name, email, color, initial: name[0], label: 'Collaborator' });
     renderRoles();
-    addMsg(`Added ${name} to the brief.`, 'ai');
   }
   closeModal('roles-modal');
 }
 
-function filterRoles(query) {
-  const opts = document.querySelectorAll('#roles-options .ra-role-option');
-  opts.forEach(opt => {
-    const text = opt.textContent.toLowerCase();
-    opt.style.display = text.includes(query.toLowerCase()) ? '' : 'none';
+function renderRoles() {
+  document.getElementById('roles-list').innerHTML = state.roles.map(r =>
+    `<div class="ra-roles-row"><div class="ra-role-av" style="background:${r.color}">${r.initial}</div><div style="flex:1"><div class="ra-role-name">${r.name}</div><div class="ra-role-label">${r.label}</div></div></div>`
+  ).join('');
+}
+
+function filterRoles(q) {
+  document.querySelectorAll('#roles-options .ra-role-option').forEach(o => {
+    o.style.display = o.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
   });
 }
 
-/* ── Assets ── */
+/* ────────────────────────────────
+   ASSETS
+──────────────────────────────── */
 function renderAssets() {
   const grid = document.getElementById('assets-grid');
-  grid.innerHTML = state.assets.map((a, i) => `
-    <div class="ra-asset-thumb" onclick="openAssetFS(${i})">
-      <img src="${a.src}" alt="${a.name}">
-      <div class="ra-asset-overlay"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
-    </div>`).join('') +
-    `<button class="ra-asset-thumb ra-add-asset" onclick="openUploadModal()" title="Add reference">
-      <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    </button>`;
-}
-
-/* ── Modals ── */
-function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-document.querySelectorAll('.ra-modal-bg').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) m.classList.add('hidden'); });
-});
-
-function openTypeModal() { openModal('type-modal'); }
-function openRolesModal() { openModal('roles-modal'); }
-function openUploadModal() { openModal('upload-modal'); }
-
-function openAssetFS(idx) {
-  activeAssetIdx = idx;
-  const asset = state.assets[idx];
-  document.getElementById('fs-img').src = asset.src;
-  document.getElementById('fs-name').textContent = asset.name;
-  document.getElementById('fs-modal-title').textContent = asset.name;
-  openModal('fs-modal');
-}
-
-function downloadAsset() {
-  if (activeAssetIdx === null) return;
-  const asset = state.assets[activeAssetIdx];
-  const a = document.createElement('a');
-  a.href = asset.src;
-  a.download = asset.name;
-  a.click();
-}
-
-function removeAsset() {
-  if (activeAssetIdx === null) return;
-  state.assets.splice(activeAssetIdx, 1);
-  renderAssets();
-  closeModal('fs-modal');
-  activeAssetIdx = null;
-}
-
-/* ── Upload / drop ── */
-function dragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
-function dragLeave() { document.getElementById('drop-zone').classList.remove('drag-over'); }
-function dropFile(e) {
-  e.preventDefault();
-  dragLeave();
-  handleFiles(e.dataTransfer.files);
+  grid.innerHTML = state.assets.map((a,i) =>
+    `<div class="ra-asset-thumb" title="${a.name}"><img src="${a.src}" alt="${a.name}"></div>`
+  ).join('') +
+  `<button class="ra-asset-thumb ra-add-asset" onclick="openModal('upload-modal')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>`;
 }
 
 function handleFiles(files) {
   Array.from(files).forEach(f => {
-    const reader = new FileReader();
-    reader.onload = ev => {
+    const r = new FileReader();
+    r.onload = ev => {
       state.pendingFiles.push({ src: ev.target.result, name: f.name });
       const prev = document.getElementById('upload-previews');
       const img = document.createElement('img');
       img.src = ev.target.result;
-      img.style.cssText = 'width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--ra-border)';
+      img.style.cssText = 'width:68px;height:68px;object-fit:cover;border-radius:8px;border:1px solid var(--ra-border)';
       prev.appendChild(img);
     };
-    reader.readAsDataURL(f);
+    r.readAsDataURL(f);
   });
 }
 
@@ -822,30 +833,44 @@ function confirmUpload() {
   document.getElementById('upload-previews').innerHTML = '';
   renderAssets();
   closeModal('upload-modal');
-  if (state.step === 'assets') {
-    removeChips('asset-chips');
-    addMsg(`Added ${state.assets.length} reference asset${state.assets.length !== 1 ? 's' : ''}.`, 'user');
-    finishBrief();
-  }
 }
 
-/* ── Submit / Save ── */
+function dragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
+function dragLeave() { document.getElementById('drop-zone').classList.remove('drag-over'); }
+function dropFile(e) { e.preventDefault(); dragLeave(); handleFiles(e.dataTransfer.files); }
+
+/* ────────────────────────────────
+   MODALS
+──────────────────────────────── */
+function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+document.querySelectorAll('.ra-modal-bg').forEach(m => m.addEventListener('click', e => { if(e.target===m)m.classList.add('hidden'); }));
+
+/* ────────────────────────────────
+   SUBMIT / SAVE
+──────────────────────────────── */
 function submitRequest() {
-  removeChips('final-chips');
-  removeChips('final-chips2');
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
-  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;fill:none"><polyline points="20 6 9 17 4 12"/></svg> Submitted!';
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#111;stroke-width:2.8;stroke-linecap:round;fill:none"><polyline points="20 6 9 17 4 12"/></svg> Submitted!';
   btn.style.background = 'var(--color-green)';
   btn.style.color = '#111';
-  document.getElementById('brief-status').textContent = 'Submitted';
-  document.getElementById('brief-status').style.background = 'rgba(113,221,140,.15)';
-  document.getElementById('brief-status').style.color = 'var(--color-green)';
-  addMsg('Your request has been submitted! Our team will review it shortly. You can track progress on the <a href="index.html" style="color:var(--color-primary);font-weight:600">Dashboard</a>.', 'ai');
+  document.getElementById('brief-badge').textContent = 'Submitted';
+  document.getElementById('brief-badge').className = 'ra-brief-badge submitted';
+  addMsg('Your request is submitted! The team will pick it up shortly. Track progress on the <a href="index.html" style="color:var(--color-primary);font-weight:700">Dashboard</a>.', 'ai');
 }
 
 function saveDraft() {
-  addMsg('Draft saved. You can come back and finish it anytime from your Dashboard.', 'ai');
+  addMsg('Draft saved — you can finish it anytime from the Dashboard.', 'ai');
+}
+
+/* ────────────────────────────────
+   THEME
+──────────────────────────────── */
+function toggleTheme() {
+  const w = document.getElementById('ra-wrap');
+  w.classList.toggle('light');
+  document.querySelector('.ra-theme-btn').textContent = w.classList.contains('light') ? '🌙' : '☀';
 }
 </script>
 </body>
