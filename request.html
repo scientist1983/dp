@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<!--
+  JarCOS Request Agent — Design Pickle
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dp — Request Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
+
+/* ── CSS TOKENS ── */
+:root{
+  --ra-bg:#0C0C0C;
+  --ra-sb:#111;
+  --ra-card:#1C1C1C;
+  --ra-border:rgba(255,255,255,.09);
+  --ra-text:#fff;
+  --ra-muted:rgba(255,255,255,.42);
+  --ra-divider:rgba(255,255,255,.07);
+  --ra-hover:rgba(255,255,255,.05);
+  --ra-active:rgba(255,255,255,.1);
+  --ra-input:#222;
+  --color-primary:#2C3AFF;
+  --color-volt:#D5FF02;
+  --color-green:#71DD8C;
+  --color-orange:#F55200;
+  --color-purple:#B899EB;
+}
+.light{
+  --ra-bg:#F9F9FA;
+  --ra-sb:#fff;
+  --ra-card:#fff;
+  --ra-border:#E5E3DF;
+  --ra-text:#0B0C0B;
+  --ra-muted:#888;
+  --ra-divider:#F0EDE8;
+  --ra-hover:#F5F4F0;
+  --ra-active:#EDEAE4;
+  --ra-input:#F5F4F0;
+}
+
+/* ── LAYOUT ── */
+#ra-wrap{display:flex;flex-direction:column;height:100vh;background:var(--ra-bg)}
+
+/* Header */
+.ra-header{height:54px;background:var(--ra-sb);border-bottom:1px solid var(--ra-border);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;z-index:10}
+.ra-logo{font-size:20px;font-weight:900;letter-spacing:-.04em;line-height:1;text-decoration:none;cursor:pointer}
+#ra-wrap:not(.light) .ra-logo{color:var(--color-volt)}
+#ra-wrap.light .ra-logo{color:#0B0C0B}
+.ra-header-title{font-size:14px;font-weight:600;color:var(--ra-muted);flex:1}
+.ra-header-r{display:flex;align-items:center;gap:6px;margin-left:auto}
+.ra-icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);transition:all .12s;text-decoration:none}
+.ra-icon-btn:hover{background:var(--ra-hover);color:var(--ra-text)}
+.ra-icon-btn svg{width:16px;height:16px}
+.ra-theme-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);font-size:15px;transition:all .12s}
+.ra-theme-btn:hover{background:var(--ra-hover);color:var(--ra-text)}
+
+/* Body: two-pane */
+.ra-body{flex:1;display:flex;overflow:hidden}
+
+/* ── CHAT PANE ── */
+.ra-chat{flex:1;min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--ra-border)}
+.ra-chat-msgs{flex:1;overflow-y:auto;padding:20px 20px 8px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.ra-chat-msgs::-webkit-scrollbar{width:4px}
+.ra-chat-msgs::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
+
+/* Messages */
+.ra-msg{display:flex;gap:10px;animation:fadeUp .18s ease}
+.ra-msg.user{flex-direction:row-reverse}
+.ra-msg-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.ra-msg-av.ai{background:linear-gradient(135deg,#F97316,#3B82F6);color:#fff}
+.ra-msg-av.user{background:#E05A2B;color:#fff}
+.ra-bubble{max-width:78%;padding:11px 14px;border-radius:16px;font-size:13.5px;line-height:1.55;color:var(--ra-text)}
+.ra-msg.ai .ra-bubble{background:var(--ra-card);border:1px solid var(--ra-border);border-bottom-left-radius:4px}
+.ra-msg.user .ra-bubble{background:var(--color-primary);color:#fff;border-bottom-right-radius:4px}
+
+/* Quick-reply chips */
+.ra-chips{display:flex;flex-wrap:wrap;gap:7px;padding:4px 0 4px 40px}
+.ra-chip{padding:7px 14px;border-radius:9999px;border:1px solid var(--ra-border);background:var(--ra-card);font-size:12.5px;color:var(--ra-text);cursor:pointer;transition:all .12s;font-family:inherit}
+.ra-chip:hover{border-color:var(--color-primary);color:var(--color-primary)}
+.ra-chip.selected{background:rgba(44,58,255,.15);border-color:var(--color-primary);color:var(--color-primary)}
+
+/* Typing indicator */
+.ra-typing{display:flex;align-items:center;gap:4px;padding:10px 14px;background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;border-bottom-left-radius:4px;width:58px}
+.ra-dot{width:7px;height:7px;border-radius:50%;background:var(--ra-muted);animation:blink 1.2s infinite}
+.ra-dot:nth-child(2){animation-delay:.2s}
+.ra-dot:nth-child(3){animation-delay:.4s}
+
+/* Chat input bar */
+.ra-chat-bar{padding:12px 16px;border-top:1px solid var(--ra-border);display:flex;align-items:flex-end;gap:10px;background:var(--ra-sb)}
+.ra-chat-input{flex:1;min-height:40px;max-height:120px;resize:none;border:1px solid var(--ra-border);border-radius:12px;background:var(--ra-input);color:var(--ra-text);font-family:inherit;font-size:13.5px;padding:10px 14px;outline:none;line-height:1.45;overflow-y:auto;transition:border-color .12s}
+.ra-chat-input::placeholder{color:var(--ra-muted)}
+.ra-chat-input:focus{border-color:var(--color-primary)}
+.ra-send-btn{width:40px;height:40px;border-radius:10px;background:var(--color-primary);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s}
+.ra-send-btn:hover{background:#2834E5}
+.ra-send-btn svg{width:16px;height:16px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.ra-attach-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);transition:all .12s}
+.ra-attach-btn:hover{background:var(--ra-hover);color:var(--ra-text)}
+.ra-attach-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+
+/* ── BRIEF PANEL ── */
+.ra-brief{width:340px;min-width:340px;background:var(--ra-sb);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.ra-brief-hd{padding:16px 18px 12px;border-bottom:1px solid var(--ra-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.ra-brief-title{font-size:14px;font-weight:700;color:var(--ra-text)}
+.ra-brief-status{font-size:11.5px;padding:3px 9px;border-radius:9999px;background:rgba(44,58,255,.15);color:var(--color-primary);font-weight:600}
+.ra-brief-body{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:16px}
+.ra-brief-body::-webkit-scrollbar{width:4px}
+.ra-brief-body::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
+
+/* Brief fields */
+.ra-field{display:flex;flex-direction:column;gap:6px}
+.ra-field-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ra-muted)}
+.ra-field-value{font-size:13.5px;color:var(--ra-text);line-height:1.4}
+.ra-field-empty{font-size:13px;color:var(--ra-muted);font-style:italic}
+.ra-field-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:9999px;background:rgba(44,58,255,.14);color:var(--color-primary);font-size:12px;font-weight:600}
+.ra-field-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:9999px;border:1px solid var(--ra-border);font-size:12px;color:var(--ra-text);margin:2px 3px 2px 0}
+.ra-field-divider{border:none;border-top:1px solid var(--ra-divider);margin:0 -18px}
+
+/* Asset grid */
+.ra-assets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.ra-asset-thumb{aspect-ratio:1;border-radius:8px;border:1px solid var(--ra-border);background:var(--ra-hover);overflow:hidden;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;color:var(--ra-muted)}
+.ra-asset-thumb img{width:100%;height:100%;object-fit:cover}
+.ra-asset-thumb:hover .ra-asset-overlay{opacity:1}
+.ra-asset-overlay{position:absolute;inset:0;background:rgba(44,58,255,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;border-radius:8px}
+.ra-asset-overlay svg{width:20px;height:20px;stroke:#fff;stroke-width:2;stroke-linecap:round;fill:none}
+.ra-add-asset{border:1px dashed var(--ra-border);background:transparent;cursor:pointer;transition:all .12s;font-family:inherit}
+.ra-add-asset:hover{border-color:var(--color-primary);background:rgba(44,58,255,.07);color:var(--color-primary)}
+
+/* Roles */
+.ra-roles-row{display:flex;align-items:center;gap:8px}
+.ra-role-av{width:28px;height:28px;border-radius:50%;background:var(--ra-hover);border:1px solid var(--ra-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.ra-role-name{font-size:13px;color:var(--ra-text);flex:1}
+.ra-role-label{font-size:11px;color:var(--ra-muted)}
+.ra-add-role{padding:5px 12px;border-radius:9999px;border:1px dashed var(--ra-border);background:transparent;font-size:12px;color:var(--ra-muted);cursor:pointer;font-family:inherit;transition:all .12s;display:inline-flex;align-items:center;gap:5px}
+.ra-add-role:hover{border-color:var(--color-primary);color:var(--color-primary)}
+
+/* Brief footer */
+.ra-brief-footer{padding:14px 18px;border-top:1px solid var(--ra-border);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.ra-submit-btn{width:100%;padding:12px;border-radius:10px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background .12s;display:flex;align-items:center;justify-content:center;gap:8px}
+.ra-submit-btn:hover{background:#2834E5}
+.ra-submit-btn:disabled{opacity:.45;cursor:not-allowed}
+.ra-submit-btn svg{width:15px;height:15px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;fill:none}
+.ra-save-btn{width:100%;padding:10px;border-radius:10px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
+.ra-save-btn:hover{border-color:var(--color-primary);color:var(--color-primary)}
+
+/* ── MODALS ── */
+.ra-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.ra-modal-bg.hidden{display:none}
+.ra-modal{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;width:100%;max-width:480px;overflow:hidden;animation:fadeUp .18s ease}
+.ra-modal-hd{padding:18px 20px 14px;border-bottom:1px solid var(--ra-divider);display:flex;align-items:center;justify-content:space-between}
+.ra-modal-title{font-size:15px;font-weight:700;color:var(--ra-text)}
+.ra-modal-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);font-size:16px;line-height:1;transition:all .12s}
+.ra-modal-close:hover{background:var(--ra-hover);color:var(--ra-text)}
+.ra-modal-body{padding:20px}
+
+/* Type picker */
+.ra-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ra-type-card{border:1px solid var(--ra-border);border-radius:12px;padding:16px 12px;cursor:pointer;transition:all .12s;text-align:center;background:var(--ra-hover);display:flex;flex-direction:column;align-items:center;gap:8px}
+.ra-type-card:hover{border-color:var(--color-primary);background:rgba(44,58,255,.08)}
+.ra-type-card.selected{border-color:var(--color-primary);background:rgba(44,58,255,.15)}
+.ra-type-icon{width:40px;height:40px;border-radius:10px;background:rgba(44,58,255,.18);display:flex;align-items:center;justify-content:center;margin:0 auto}
+.ra-type-icon svg{width:20px;height:20px;stroke:var(--color-primary);stroke-width:1.8;stroke-linecap:round;fill:none}
+.ra-type-name{font-size:12.5px;font-weight:600;color:var(--ra-text)}
+.ra-type-sub{font-size:11px;color:var(--ra-muted)}
+
+/* Roles modal */
+.ra-roles-search{width:100%;padding:9px 14px;border-radius:10px;border:1px solid var(--ra-border);background:var(--ra-input);color:var(--ra-text);font-family:inherit;font-size:13px;outline:none;margin-bottom:14px;transition:border-color .12s}
+.ra-roles-search:focus{border-color:var(--color-primary)}
+.ra-roles-search::placeholder{color:var(--ra-muted)}
+.ra-role-option{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .1s}
+.ra-role-option:hover{background:var(--ra-hover)}
+.ra-role-option-av{width:32px;height:32px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.ra-role-option-info{flex:1}
+.ra-role-option-name{font-size:13px;font-weight:600;color:var(--ra-text)}
+.ra-role-option-email{font-size:11.5px;color:var(--ra-muted)}
+.ra-role-check{width:18px;height:18px;border-radius:5px;border:1px solid var(--ra-border);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--color-primary)}
+
+/* Asset fullscreen */
+.ra-fs-modal{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;width:100%;max-width:600px;overflow:hidden;animation:fadeUp .18s ease}
+.ra-fs-img{width:100%;max-height:60vh;object-fit:contain;background:#0a0a0a;display:block}
+.ra-fs-footer{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--ra-divider)}
+.ra-fs-name{font-size:13px;font-weight:600;color:var(--ra-text)}
+.ra-fs-actions{display:flex;gap:8px}
+.ra-fs-act-btn{padding:6px 14px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;font-size:12.5px;color:var(--ra-muted);cursor:pointer;font-family:inherit;transition:all .12s}
+.ra-fs-act-btn:hover{border-color:var(--color-primary);color:var(--color-primary)}
+.ra-fs-act-btn.danger:hover{border-color:#EF4444;color:#EF4444}
+
+/* Upload modal */
+.ra-drop-zone{border:2px dashed var(--ra-border);border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:10px}
+.ra-drop-zone:hover,.ra-drop-zone.drag-over{border-color:var(--color-primary);background:rgba(44,58,255,.07)}
+.ra-drop-zone svg{width:32px;height:32px;stroke:var(--ra-muted);stroke-width:1.5;stroke-linecap:round;fill:none}
+.ra-drop-zone p{font-size:13px;color:var(--ra-muted)}
+.ra-drop-zone strong{color:var(--color-primary);cursor:pointer}
+.ra-modal-footer{padding:14px 20px;border-top:1px solid var(--ra-divider);display:flex;justify-content:flex-end;gap:8px}
+.ra-btn-primary{padding:9px 20px;border-radius:9999px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:background .12s}
+.ra-btn-primary:hover{background:#2834E5}
+.ra-btn-secondary{padding:9px 20px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
+.ra-btn-secondary:hover{border-color:var(--color-primary);color:var(--color-primary)}
+
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div id="ra-wrap">
+
+  <!-- HEADER -->
+  <header class="ra-header">
+    <a href="index.html" class="ra-logo">dp</a>
+    <div class="ra-header-title">Request Agent</div>
+    <div class="ra-header-r">
+      <button class="ra-theme-btn" onclick="toggleTheme()" title="Toggle light/dark">☀</button>
+      <a href="index.html" class="ra-icon-btn" title="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- BODY -->
+  <div class="ra-body">
+
+    <!-- CHAT PANE -->
+    <div class="ra-chat">
+      <div class="ra-chat-msgs" id="chat-msgs">
+
+        <!-- AI greeting -->
+        <div class="ra-msg ai">
+          <div class="ra-msg-av ai">AI</div>
+          <div class="ra-bubble">Hey! I'm your Request Agent. I'll help you put together a creative brief — it only takes a few minutes.<br><br>Let's start: <strong>what type of creative asset</strong> do you need?</div>
+        </div>
+        <div class="ra-chips" id="type-chips">
+          <button class="ra-chip" onclick="pickType('Social Media')">Social Media</button>
+          <button class="ra-chip" onclick="pickType('Video')">Video</button>
+          <button class="ra-chip" onclick="pickType('Print')">Print</button>
+          <button class="ra-chip" onclick="pickType('Presentation')">Presentation</button>
+          <button class="ra-chip" onclick="pickType('Illustration')">Illustration</button>
+          <button class="ra-chip" onclick="openTypeModal()">More types →</button>
+        </div>
+
+      </div>
+
+      <!-- Chat input -->
+      <div class="ra-chat-bar">
+        <button class="ra-attach-btn" onclick="openUploadModal()" title="Attach reference file">
+          <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+        <textarea class="ra-chat-input" id="chat-input" placeholder="Describe what you need…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="ra-send-btn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- BRIEF PANEL -->
+    <aside class="ra-brief">
+      <div class="ra-brief-hd">
+        <span class="ra-brief-title">Creative Brief</span>
+        <span class="ra-brief-status" id="brief-status">Draft</span>
+      </div>
+      <div class="ra-brief-body">
+
+        <!-- Type -->
+        <div class="ra-field">
+          <div class="ra-field-label">Type</div>
+          <div id="bf-type"><span class="ra-field-empty">Not set</span></div>
+        </div>
+
+        <hr class="ra-field-divider">
+
+        <!-- Title -->
+        <div class="ra-field">
+          <div class="ra-field-label">Title</div>
+          <div id="bf-title"><span class="ra-field-empty">Not set</span></div>
+        </div>
+
+        <!-- Format / Size -->
+        <div class="ra-field">
+          <div class="ra-field-label">Format / Size</div>
+          <div id="bf-format"><span class="ra-field-empty">Not set</span></div>
+        </div>
+
+        <!-- Project -->
+        <div class="ra-field">
+          <div class="ra-field-label">Project</div>
+          <div id="bf-project"><span class="ra-field-empty">Not set</span></div>
+        </div>
+
+        <hr class="ra-field-divider">
+
+        <!-- Description -->
+        <div class="ra-field">
+          <div class="ra-field-label">Description</div>
+          <div id="bf-desc" style="font-size:13.5px;line-height:1.55;color:var(--ra-text)"><span class="ra-field-empty">Not set</span></div>
+        </div>
+
+        <hr class="ra-field-divider">
+
+        <!-- Reference assets -->
+        <div class="ra-field">
+          <div class="ra-field-label" style="margin-bottom:2px">Reference Assets</div>
+          <div class="ra-assets-grid" id="assets-grid">
+            <button class="ra-asset-thumb ra-add-asset" onclick="openUploadModal()" title="Add reference">
+              <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <hr class="ra-field-divider">
+
+        <!-- Team / Roles -->
+        <div class="ra-field">
+          <div class="ra-field-label" style="margin-bottom:8px">Team &amp; Roles</div>
+          <div id="roles-list" style="display:flex;flex-direction:column;gap:8px">
+            <div class="ra-roles-row">
+              <div class="ra-role-av" style="background:#E05A2B">J</div>
+              <div style="flex:1"><div class="ra-role-name">Jane Johnson</div><div class="ra-role-label">Requester</div></div>
+            </div>
+          </div>
+          <button class="ra-add-role" onclick="openRolesModal()" style="margin-top:8px">
+            <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add person
+          </button>
+        </div>
+
+        <hr class="ra-field-divider">
+
+        <!-- Tags -->
+        <div class="ra-field">
+          <div class="ra-field-label">Tags</div>
+          <div id="bf-tags" style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:2px">
+            <span class="ra-field-empty">No tags</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Brief footer -->
+      <div class="ra-brief-footer">
+        <button class="ra-submit-btn" id="submit-btn" disabled onclick="submitRequest()">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Submit Request
+        </button>
+        <button class="ra-save-btn" onclick="saveDraft()">Save as Draft</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ── MODAL: Type Picker ── -->
+<div class="ra-modal-bg hidden" id="type-modal">
+  <div class="ra-modal">
+    <div class="ra-modal-hd">
+      <span class="ra-modal-title">Choose Asset Type</span>
+      <button class="ra-modal-close" onclick="closeModal('type-modal')">×</button>
+    </div>
+    <div class="ra-modal-body">
+      <div class="ra-type-grid">
+        <div class="ra-type-card" onclick="pickType('Social Media')">
+          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+          <div class="ra-type-name">Social Media</div>
+          <div class="ra-type-sub">Posts, stories, covers</div>
+        </div>
+        <div class="ra-type-card" onclick="pickType('Video')">
+          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+          <div class="ra-type-name">Video</div>
+          <div class="ra-type-sub">Reels, ads, intros</div>
+        </div>
+        <div class="ra-type-card" onclick="pickType('Print')">
+          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
+          <div class="ra-type-name">Print</div>
+          <div class="ra-type-sub">Flyers, brochures, cards</div>
+        </div>
+        <div class="ra-type-card" onclick="pickType('Presentation')">
+          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><path d="M2 3h20v13H2z"/><path d="M8 21l4-5 4 5"/><path d="M12 16v2"/></svg></div>
+          <div class="ra-type-name">Presentation</div>
+          <div class="ra-type-sub">Slides, decks</div>
+        </div>
+        <div class="ra-type-card" onclick="pickType('Illustration')">
+          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div class="ra-type-name">Illustration</div>
+          <div class="ra-type-sub">Custom artwork</div>
+        </div>
+        <div class="ra-type-card" onclick="pickType('Email')">
+          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div class="ra-type-name">Email</div>
+          <div class="ra-type-sub">Templates, banners</div>
+        </div>
+        <div class="ra-type-card" onclick="pickType('Logo / Brand')">
+          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+          <div class="ra-type-name">Logo / Brand</div>
+          <div class="ra-type-sub">Identity, guidelines</div>
+        </div>
+        <div class="ra-type-card" onclick="pickType('Web / UI')">
+          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+          <div class="ra-type-name">Web / UI</div>
+          <div class="ra-type-sub">Banners, mockups</div>
+        </div>
+        <div class="ra-type-card" onclick="pickType('Photo Edit')">
+          <div class="ra-type-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="ra-type-name">Photo Edit</div>
+          <div class="ra-type-sub">Retouching, composites</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Roles ── -->
+<div class="ra-modal-bg hidden" id="roles-modal">
+  <div class="ra-modal">
+    <div class="ra-modal-hd">
+      <span class="ra-modal-title">Add Team Member</span>
+      <button class="ra-modal-close" onclick="closeModal('roles-modal')">×</button>
+    </div>
+    <div class="ra-modal-body">
+      <input class="ra-roles-search" placeholder="Search by name or email…" oninput="filterRoles(this.value)">
+      <div id="roles-options">
+        <div class="ra-role-option" onclick="addRole('Alex Chen','alex@designpickle.com','#5CD801')">
+          <div class="ra-role-option-av" style="background:#5CD801;color:#111">A</div>
+          <div class="ra-role-option-info"><div class="ra-role-option-name">Alex Chen</div><div class="ra-role-option-email">alex@designpickle.com</div></div>
+        </div>
+        <div class="ra-role-option" onclick="addRole('Maria Santos','maria@designpickle.com','#B899EB')">
+          <div class="ra-role-option-av" style="background:#B899EB;color:#111">M</div>
+          <div class="ra-role-option-info"><div class="ra-role-option-name">Maria Santos</div><div class="ra-role-option-email">maria@designpickle.com</div></div>
+        </div>
+        <div class="ra-role-option" onclick="addRole('Tom Bradley','tom@designpickle.com','#FFB55B')">
+          <div class="ra-role-option-av" style="background:#FFB55B;color:#111">T</div>
+          <div class="ra-role-option-info"><div class="ra-role-option-name">Tom Bradley</div><div class="ra-role-option-email">tom@designpickle.com</div></div>
+        </div>
+        <div class="ra-role-option" onclick="addRole('Sam Rivera','sam@designpickle.com','#00F6FF')">
+          <div class="ra-role-option-av" style="background:#00F6FF;color:#111">S</div>
+          <div class="ra-role-option-info"><div class="ra-role-option-name">Sam Rivera</div><div class="ra-role-option-email">sam@designpickle.com</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="ra-modal-footer">
+      <button class="ra-btn-secondary" onclick="closeModal('roles-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Upload ── -->
+<div class="ra-modal-bg hidden" id="upload-modal">
+  <div class="ra-modal">
+    <div class="ra-modal-hd">
+      <span class="ra-modal-title">Add Reference Asset</span>
+      <button class="ra-modal-close" onclick="closeModal('upload-modal')">×</button>
+    </div>
+    <div class="ra-modal-body">
+      <div class="ra-drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+        <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        <p>Drag &amp; drop files here, or <strong>browse</strong></p>
+        <p style="font-size:11.5px">Supports PNG, JPG, GIF, PDF, AI, PSD</p>
+      </div>
+      <input type="file" id="file-input" style="display:none" multiple accept="image/*,.pdf,.ai,.psd" onchange="handleFiles(this.files)">
+      <div id="upload-previews" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px"></div>
+    </div>
+    <div class="ra-modal-footer">
+      <button class="ra-btn-secondary" onclick="closeModal('upload-modal')">Cancel</button>
+      <button class="ra-btn-primary" onclick="confirmUpload()">Add to Brief</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Asset Fullscreen ── -->
+<div class="ra-modal-bg hidden" id="fs-modal">
+  <div class="ra-fs-modal">
+    <div class="ra-modal-hd">
+      <span class="ra-modal-title" id="fs-modal-title">Asset Preview</span>
+      <button class="ra-modal-close" onclick="closeModal('fs-modal')">×</button>
+    </div>
+    <div id="fs-content" style="background:#0a0a0a;min-height:200px;display:flex;align-items:center;justify-content:center">
+      <img id="fs-img" class="ra-fs-img" src="" alt="">
+    </div>
+    <div class="ra-fs-footer">
+      <span class="ra-fs-name" id="fs-name">—</span>
+      <div class="ra-fs-actions">
+        <button class="ra-fs-act-btn" onclick="downloadAsset()">Download</button>
+        <button class="ra-fs-act-btn danger" onclick="removeAsset()">Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── State ── */
+const state = {
+  type: null,
+  title: null,
+  format: null,
+  project: null,
+  desc: null,
+  tags: [],
+  assets: [],
+  roles: [{ name:'Jane Johnson', email:'jane@designpickle.com', color:'#E05A2B', initial:'J', label:'Requester' }],
+  step: 'type',
+  pendingFiles: []
+};
+
+let activeAssetIdx = null;
+
+/* ── Theme ── */
+function toggleTheme() {
+  const wrap = document.getElementById('ra-wrap');
+  wrap.classList.toggle('light');
+  document.querySelector('.ra-theme-btn').textContent = wrap.classList.contains('light') ? '🌙' : '☀';
+}
+
+/* ── Chat helpers ── */
+function addMsg(text, role) {
+  const container = document.getElementById('chat-msgs');
+  const isUser = role === 'user';
+  const div = document.createElement('div');
+  div.className = 'ra-msg ' + role;
+  div.innerHTML = `<div class="ra-msg-av ${role}">${isUser ? 'J' : 'AI'}</div><div class="ra-bubble">${text}</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeChips(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function showTyping(cb) {
+  const container = document.getElementById('chat-msgs');
+  const typing = document.createElement('div');
+  typing.className = 'ra-msg ai';
+  typing.id = 'typing-indicator';
+  typing.innerHTML = `<div class="ra-msg-av ai">AI</div><div class="ra-typing"><div class="ra-dot"></div><div class="ra-dot"></div><div class="ra-dot"></div></div>`;
+  container.appendChild(typing);
+  container.scrollTop = container.scrollHeight;
+  setTimeout(() => {
+    const t = document.getElementById('typing-indicator');
+    if (t) t.remove();
+    cb();
+  }, 900);
+}
+
+function addChips(id, chips) {
+  const container = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = 'ra-chips';
+  div.id = id;
+  chips.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'ra-chip';
+    btn.textContent = c.label;
+    btn.onclick = c.action;
+    div.appendChild(btn);
+  });
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+/* ── Brief update helpers ── */
+function updateBrief(field, html) {
+  document.getElementById(field).innerHTML = html;
+}
+
+function checkSubmitEnabled() {
+  const ready = state.type && state.title && state.desc;
+  document.getElementById('submit-btn').disabled = !ready;
+  if (ready) {
+    document.getElementById('brief-status').textContent = 'Ready';
+    document.getElementById('brief-status').style.background = 'rgba(113,221,140,.15)';
+    document.getElementById('brief-status').style.color = 'var(--color-green)';
+  }
+}
+
+/* ── Conversation flow ── */
+function pickType(type) {
+  state.type = type;
+  removeChips('type-chips');
+  addMsg(type, 'user');
+  updateBrief('bf-type', `<span class="ra-field-pill">${type}</span>`);
+  showTyping(() => {
+    addMsg(`Great choice — <strong>${type}</strong> it is. What's a good working title for this request?`, 'ai');
+    state.step = 'title';
+  });
+}
+
+function pickTitle(title) {
+  state.title = title;
+  updateBrief('bf-title', `<span class="ra-field-value">${title}</span>`);
+  showTyping(() => {
+    addMsg(`Perfect. What <strong>format or dimensions</strong> do you need? (e.g. 1080×1080px, A4, 16:9 landscape)`, 'ai');
+    state.step = 'format';
+    addChips('format-chips', [
+      { label:'1080×1080 (Square)', action: () => pickFormat('1080×1080px') },
+      { label:'1920×1080 (16:9)', action: () => pickFormat('1920×1080px') },
+      { label:'Story (1080×1920)', action: () => pickFormat('1080×1920px') },
+      { label:'A4 Print', action: () => pickFormat('A4 (210×297mm)') },
+    ]);
+  });
+}
+
+function pickFormat(format) {
+  state.format = format;
+  removeChips('format-chips');
+  addMsg(format, 'user');
+  updateBrief('bf-format', `<span class="ra-field-value">${format}</span>`);
+  showTyping(() => {
+    addMsg(`Got it. Now <strong>describe</strong> what you need in detail — include the key message, style, tone, or any specific requirements.`, 'ai');
+    state.step = 'desc';
+  });
+}
+
+function pickDesc(desc) {
+  state.desc = desc;
+  updateBrief('bf-desc', `<div style="font-size:13.5px;line-height:1.55;color:var(--ra-text)">${desc}</div>`);
+  showTyping(() => {
+    addMsg(`Brilliant! Would you like to add any <strong>reference assets</strong>? (brand files, examples, mood board images)`, 'ai');
+    state.step = 'assets';
+    addChips('asset-chips', [
+      { label:'Add references', action: () => { removeChips('asset-chips'); openUploadModal(); } },
+      { label:'Skip for now', action: () => skipAssets() },
+    ]);
+  });
+}
+
+function skipAssets() {
+  removeChips('asset-chips');
+  addMsg('Skip for now', 'user');
+  finishBrief();
+}
+
+function finishBrief() {
+  showTyping(() => {
+    addMsg(`Your brief is looking great! 🎉 You can review it in the panel on the right. When you're happy, hit <strong>Submit Request</strong>.`, 'ai');
+    state.step = 'done';
+    checkSubmitEnabled();
+    addChips('final-chips', [
+      { label:'Add tags', action: () => { removeChips('final-chips'); promptTags(); } },
+      { label:'Assign someone', action: () => { removeChips('final-chips'); openRolesModal(); } },
+      { label:'Submit now', action: () => submitRequest() },
+    ]);
+  });
+}
+
+function promptTags() {
+  addMsg('What tags should I add? (comma-separated)', 'ai');
+  state.step = 'tags';
+}
+
+/* ── Send message ── */
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = '';
+  addMsg(text, 'user');
+
+  if (state.step === 'title') {
+    pickTitle(text);
+  } else if (state.step === 'format') {
+    removeChips('format-chips');
+    pickFormat(text);
+  } else if (state.step === 'desc') {
+    pickDesc(text);
+  } else if (state.step === 'tags') {
+    const tags = text.split(',').map(t => t.trim()).filter(Boolean);
+    state.tags = [...state.tags, ...tags];
+    renderTags();
+    showTyping(() => {
+      addMsg(`Added ${tags.length} tag${tags.length > 1 ? 's' : ''}. Anything else to tweak?`, 'ai');
+      state.step = 'done';
+      addChips('final-chips2', [
+        { label:'Assign someone', action: () => { removeChips('final-chips2'); openRolesModal(); } },
+        { label:'Submit', action: () => submitRequest() },
+      ]);
+    });
+  } else if (state.step === 'done') {
+    showTyping(() => {
+      addMsg(`The brief is ready to submit. Feel free to make any edits in the panel, then hit Submit Request.`, 'ai');
+    });
+  } else {
+    showTyping(() => {
+      addMsg(`Got it. Let's continue filling out your brief.`, 'ai');
+    });
+  }
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+/* ── Tags ── */
+function renderTags() {
+  const el = document.getElementById('bf-tags');
+  if (!state.tags.length) { el.innerHTML = '<span class="ra-field-empty">No tags</span>'; return; }
+  el.innerHTML = state.tags.map(t => `<span class="ra-field-tag">${t}</span>`).join('') +
+    `<button onclick="removeLastTag()" style="font-size:11px;color:var(--ra-muted);background:none;border:none;cursor:pointer;padding:2px 4px">✕</button>`;
+}
+
+function removeLastTag() {
+  state.tags.pop();
+  renderTags();
+}
+
+/* ── Roles ── */
+function renderRoles() {
+  const list = document.getElementById('roles-list');
+  list.innerHTML = state.roles.map(r => `
+    <div class="ra-roles-row">
+      <div class="ra-role-av" style="background:${r.color}">${r.initial}</div>
+      <div style="flex:1"><div class="ra-role-name">${r.name}</div><div class="ra-role-label">${r.label || 'Collaborator'}</div></div>
+    </div>`).join('');
+}
+
+function addRole(name, email, color) {
+  const initial = name.charAt(0).toUpperCase();
+  const exists = state.roles.find(r => r.email === email);
+  if (!exists) {
+    state.roles.push({ name, email, color, initial, label: 'Collaborator' });
+    renderRoles();
+    addMsg(`Added ${name} to the brief.`, 'ai');
+  }
+  closeModal('roles-modal');
+}
+
+function filterRoles(query) {
+  const opts = document.querySelectorAll('#roles-options .ra-role-option');
+  opts.forEach(opt => {
+    const text = opt.textContent.toLowerCase();
+    opt.style.display = text.includes(query.toLowerCase()) ? '' : 'none';
+  });
+}
+
+/* ── Assets ── */
+function renderAssets() {
+  const grid = document.getElementById('assets-grid');
+  grid.innerHTML = state.assets.map((a, i) => `
+    <div class="ra-asset-thumb" onclick="openAssetFS(${i})">
+      <img src="${a.src}" alt="${a.name}">
+      <div class="ra-asset-overlay"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+    </div>`).join('') +
+    `<button class="ra-asset-thumb ra-add-asset" onclick="openUploadModal()" title="Add reference">
+      <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>`;
+}
+
+/* ── Modals ── */
+function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+document.querySelectorAll('.ra-modal-bg').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.add('hidden'); });
+});
+
+function openTypeModal() { openModal('type-modal'); }
+function openRolesModal() { openModal('roles-modal'); }
+function openUploadModal() { openModal('upload-modal'); }
+
+function openAssetFS(idx) {
+  activeAssetIdx = idx;
+  const asset = state.assets[idx];
+  document.getElementById('fs-img').src = asset.src;
+  document.getElementById('fs-name').textContent = asset.name;
+  document.getElementById('fs-modal-title').textContent = asset.name;
+  openModal('fs-modal');
+}
+
+function downloadAsset() {
+  if (activeAssetIdx === null) return;
+  const asset = state.assets[activeAssetIdx];
+  const a = document.createElement('a');
+  a.href = asset.src;
+  a.download = asset.name;
+  a.click();
+}
+
+function removeAsset() {
+  if (activeAssetIdx === null) return;
+  state.assets.splice(activeAssetIdx, 1);
+  renderAssets();
+  closeModal('fs-modal');
+  activeAssetIdx = null;
+}
+
+/* ── Upload / drop ── */
+function dragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
+function dragLeave() { document.getElementById('drop-zone').classList.remove('drag-over'); }
+function dropFile(e) {
+  e.preventDefault();
+  dragLeave();
+  handleFiles(e.dataTransfer.files);
+}
+
+function handleFiles(files) {
+  Array.from(files).forEach(f => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      state.pendingFiles.push({ src: ev.target.result, name: f.name });
+      const prev = document.getElementById('upload-previews');
+      const img = document.createElement('img');
+      img.src = ev.target.result;
+      img.style.cssText = 'width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--ra-border)';
+      prev.appendChild(img);
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+function confirmUpload() {
+  state.assets.push(...state.pendingFiles);
+  state.pendingFiles = [];
+  document.getElementById('upload-previews').innerHTML = '';
+  renderAssets();
+  closeModal('upload-modal');
+  if (state.step === 'assets') {
+    removeChips('asset-chips');
+    addMsg(`Added ${state.assets.length} reference asset${state.assets.length !== 1 ? 's' : ''}.`, 'user');
+    finishBrief();
+  }
+}
+
+/* ── Submit / Save ── */
+function submitRequest() {
+  removeChips('final-chips');
+  removeChips('final-chips2');
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;fill:none"><polyline points="20 6 9 17 4 12"/></svg> Submitted!';
+  btn.style.background = 'var(--color-green)';
+  btn.style.color = '#111';
+  document.getElementById('brief-status').textContent = 'Submitted';
+  document.getElementById('brief-status').style.background = 'rgba(113,221,140,.15)';
+  document.getElementById('brief-status').style.color = 'var(--color-green)';
+  addMsg('Your request has been submitted! Our team will review it shortly. You can track progress on the <a href="index.html" style="color:var(--color-primary);font-weight:600">Dashboard</a>.', 'ai');
+}
+
+function saveDraft() {
+  addMsg('Draft saved. You can come back and finish it anytime from your Dashboard.', 'ai');
+}
+</script>
+</body>
+</html>

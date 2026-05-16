@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<!--
+  JarCOS Onboarding Agent — Design Pickle
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dp — Onboarding Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Lato',system-ui,sans-serif;background:var(--db-bg);color:var(--db-text)}
+
+/* ── CSS TOKENS ── */
+:root{
+  --db-bg:#0C0C0C;
+  --db-sb:#111;
+  --db-card:#1C1C1C;
+  --db-border:rgba(255,255,255,.09);
+  --db-text:#fff;
+  --db-muted:rgba(255,255,255,.42);
+  --db-divider:rgba(255,255,255,.07);
+  --db-hover:rgba(255,255,255,.05);
+  --db-active:rgba(255,255,255,.1);
+  --color-primary:#2C3AFF;
+  --color-volt:#D5FF02;
+  --color-green:#71DD8C;
+  --color-orange:#F55200;
+  --color-purple:#B899EB;
+}
+.light{
+  --db-bg:#F9F9FA;
+  --db-sb:#fff;
+  --db-card:#fff;
+  --db-border:#E5E3DF;
+  --db-text:#0B0C0B;
+  --db-muted:#888;
+  --db-divider:#F0EDE8;
+  --db-hover:#F5F4F0;
+  --db-active:#EDEAE4;
+}
+
+.page{display:flex;flex-direction:column;min-height:100vh;background:var(--db-bg)}
+
+/* Header */
+.ob-header{height:52px;background:var(--db-sb);border-bottom:1px solid var(--db-border);display:flex;align-items:center;padding:0 20px;gap:16px;flex-shrink:0;position:sticky;top:0;z-index:20}
+.ob-header-logo{font-size:22px;font-weight:900;letter-spacing:-.04em;text-decoration:none;line-height:1}
+.light .ob-header-logo{color:#0B0C0B}
+:root:not(.light) .ob-header-logo,.page:not(.light) .ob-header-logo{color:var(--color-volt)}
+.ob-header-title{flex:1;text-align:center;font-size:14px;font-weight:600;color:var(--db-text)}
+.ob-header-r{display:flex;align-items:center;gap:8px}
+.ob-header-close{width:32px;height:32px;border-radius:50%;border:1px solid var(--db-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--db-muted);font-size:16px;text-decoration:none;transition:all .12s}
+.ob-header-close:hover{background:var(--db-hover);color:var(--db-text)}
+.ob-theme-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--db-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--db-muted);font-size:15px;transition:all .12s}
+.ob-theme-btn:hover{background:var(--db-hover);color:var(--db-text)}
+
+/* Progress bar */
+.ob-prog{height:3px;background:var(--db-border);flex-shrink:0}
+.ob-prog-fill{height:100%;background:var(--color-primary);width:0%;transition:width .5s ease}
+
+/* Main */
+.ob-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* Welcome screen */
+#ob-welcome{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 60px;gap:60px;overflow:auto;background:var(--db-bg);flex-wrap:wrap}
+#ob-welcome.hidden{display:none}
+.ob-wl-copy{flex:1;min-width:260px;max-width:420px}
+.ob-wl-title{font-size:40px;font-weight:900;color:var(--db-text);letter-spacing:-.5px;margin-bottom:6px}
+.ob-wl-name{font-size:15px;color:var(--db-muted);margin-bottom:22px}
+.ob-wl-name strong{color:var(--db-text)}
+.ob-wl-bubble{background:var(--db-card);border:0.5px solid var(--db-border);border-radius:14px 14px 14px 3px;padding:18px 22px;font-size:14px;color:var(--db-muted);line-height:1.7;box-shadow:0 2px 12px rgba(0,0,0,.18);margin-bottom:28px}
+.ob-get-started{padding:14px 40px;border-radius:9999px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+.ob-get-started:hover{background:#2834E5}
+.ob-mascot-img{width:200px;height:200px;border-radius:28px;background:linear-gradient(145deg,#2C3AFF,#6366F1);display:flex;align-items:center;justify-content:center;font-size:80px;box-shadow:0 14px 40px rgba(44,58,255,.25);position:relative;overflow:hidden}
+.ob-mascot-img::after{content:'DESIGN PICKLE EXPRESS';position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:800;letter-spacing:.1em;color:rgba(255,255,255,.5);white-space:nowrap}
+
+/* Chat area */
+#ob-chat{display:none;flex-direction:column;flex:1;overflow:hidden;background:var(--db-card)}
+#ob-chat.active{display:flex;flex:1;min-height:0}
+.ob-msgs{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.ob-msgs::-webkit-scrollbar{width:4px}
+.ob-msgs::-webkit-scrollbar-thumb{background:var(--db-border);border-radius:2px}
+.ob-input-bar{border-top:0.5px solid var(--db-border);padding:11px 16px;background:var(--db-sb);flex-shrink:0;display:flex;flex-direction:column;gap:7px}
+.ob-input-row{display:flex;align-items:flex-end;gap:9px}
+.ob-input-ta{flex:1;background:var(--db-hover);border:0.5px solid var(--db-border);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--db-text);min-height:42px;max-height:100px;font-family:inherit;resize:none;outline:none;transition:all .15s}
+.ob-input-ta::placeholder{color:var(--db-muted)}
+.ob-input-ta:focus{background:var(--db-card);border-color:rgba(255,255,255,.22)}
+.light .ob-input-ta:focus{border-color:#C8C5BF}
+.ob-send{width:38px;height:38px;border-radius:50%;border:none;background:var(--color-primary);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;align-self:flex-end;transition:all .15s}
+.ob-send:hover{background:#2834E5}
+.ob-send.off{background:rgba(200,200,200,.3);cursor:not-allowed}
+.ob-send svg{width:15px;height:15px;fill:#fff}
+.ob-hint{font-size:11px;color:var(--db-muted);padding:0 2px}
+
+/* Bubbles */
+.msg{display:flex;align-items:flex-end;gap:9px;max-width:90%;animation:fadeUp .2s ease;flex-shrink:0}
+.msg.ai{align-self:flex-start}.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.av.ai{background:var(--color-primary);color:#fff}.av.us{background:var(--db-text);color:var(--db-bg)}
+.bub{padding:10px 14px;border-radius:18px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.msg.ai .bub{background:var(--db-card);border:0.5px solid var(--db-border);border-bottom-left-radius:3px;color:var(--db-text);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.msg.user .bub{background:var(--color-primary);color:#fff;border-bottom-right-radius:3px}
+
+/* Step card */
+.ob-step-card{align-self:flex-start;flex-shrink:0;margin-left:37px;width:min(500px,95%);background:var(--db-card);border:0.5px solid var(--db-border);border-radius:14px;overflow:hidden;animation:fadeUp .28s ease;box-shadow:0 2px 10px rgba(0,0,0,.22);display:flex;flex-direction:column;max-height:min(680px,82vh)}
+.ob-step-card.used{opacity:.3;pointer-events:none}
+.ob-sc-body{padding:18px 20px;overflow-y:auto;flex:1;min-height:200px}
+.ob-sc-q{font-size:15px;font-weight:700;color:var(--db-text);margin-bottom:4px}
+.ob-sc-hint{font-size:12px;color:var(--db-muted);margin-bottom:16px;line-height:1.5}
+
+/* Dropdown */
+.ob-dropdown-wrap{position:relative}
+.ob-dropdown-btn{width:100%;padding:11px 14px;border:0.5px solid var(--db-border);border-radius:10px;background:var(--db-hover);font-family:inherit;font-size:13.5px;color:var(--db-text);text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color .12s}
+.ob-dropdown-btn:hover{border-color:rgba(255,255,255,.22)}
+.ob-dropdown-btn.open{border-color:var(--color-primary);border-radius:10px 10px 0 0}
+.ob-dropdown-btn svg{width:16px;height:16px;flex-shrink:0;transition:transform .2s;color:var(--db-muted)}
+.ob-dropdown-btn.open svg{transform:rotate(180deg)}
+.ob-dropdown-menu{position:absolute;top:100%;left:0;right:0;background:var(--db-card);border:0.5px solid var(--db-border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:50}
+.ob-dd-item{padding:12px 14px;font-size:13.5px;color:var(--db-text);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .1s}
+.ob-dd-item:hover{background:var(--db-hover)}
+.ob-dd-item.sel{color:var(--db-text);font-weight:500}
+.ob-dd-item .ob-check{width:16px;height:16px;flex-shrink:0;color:var(--color-primary)}
+
+/* URL inputs */
+.ob-url-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ob-url-input{flex:1;padding:11px 14px;border:0.5px solid var(--db-border);border-radius:10px;background:var(--db-hover);font-family:inherit;font-size:13px;color:var(--db-text);outline:none;transition:border-color .12s}
+.ob-url-input:focus{border-color:var(--color-primary)}
+.ob-url-input::placeholder{color:var(--db-muted)}
+.ob-url-icon-btn{width:34px;height:34px;border-radius:50%;border:0.5px solid var(--db-border);background:var(--db-hover);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--db-text);font-size:18px;transition:all .12s}
+.ob-url-icon-btn:hover{border-color:rgba(255,255,255,.3)}
+.ob-upload-link{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--db-muted);cursor:pointer;margin-top:4px;width:fit-content}
+.ob-upload-link:hover{color:var(--db-text)}
+.ob-upload-link svg{width:16px;height:16px}
+
+/* Brand preview */
+.ob-brand-scan{margin-top:14px;border:0.5px solid var(--db-border);border-radius:12px;overflow:hidden;animation:fadeUp .25s ease}
+.ob-brand-scan-head{background:var(--db-hover);padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--db-border)}
+.ob-brand-scan-dot{width:8px;height:8px;border-radius:50%;background:var(--color-primary);flex-shrink:0}
+.ob-brand-scan-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--color-primary)}
+.ob-brand-scan-url{font-size:11px;color:var(--db-muted);margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.ob-brand-loading{padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.ob-brand-bar{width:100%;height:4px;background:var(--db-border);border-radius:2px;overflow:hidden}
+.ob-brand-bar-fill{height:100%;background:linear-gradient(90deg,var(--color-primary),#6366F1);border-radius:2px;animation:brandScan 1.8s ease-in-out forwards}
+@keyframes brandScan{0%{width:0%}60%{width:75%}100%{width:100%}}
+.ob-brand-scan-msg{font-size:12px;color:var(--db-muted)}
+.ob-brand-result{padding:14px}
+.ob-brand-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ob-brand-favicon{width:36px;height:36px;border-radius:8px;background:var(--db-hover);border:0.5px solid var(--db-border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.ob-brand-favicon img{width:28px;height:28px;object-fit:contain}
+.ob-brand-domain{font-size:13px;font-weight:600;color:var(--db-text)}
+.ob-brand-domain-sub{font-size:11px;color:var(--db-muted)}
+.ob-brand-section{margin-bottom:12px}
+.ob-brand-section-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--db-muted);margin-bottom:6px}
+.ob-brand-colors{display:flex;gap:6px;flex-wrap:wrap}
+.ob-brand-swatch{width:32px;height:32px;border-radius:8px;border:0.5px solid rgba(255,255,255,.1);cursor:default;position:relative;transition:transform .1s}
+.ob-brand-swatch:hover{transform:scale(1.12)}
+.ob-brand-swatch-hex{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--db-muted);white-space:nowrap;opacity:0;transition:opacity .15s}
+.ob-brand-swatch:hover .ob-brand-swatch-hex{opacity:1}
+.ob-brand-fonts{display:flex;gap:6px;flex-wrap:wrap}
+.ob-brand-font-tag{padding:4px 10px;border-radius:9999px;background:var(--db-hover);border:0.5px solid var(--db-border);font-size:11px;color:var(--db-text)}
+
+/* Project / category */
+.ob-proj-name{width:100%;padding:11px 14px;border:0.5px solid var(--db-border);border-radius:10px;background:var(--db-hover);font-family:inherit;font-size:13px;color:var(--db-text);outline:none;transition:border-color .12s;margin-bottom:14px}
+.ob-proj-name:focus{border-color:var(--color-primary)}
+.ob-proj-name::placeholder{color:var(--db-muted)}
+.ob-cats-grid{display:flex;flex-wrap:wrap;gap:7px}
+.ob-cat-pill{padding:7px 13px;border:0.5px solid var(--db-border);border-radius:9999px;font-size:12.5px;color:var(--db-muted);cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:5px;position:relative;user-select:none}
+.ob-cat-pill:hover{border-color:rgba(255,255,255,.3);color:var(--db-text)}
+.ob-cat-pill.sel{border-color:var(--color-primary);background:rgba(44,58,255,.15);color:#fff}
+.ob-cat-pill .ob-pill-count{background:var(--color-primary);color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ob-cat-pill svg{width:12px;height:12px;transition:transform .15s;color:var(--db-muted)}
+.ob-cat-pill.sel svg{transform:rotate(180deg)}
+.ob-cat-dropdown{position:absolute;top:calc(100% + 6px);left:0;min-width:200px;background:var(--db-card);border:0.5px solid var(--db-border);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.4);padding:8px 0;z-index:60;animation:fadeUp .15s ease}
+.ob-cat-sub{padding:9px 14px;font-size:13px;color:var(--db-text);display:flex;align-items:center;gap:9px;cursor:pointer;transition:background .1s}
+.ob-cat-sub:hover{background:var(--db-hover)}
+.ob-cat-sub input[type="checkbox"]{width:16px;height:16px;accent-color:var(--color-primary);cursor:pointer}
+
+/* Email tags */
+.ob-email-wrap{border:0.5px solid var(--db-border);border-radius:10px;padding:10px 12px;min-height:50px;display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;cursor:text;transition:border-color .12s;background:var(--db-hover)}
+.ob-email-wrap:focus-within{border-color:var(--color-primary)}
+.ob-email-tag{padding:4px 10px;border-radius:9999px;background:var(--db-active);border:0.5px solid var(--db-border);font-size:12.5px;color:var(--db-text);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.ob-email-tag.invalid{background:rgba(239,68,68,.15);border-color:#EF4444;color:#EF4444}
+.ob-email-tag-x{cursor:pointer;color:var(--db-muted);font-size:12px;transition:color .1s}
+.ob-email-tag-x:hover{color:#EF4444}
+.ob-email-input{border:none;outline:none;font-family:inherit;font-size:13px;color:var(--db-text);min-width:140px;background:transparent;flex:1}
+.ob-email-input::placeholder{color:var(--db-muted)}
+.ob-email-error{font-size:11.5px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px}
+.ob-pending{margin-top:14px}
+.ob-pending-hd{font-size:13px;font-weight:700;color:var(--db-text);margin-bottom:3px}
+.ob-pending-sub{font-size:11.5px;color:var(--db-muted);margin-bottom:10px}
+.ob-invite-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-top:0.5px solid var(--db-divider)}
+.ob-invite-email{font-size:13px;color:var(--db-text)}
+.ob-invite-cancel{padding:4px 11px;border:0.5px solid var(--db-border);border-radius:9999px;font-family:inherit;font-size:11px;color:var(--db-muted);cursor:pointer;background:transparent;transition:all .12s}
+.ob-invite-cancel:hover{border-color:#EF4444;color:#EF4444}
+
+/* Integration tiles */
+.ob-integ-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ob-integ-tile{border:1.5px solid var(--db-border);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .15s;position:relative;background:var(--db-hover)}
+.ob-integ-tile:hover{border-color:rgba(255,255,255,.22);background:var(--db-card)}
+.ob-integ-tile.sel{border-color:var(--color-primary);background:rgba(44,58,255,.1)}
+.ob-integ-tile.sel .ob-integ-check{opacity:1}
+.ob-integ-check{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:6px;background:var(--color-primary);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;font-size:11px;color:#fff;font-weight:700}
+.ob-integ-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.ob-integ-name{font-size:13px;font-weight:600;color:var(--db-text)}
+
+/* Video placeholder */
+.ob-video-placeholder{width:100%;height:220px;background:linear-gradient(135deg,#2A2A2A,#444);display:flex;align-items:center;justify-content:center;border-radius:12px;position:relative}
+.ob-play-btn{width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:background .15s}
+.ob-play-btn:hover{background:rgba(0,0,0,.85)}
+.ob-play-btn::after{content:'';width:0;height:0;border-style:solid;border-width:10px 0 10px 20px;border-color:transparent transparent transparent #FFD700;margin-left:4px}
+
+/* Step card footer */
+.ob-sc-footer{padding:14px 20px;border-top:0.5px solid var(--db-divider);display:flex;gap:8px;background:var(--db-sb)}
+.ob-back-btn{flex:1;max-width:120px;padding:11px;border-radius:10px;border:0.5px solid var(--db-border);background:transparent;font-family:inherit;font-size:13px;font-weight:500;color:var(--db-muted);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.ob-back-btn:hover{border-color:rgba(255,255,255,.3);color:var(--db-text)}
+.ob-next-btn{flex:1;padding:11px;border-radius:10px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.ob-next-btn:hover{background:#2834E5}
+.ob-next-btn.off{background:rgba(200,200,200,.25);cursor:not-allowed}
+
+/* Upload modal */
+.upload-modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:center;justify-content:center}
+.upload-modal-back.show{display:flex}
+.upload-modal{background:var(--db-card);border-radius:20px;width:540px;max-width:94vw;padding:28px;box-shadow:0 16px 48px rgba(0,0,0,.5);animation:fadeUp .25s ease;border:0.5px solid var(--db-border)}
+.um-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.um-title{font-size:17px;font-weight:700;color:var(--db-text)}
+.um-close{width:30px;height:30px;border-radius:50%;border:none;background:var(--db-hover);color:var(--db-muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.um-close:hover{background:var(--db-active)}
+.um-drop{border:1.5px dashed var(--db-border);border-radius:14px;padding:36px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--db-hover);cursor:pointer;transition:all .15s;margin-bottom:20px}
+.um-drop:hover{border-color:var(--color-primary);background:rgba(44,58,255,.08)}
+.um-drop-icon{width:44px;height:44px;border-radius:12px;background:var(--db-card);border:0.5px solid var(--db-border);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.um-drop-icon svg{width:22px;height:22px;color:var(--db-muted)}
+.um-drop-text{font-size:13.5px;color:var(--db-muted);text-align:center}
+.um-drop-text a{color:var(--color-primary);text-decoration:none;font-weight:600}
+.um-drop-sub{font-size:12px;color:var(--db-muted)}
+.um-files-hd{font-size:13px;font-weight:600;color:var(--db-muted);margin-bottom:8px}
+.um-file-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:0.5px solid var(--db-divider)}
+.um-file-icon{width:32px;height:32px;border-radius:7px;background:var(--db-hover);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.um-file-icon svg{width:17px;height:17px;color:var(--db-muted)}
+.um-file-inf{flex:1;min-width:0}
+.um-file-nm{font-size:13px;font-weight:500;color:var(--db-text)}
+.um-file-sz{font-size:11.5px;color:var(--db-muted)}
+.um-file-x{width:24px;height:24px;border-radius:50%;border:none;background:var(--db-hover);color:var(--db-muted);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.um-file-x:hover{background:var(--db-active)}
+.um-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.um-cancel{padding:10px 22px;border-radius:9999px;border:0.5px solid var(--db-border);background:transparent;font-family:inherit;font-size:13px;font-weight:500;color:var(--db-muted);cursor:pointer;transition:all .12s}
+.um-cancel:hover{border-color:rgba(255,255,255,.3);color:var(--db-text)}
+.um-select{padding:10px 22px;border-radius:9999px;border:none;background:var(--color-primary);color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
+.um-select:hover{background:#2834E5}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes db{0%,60%,100%{transform:translateY(0);background:var(--db-muted)}30%{transform:translateY(-4px);background:var(--color-primary)}}
+</style>
+</head>
+<body>
+<div class="page" id="page">
+
+  <!-- HEADER -->
+  <header class="ob-header">
+    <a href="index.html" class="ob-header-logo">dp</a>
+    <div class="ob-header-title">Onboarding Agent</div>
+    <div class="ob-header-r">
+      <button class="ob-theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
+      <a href="index.html" class="ob-header-close" title="Close">✕</a>
+    </div>
+  </header>
+
+  <!-- PROGRESS BAR -->
+  <div class="ob-prog"><div class="ob-prog-fill" id="ob-pf"></div></div>
+
+  <!-- MAIN -->
+  <div class="ob-main">
+
+    <!-- WELCOME SCREEN -->
+    <div id="ob-welcome" style="flex:1;display:flex;align-items:center;justify-content:center;padding:48px 60px;gap:60px;overflow:auto;background:var(--db-bg);flex-wrap:wrap">
+      <div class="ob-wl-copy">
+        <div class="ob-wl-title">Welcome, Jane</div>
+        <div class="ob-wl-name">I am <strong>Sarah Pickle</strong> your onboarding agent.</div>
+        <div class="ob-wl-bubble">
+          I'm here to help you set up your account smoothly and efficiently. Let's make sure everything is in place for you to get started!
+        </div>
+        <button class="ob-get-started" onclick="obStart()">Get Started</button>
+      </div>
+      <div style="flex-shrink:0">
+        <div class="ob-mascot-img">🥒</div>
+      </div>
+    </div>
+
+    <!-- CHAT AREA -->
+    <div id="ob-chat" style="display:none;flex-direction:column;flex:1;overflow:hidden;background:var(--db-card)">
+      <div id="ob-msgs" class="ob-msgs"></div>
+      <div class="ob-input-bar">
+        <div class="ob-input-row">
+          <textarea id="ob-fi" placeholder="Type a message..." rows="1" class="ob-input-ta" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+          <button class="ob-send off" id="ob-nb" onclick="obSend()"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+        </div>
+        <div id="ob-hint" class="ob-hint">Complete each step to continue</div>
+      </div>
+    </div>
+
+  </div><!-- /ob-main -->
+
+</div><!-- /page -->
+
+<!-- UPLOAD MODAL -->
+<div class="upload-modal-back" id="upload-modal-back">
+  <div class="upload-modal">
+    <div class="um-hd"><span class="um-title">Select files to upload</span><button class="um-close" onclick="closeUploadModal()">&#x2715;</button></div>
+    <div class="um-drop" onclick="document.getElementById('um-file-input').click()">
+      <div class="um-drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></div>
+      <div class="um-drop-text">Drag and drop your file here or <a>choose file</a></div>
+      <div class="um-drop-sub">File must be <strong>PDF</strong> format</div>
+      <input type="file" id="um-file-input" style="display:none" accept=".pdf">
+    </div>
+    <div class="um-files-hd">Selected files</div>
+    <div class="um-file-row"><div class="um-file-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="um-file-inf"><div class="um-file-nm">File name.PDF</div><div class="um-file-sz">30 MB</div></div><button class="um-file-x">&#x2715;</button></div>
+    <div class="um-actions"><button class="um-cancel" onclick="closeUploadModal()">Cancel</button><button class="um-select" onclick="closeUploadModal()">Select</button></div>
+  </div>
+</div>
+
+<script>
+/* ── THEME ── */
+function toggleTheme() {
+  document.getElementById('page').classList.toggle('light');
+  document.body.classList.toggle('light');
+  const btn = document.querySelector('.ob-theme-btn');
+  if (btn) btn.textContent = document.getElementById('page').classList.contains('light') ? '🌙' : '☀';
+}
+
+/* ── ONBOARDING DATA ── */
+const OB = {
+  step: 0,
+  data: { timezone:'EST (US Eastern)', urls:[], project:'', categories:{}, emails:[], integrations:[], files:[] },
+  emailError: null,
+};
+
+const OB_STEPS = [
+  { id:'timezone', q:"What's your preferred timezone?", hint:"We'll use this to deliver work in your preferred working hours." },
+  { id:'website',  q:"Enter your website", hint:"We'll analyze your site to create your brand profile using your colors, logos, images, and fonts." },
+  { id:'project',  q:"Start your first project", hint:"Choose at least 3 types of request you'll need for your project." },
+  { id:'team',     q:"Invite members to your team", hint:"You can add up to 4 members" },
+  { id:'integrations', q:"Would you like to integrate any of these tools?", hint:"Connect your tools to get a full view of your workflow in one place." },
+  { id:'video',    q:"Message from our CEO Russ Perry", hint:"A personal welcome from our founder." },
+];
+
+const OB_CAT_SUBS = {
+  'Brand & Identity': ['Logo','Visual Identity Systems','Brand Guidelines','Business Card','Stationery','Corporate Collateral'],
+  'Marketing & Advertising': ['Social Media Ads','Email Campaign','Banner Ads','Flyer','Brochure'],
+  'Digital & Web': ['Landing Page','Website Banner','Icon Set','App Screenshot'],
+  'Apparel & Merchandise': ['T-Shirt Design','Hat Design','Tote Bag','Sticker'],
+  'Corporate & Internal': ['Presentation','Internal Newsletter','Org Chart','Signage'],
+  'Ebooks & Digital Report': ['Ebook Design','Report Layout','Infographic','One-Pager'],
+  'Environmental & Event': ['Event Banner','Trade Show Booth','Stage Backdrop'],
+  'Illustration & Artwork': ['Custom Illustration','Character Design','Pattern Design'],
+  'Motion & Video': ['Animated Ad','Logo Animation','GIF','Video Thumbnail'],
+  'Presentations': ['Pitch Deck','Sales Deck','Investor Presentation'],
+  'Print': ['Poster','Postcard','Business Card','Menu Design'],
+  'Product & Packaging': ['Product Label','Packaging Design','Box Design'],
+};
+
+const OB_TZONES = ['EST (US Eastern)','PST (US Pacific)','CST (US Central)','MST (US Mountain)','UK (BST/GMT)','CET (Central European)','ACST (Australia Central)','JST (Japan Standard)'];
+
+const OB_SA_MSGS = [
+  "Perfect! I'll make sure your work arrives during your working hours.",
+  "Great! I'm analyzing your brand to get everything set up.",
+  "Nice! Your first project is ready to go.",
+  "Invites sent! Your team will be able to collaborate in no time.",
+  "Awesome! Your tools are connected. Everything in one place.",
+  "Wasn't that great? Russ is excited to have you on board. You're all set!"
+];
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+function scrOB(){setTimeout(()=>{const m=document.getElementById('ob-msgs');m.scrollTop=m.scrollHeight;},40);}
+
+function obStart() {
+  document.getElementById('ob-welcome').style.display = 'none';
+  const chat = document.getElementById('ob-chat');
+  chat.style.display = 'flex'; chat.style.flexDirection = 'column';
+  chat.style.flex = '1'; chat.style.overflow = 'hidden';
+  OB.step = 0;
+  obRunStep(0);
+}
+
+function obRunStep(i) {
+  if (i >= OB_STEPS.length) { obFinish(); return; }
+  const step = OB_STEPS[i];
+  OB.step = i;
+  obUpdateProgress(i);
+  const greetings = [
+    "First things first — let's make sure you get your work at the right time.",
+    "Now let me analyze your brand! Drop in your website URL and I'll pull your colors, logos, and fonts.",
+    "Let's get your first project set up. I just need a name and the types of design work you'll need.",
+    "Who else should have access? I can send invites right now.",
+    "Want to connect any of your tools? It makes everything so much smoother.",
+    "Before you dive in, a personal welcome from our CEO Russ Perry. He's excited to have you on board!",
+  ];
+  obAddAI(greetings[i]);
+  setTimeout(() => { obAddStepCard(step, i); scrOB(); }, 400);
+}
+
+function obAddAI(text) {
+  const msgs = document.getElementById('ob-msgs');
+  const w = document.createElement('div'); w.className = 'msg ai';
+  w.innerHTML = `<div class="av ai" style="font-size:8px">SP</div><div class="bub">${esc(text)}</div>`;
+  msgs.appendChild(w); scrOB();
+}
+function obAddUser(text) {
+  const msgs = document.getElementById('ob-msgs');
+  const w = document.createElement('div'); w.className = 'msg user';
+  w.innerHTML = `<div class="av us">YOU</div><div class="bub">${esc(text)}</div>`;
+  msgs.appendChild(w); scrOB();
+}
+
+function obUpdateProgress(i) {
+  document.getElementById('ob-pf').style.width = Math.round((i / OB_STEPS.length) * 100) + '%';
+}
+
+function obAddStepCard(step, i) {
+  const msgs = document.getElementById('ob-msgs');
+  const card = document.createElement('div');
+  card.className = 'ob-step-card';
+  card.id = 'ob-card-' + i;
+
+  let body = `<div class="ob-sc-body"><div class="ob-sc-q">${step.q}</div><div class="ob-sc-hint">${step.hint}</div>`;
+
+  if (step.id === 'timezone') {
+    body += `<div class="ob-dropdown-wrap">
+      <button class="ob-dropdown-btn" id="ob-tz-btn" onclick="obToggleDD('ob-tz-menu','ob-tz-btn')">
+        <span id="ob-tz-val">EST (US Eastern)</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="ob-dropdown-menu" id="ob-tz-menu" style="display:none">
+        ${OB_TZONES.map(tz => `<div class="ob-dd-item${tz===OB.data.timezone?' sel':''}" onclick="obSelectTZ('${tz}')">${tz}${tz===OB.data.timezone?'<svg class="ob-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>':''}</div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (step.id === 'website') {
+    body += `<div id="ob-url-container">
+      <div class="ob-url-row"><input class="ob-url-input" id="ob-url-0" placeholder="https://www.example.com" type="url" oninput="obUrlChange(this.value)"><button class="ob-url-icon-btn" onclick="obAddUrlField()" title="Add another URL">+</button></div>
+    </div>
+    <div style="margin-top:8px"><span class="ob-upload-link" onclick="openUploadModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Or &nbsp; Upload file</span></div>
+    <div id="ob-brand-preview"></div>`;
+  }
+
+  if (step.id === 'project') {
+    body += `<input class="ob-proj-name" id="ob-proj-name" placeholder="Project name (e.g. Social media campaign)" value="${esc(OB.data.project)}" oninput="OB.data.project=this.value">
+    <div class="ob-cats-grid" id="ob-cats-grid">
+      ${Object.keys(OB_CAT_SUBS).map(cat => {
+        const count = (OB.data.categories[cat]||[]).length;
+        return `<div class="ob-cat-pill${count>0?' sel':''}" id="obcat-${esc(cat)}" onclick="obToggleCat(event,'${cat}')">
+          ${esc(cat)} ${count>0?`<span class="ob-pill-count">${count}</span>`:''}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  if (step.id === 'team') {
+    body += `<div class="ob-email-wrap" id="ob-email-wrap" onclick="document.getElementById('ob-email-input').focus()">
+      <input class="ob-email-input" id="ob-email-input" placeholder="Email address" onkeydown="obEmailKey(event)" onblur="obEmailBlur()">
+      <button style="margin-left:auto;padding:5px 12px;border:0.5px solid var(--db-border);border-radius:9999px;background:transparent;font-family:inherit;font-size:11.5px;color:var(--db-muted);cursor:pointer;flex-shrink:0;transition:all .12s" onclick="obSendInvites()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-right:4px;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Send invites
+      </button>
+    </div>
+    <div id="ob-email-error" class="ob-email-error" style="display:none"></div>
+    <div id="ob-pending-list" style="display:none">
+      <div class="ob-pending" id="ob-pending-inner">
+        <div class="ob-pending-hd">Pending invitations (<span id="ob-pending-count">0</span>)</div>
+        <div class="ob-pending-sub">You can always manage or remove team members later in settings</div>
+        <div id="ob-pending-rows"></div>
+      </div>
+    </div>`;
+  }
+
+  if (step.id === 'integrations') {
+    body += `<div class="ob-integ-grid">
+      <div class="ob-integ-tile" id="ob-integ-slack" onclick="obToggleInteg('slack')">
+        <div class="ob-integ-check">&#x2713;</div>
+        <div class="ob-integ-icon" style="background:rgba(255,255,255,.05)">
+          <svg width="28" height="28" viewBox="0 0 24 24"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z" fill="#E01E5A"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" fill="#E01E5A"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z" fill="#2EB67D"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z" fill="#2EB67D"/><path d="M10 4.5C10 3.67 10.67 3 11.5 3S13 3.67 13 4.5V6H11.5c-.83 0-1.5-.67-1.5-1.5z" fill="#ECB22E"/><path d="M10 9.5v-1.5H4.5C3.67 8 3 8.67 3 9.5S3.67 11 4.5 11h5c.83 0 1.5-.67 1.5-1.5z" fill="#ECB22E"/><path d="M14 19.5c0 .83-.67 1.5-1.5 1.5S11 20.33 11 19.5V18h1.5c.83 0 1.5.67 1.5 1.5z" fill="#36C5F0"/><path d="M14 14.5V16h5.5c.83 0 1.5-.67 1.5-1.5S20.33 13 19.5 13H14c-.83 0-1.5.67-1.5 1.5z" fill="#36C5F0"/></svg>
+        </div>
+        <div class="ob-integ-name">Slack</div>
+      </div>
+      <div class="ob-integ-tile" id="ob-integ-teams" onclick="obToggleInteg('teams')">
+        <div class="ob-integ-check">&#x2713;</div>
+        <div class="ob-integ-icon" style="background:rgba(255,255,255,.05)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#5059C9"><path d="M20 4h-7a4 4 0 0 0-4 4v4a4 4 0 0 0 4 4h7a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4z" opacity=".4"/><path d="M14 4a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM0 13a4 4 0 0 1 4-4h4v8H4a4 4 0 0 1-4-4z" fill="#7B83EB"/><circle cx="6" cy="9" r="3" fill="#7B83EB"/></svg>
+        </div>
+        <div class="ob-integ-name">Microsoft Teams</div>
+      </div>
+      <div class="ob-integ-tile" id="ob-integ-zapier" onclick="obToggleInteg('zapier')">
+        <div class="ob-integ-check">&#x2713;</div>
+        <div class="ob-integ-icon" style="background:rgba(255,80,0,.1)">
+          <div style="width:44px;height:44px;border-radius:10px;background:#FF4A00;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff">Z</div>
+        </div>
+        <div class="ob-integ-name">Zapier</div>
+      </div>
+    </div>`;
+  }
+
+  if (step.id === 'video') {
+    body += `<div class="ob-video-placeholder">
+      <div style="position:absolute;top:16px;left:0;right:0;text-align:center;font-size:13px;font-weight:600;color:rgba(255,255,255,.7)">Russ Perry, CEO &amp; Founder</div>
+      <div style="width:100%;height:100%;background:linear-gradient(180deg,#3A3A3A 0%,#1A1A1A 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border-radius:12px">
+        <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#555,#333);display:flex;align-items:center;justify-content:center;font-size:28px">👤</div>
+        <button class="ob-play-btn"></button>
+      </div>
+    </div>`;
+  }
+
+  body += `</div>`;
+
+  const isFirst = i === 0;
+  const isLast = i === OB_STEPS.length - 1;
+  body += `<div class="ob-sc-footer">
+    ${!isFirst ? `<button class="ob-back-btn" onclick="obGoBack(${i})">&#x2039; Back</button>` : ''}
+    <button class="ob-next-btn" id="ob-next-${i}" onclick="obNext(${i})">${isLast ? 'Continue &#x203A;' : 'Next &#x203A;'}</button>
+  </div>`;
+
+  card.innerHTML = body;
+  msgs.appendChild(card);
+  scrOB();
+}
+
+function obToggleDD(menuId, btnId) {
+  const menu = document.getElementById(menuId);
+  const btn = document.getElementById(btnId);
+  const isOpen = menu.style.display !== 'none';
+  menu.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    setTimeout(() => {
+      document.addEventListener('click', function closer(e) {
+        if (!menu.contains(e.target) && !btn.contains(e.target)) { menu.style.display='none'; btn.classList.remove('open'); document.removeEventListener('click',closer); }
+      });
+    }, 10);
+  }
+}
+
+function obSelectTZ(tz) {
+  OB.data.timezone = tz;
+  document.getElementById('ob-tz-val').textContent = tz;
+  const menu = document.getElementById('ob-tz-menu');
+  const btn = document.getElementById('ob-tz-btn');
+  menu.style.display = 'none'; btn.classList.remove('open');
+  menu.querySelectorAll('.ob-dd-item').forEach(el => {
+    const isSel = el.textContent.replace('✓','').trim() === tz;
+    el.classList.toggle('sel', isSel);
+    el.innerHTML = tz === el.textContent.replace('✓','').trim() ? tz + '<svg class="ob-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' : el.textContent.replace('✓','').trim();
+  });
+}
+
+function obAddUrlField() {
+  const container = document.getElementById('ob-url-container');
+  const count = container.querySelectorAll('.ob-url-row').length;
+  const row = document.createElement('div'); row.className='ob-url-row';
+  row.innerHTML = `<input class="ob-url-input" id="ob-url-${count}" placeholder="https://www.example.com" type="url" oninput="obUrlChange()"><button class="ob-url-icon-btn" onclick="this.parentElement.remove()" title="Remove">&#x2715;</button>`;
+  container.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+let _obBrandTimer = null;
+function obUrlChange(val) {
+  clearTimeout(_obBrandTimer);
+  const preview = document.getElementById('ob-brand-preview');
+  if (!preview) return;
+  const url = (val || '').trim();
+  if (!url || !url.includes('.')) { preview.innerHTML = ''; return; }
+  _obBrandTimer = setTimeout(() => obScanBrand(url), 600);
+}
+function obScanBrand(url) {
+  const preview = document.getElementById('ob-brand-preview');
+  if (!preview) return;
+  let domain = url.replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0];
+  preview.innerHTML = `<div class="ob-brand-scan">
+    <div class="ob-brand-scan-head">
+      <div class="ob-brand-scan-dot"></div>
+      <div class="ob-brand-scan-label">Analyzing</div>
+      <div class="ob-brand-scan-url">${domain}</div>
+    </div>
+    <div class="ob-brand-loading">
+      <div class="ob-brand-bar"><div class="ob-brand-bar-fill" id="ob-bar-fill"></div></div>
+      <div class="ob-brand-scan-msg" id="ob-scan-msg">Fetching homepage…</div>
+    </div>
+  </div>`;
+  const msgs2 = ['Fetching homepage…','Reading colors…','Extracting logo…','Detecting fonts…','Building brand profile…'];
+  let mi = 0;
+  const msgEl = document.getElementById('ob-scan-msg');
+  const msgInt = setInterval(() => { mi++; if(msgEl && msgs2[mi]) msgEl.textContent = msgs2[mi]; }, 340);
+  setTimeout(() => { clearInterval(msgInt); obShowBrandResult(domain); }, 1900);
+}
+function obShowBrandResult(domain) {
+  const preview = document.getElementById('ob-brand-preview');
+  if (!preview) return;
+  const palettes = [
+    ['#1A1A2E','#16213E','#0F3460','#E94560','#F5F5F5'],
+    ['#2D6A4F','#40916C','#74C69D','#B7E4C7','#F0F4F8'],
+    ['#F72585','#7209B7','#3A0CA3','#4361EE','#4CC9F0'],
+    ['#E63946','#457B9D','#1D3557','#F1FAEE','#A8DADC'],
+    ['#FF6B35','#F7C59F','#EFEFD0','#004E89','#1A936F'],
+    ['#264653','#2A9D8F','#E9C46A','#F4A261','#E76F51'],
+    ['#3D405B','#81B29A','#F2CC8F','#E07A5F','#F4F1DE'],
+    ['#6A0572','#AB83A1','#F15BB5','#FEE440','#00BBF9'],
+  ];
+  const fonts = [['Inter','Helvetica Neue'],['Söhne','GT America'],['Freight Display','Proxima Nova'],['Circular','Apercu'],['Canela','Graphik'],['Tiempos','Basis Grotesque']];
+  let hash = 0; for(let c of domain) hash = (hash * 31 + c.charCodeAt(0)) & 0xFFFFFF;
+  const palette = palettes[hash % palettes.length];
+  const fontPair = fonts[(hash >> 4) % fonts.length];
+  const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+  preview.innerHTML = `<div class="ob-brand-scan" style="border-color:rgba(44,58,255,.3)">
+    <div class="ob-brand-scan-head" style="background:rgba(44,58,255,.08);border-bottom-color:rgba(44,58,255,.2)">
+      <div class="ob-brand-scan-dot"></div>
+      <div class="ob-brand-scan-label">Brand profile ready</div>
+      <div class="ob-brand-scan-url">${domain}</div>
+    </div>
+    <div class="ob-brand-result">
+      <div class="ob-brand-logo-row">
+        <div class="ob-brand-favicon"><img src="${faviconUrl}" onerror="this.style.display='none';this.parentElement.textContent='${domain[0].toUpperCase()}'"></div>
+        <div><div class="ob-brand-domain">${domain}</div><div class="ob-brand-domain-sub">Homepage analyzed</div></div>
+      </div>
+      <div class="ob-brand-section">
+        <div class="ob-brand-section-lbl">Brand Colors</div>
+        <div class="ob-brand-colors">${palette.map(c=>`<div class="ob-brand-swatch" style="background:${c}" title="${c}"><span class="ob-brand-swatch-hex">${c}</span></div>`).join('')}</div>
+      </div>
+      <div class="ob-brand-section">
+        <div class="ob-brand-section-lbl">Typography</div>
+        <div class="ob-brand-fonts">${fontPair.map(f=>`<div class="ob-brand-font-tag">${f}</div>`).join('')}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+let obOpenCatMenu = null;
+function obToggleCat(e, cat) {
+  e.stopPropagation();
+  const pill = document.getElementById('obcat-' + cat);
+  if (obOpenCatMenu && obOpenCatMenu !== cat) {
+    const old = document.getElementById('obcatmenu-' + obOpenCatMenu);
+    if (old) old.remove();
+    obOpenCatMenu = null;
+  }
+  const existing = document.getElementById('obcatmenu-' + cat);
+  if (existing) { existing.remove(); obOpenCatMenu = null; return; }
+  const subs = OB_CAT_SUBS[cat] || [];
+  const selected = OB.data.categories[cat] || [];
+  const menu = document.createElement('div'); menu.className='ob-cat-dropdown'; menu.id='obcatmenu-'+cat;
+  menu.innerHTML = subs.map(s => `<label class="ob-cat-sub"><input type="checkbox" ${selected.includes(s)?'checked':''} onchange="obToggleSub('${cat}','${s}',this.checked)"> ${s}</label>`).join('');
+  const rect = pill.getBoundingClientRect();
+  menu.style.position = 'fixed';
+  menu.style.top = (rect.bottom + 6) + 'px';
+  menu.style.left = rect.left + 'px';
+  menu.style.zIndex = '9999';
+  document.body.appendChild(menu);
+  obOpenCatMenu = cat;
+  setTimeout(() => {
+    document.addEventListener('click', function closer(ev) {
+      if (!menu.contains(ev.target) && !pill.contains(ev.target)) { menu.remove(); obOpenCatMenu=null; document.removeEventListener('click',closer); }
+    });
+  }, 10);
+}
+function obToggleSub(cat, sub, checked) {
+  if (!OB.data.categories[cat]) OB.data.categories[cat] = [];
+  if (checked) { if (!OB.data.categories[cat].includes(sub)) OB.data.categories[cat].push(sub); }
+  else { OB.data.categories[cat] = OB.data.categories[cat].filter(s=>s!==sub); }
+  const pill = document.getElementById('obcat-'+cat);
+  const count = OB.data.categories[cat].length;
+  if (pill) {
+    pill.classList.toggle('sel', count > 0);
+    const countEl = pill.querySelector('.ob-pill-count');
+    if (count > 0) {
+      if (countEl) countEl.textContent = count;
+      else {
+        const sp = document.createElement('span'); sp.className='ob-pill-count'; sp.textContent=count;
+        pill.insertBefore(sp, pill.querySelector('svg'));
+      }
+    } else if (countEl) countEl.remove();
+  }
+}
+
+function obEmailKey(e) {
+  if (e.key === ',' || e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); obAddEmailTag(); }
+}
+function obEmailBlur() { obAddEmailTag(); }
+function obAddEmailTag() {
+  const input = document.getElementById('ob-email-input');
+  const val = input.value.trim().replace(',','');
+  if (!val) return;
+  const isValid = /^[^ @]+@[^ @]+\.[^ @]+$/.test(val);
+  const wrap = document.getElementById('ob-email-wrap');
+  const errEl = document.getElementById('ob-email-error');
+  if (!isValid) {
+    errEl.style.display = 'flex';
+    errEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>&nbsp;' + val + ' is invalid email format.';
+    const tag = document.createElement('span'); tag.className='ob-email-tag invalid';
+    tag.innerHTML = val + ' <span class="ob-email-tag-x" onclick="this.parentElement.remove()">&#x2715;</span>';
+    wrap.insertBefore(tag, input); input.value = ''; return;
+  }
+  errEl.style.display = 'none';
+  OB.data.emails.push(val);
+  const tag = document.createElement('span'); tag.className='ob-email-tag';
+  tag.textContent = val;
+  const x = document.createElement('span'); x.className='ob-email-tag-x'; x.textContent='×';
+  x.addEventListener('click', function(){ obRemoveEmail(x, val); });
+  tag.appendChild(x); wrap.insertBefore(tag, input); input.value = '';
+}
+function obRemoveEmail(el, email) {
+  OB.data.emails = OB.data.emails.filter(e=>e!==email);
+  el.parentElement.remove();
+}
+function obSendInvites() {
+  const input = document.getElementById('ob-email-input');
+  if (input.value.trim()) obAddEmailTag();
+  if (!OB.data.emails.length) return;
+  const pending = document.getElementById('ob-pending-list');
+  const rows = document.getElementById('ob-pending-rows');
+  const count = document.getElementById('ob-pending-count');
+  count.textContent = OB.data.emails.length;
+  rows.innerHTML = OB.data.emails.map((e,i) => `
+    <div class="ob-invite-row" id="ob-inv-${i}">
+      <div>
+        <div class="ob-invite-email">${esc(e)}</div>
+        ${i===0?'<div style="font-size:11.5px;color:var(--db-muted);margin-top:2px">Cancel invitation? This person won&#39;t be able to join unless you re-invite them.</div>':''}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+        <button class="ob-invite-cancel" onclick="obCancelInvite(${i},'${esc(e)}')">&#x2715; Cancel invite</button>
+        ${i===0?'<button class="ob-invite-cancel" style="border-color:var(--color-primary);color:var(--color-primary)">&#x2713; Keep invite</button>':''}
+      </div>
+    </div>`).join('');
+  pending.style.display = 'block';
+}
+function obCancelInvite(i, email) {
+  OB.data.emails = OB.data.emails.filter(e=>e!==email);
+  const row = document.getElementById('ob-inv-'+i); if (row) row.remove();
+  const count = document.getElementById('ob-pending-count'); if (count) count.textContent = OB.data.emails.length;
+  const tags = document.querySelectorAll('.ob-email-tag');
+  tags.forEach(t => { if (t.textContent.includes(email)) t.remove(); });
+}
+function obToggleInteg(name) {
+  const tile = document.getElementById('ob-integ-' + name);
+  const idx = OB.data.integrations.indexOf(name);
+  if (idx === -1) { OB.data.integrations.push(name); tile.classList.add('sel'); }
+  else { OB.data.integrations.splice(idx,1); tile.classList.remove('sel'); }
+}
+function obGoBack(i) {
+  const card = document.getElementById('ob-card-'+i); if (card) card.classList.add('used');
+  obRunStep(i-1);
+}
+function obNext(i) {
+  const step = OB_STEPS[i];
+  let userMsg = '';
+  if (step.id === 'timezone') userMsg = OB.data.timezone;
+  else if (step.id === 'website') {
+    const inputs = document.querySelectorAll('.ob-url-input');
+    const urls = [];
+    inputs.forEach(inp => { if(inp.value.trim()) urls.push(inp.value.trim()); });
+    if (urls.length > 0) { OB.data.urls = urls; userMsg = urls.join(', '); }
+    else userMsg = 'Uploading brand files';
+  }
+  else if (step.id === 'project') {
+    const nm = document.getElementById('ob-proj-name')?.value||'';
+    OB.data.project = nm;
+    const selCats = Object.entries(OB.data.categories).filter(([,v])=>v.length>0).map(([k])=>k);
+    userMsg = (nm ? nm + ' — ' : '') + (selCats.length ? selCats.join(', ') : 'Project created');
+  }
+  else if (step.id === 'team') {
+    const input = document.getElementById('ob-email-input');
+    if (input?.value.trim()) obAddEmailTag();
+    userMsg = OB.data.emails.length ? OB.data.emails.join(', ') : 'Skip for now';
+  }
+  else if (step.id === 'integrations') userMsg = OB.data.integrations.length ? OB.data.integrations.join(', ') + ' connected' : 'Skip for now';
+  else if (step.id === 'video') userMsg = "Let's get started!";
+
+  const card = document.getElementById('ob-card-'+i); if (card) card.classList.add('used');
+  if (userMsg) obAddUser(userMsg);
+  setTimeout(() => {
+    if (i < OB_SA_MSGS.length) obAddAI(OB_SA_MSGS[i]);
+    setTimeout(() => obRunStep(i+1), 500);
+  }, 300);
+}
+
+function obFinish() {
+  obUpdateProgress(OB_STEPS.length);
+  obAddAI("You're all set! 🎉 Your account is fully configured and your Design Pickle workspace is ready. Click below to go to your dashboard.");
+  setTimeout(() => {
+    const feed = document.getElementById('ob-msgs');
+    const card = document.createElement('div');
+    card.style.cssText = 'display:flex;justify-content:center;padding:16px 20px 24px;';
+    card.innerHTML = `<a href="index.html" style="background:var(--color-primary);color:#fff;border:none;border-radius:8px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(44,58,255,0.4);text-decoration:none;font-family:inherit;">Go to Dashboard <span style="font-size:18px;">→</span></a>`;
+    feed.appendChild(card);
+    feed.scrollTop = feed.scrollHeight;
+  }, 800);
+}
+
+function obSend() {}
+function openUploadModal() { document.getElementById('upload-modal-back').classList.add('show'); }
+function closeUploadModal() { document.getElementById('upload-modal-back').classList.remove('show'); }
+</script>
+</body>
+</html>
