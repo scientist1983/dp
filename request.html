@@ -195,6 +195,19 @@ body.col-resizing{cursor:col-resize;user-select:none}
 .ra-field-label{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ra-muted)}
 .ra-field-value{font-size:13px;color:var(--ra-text);line-height:1.5}
 .ra-field-mono{font-size:12.5px;color:var(--ra-text);line-height:1.7;background:var(--ra-hover);border-radius:8px;padding:8px 10px;border:1px solid var(--ra-border);font-family:'Lato',monospace}
+
+/* Editable fields */
+[contenteditable]{outline:none;border-radius:6px;padding:3px 5px;margin:-3px -5px;transition:background .12s,box-shadow .12s;cursor:text;min-height:1em}
+[contenteditable]:hover{background:var(--ra-hover)}
+[contenteditable]:focus{background:var(--ra-hover);box-shadow:0 0 0 2px var(--color-primary)}
+[contenteditable]:empty::before{content:attr(data-placeholder);color:var(--ra-muted);pointer-events:none}
+.ra-field-textarea{width:100%;background:var(--ra-hover);border:1px solid var(--ra-border);border-radius:8px;padding:8px 10px;color:var(--ra-text);font-family:'Lato',sans-serif;font-size:12.5px;line-height:1.7;resize:vertical;outline:none;min-height:70px;transition:border-color .12s,box-shadow .12s}
+.ra-field-textarea:focus{border-color:var(--color-primary);box-shadow:0 0 0 2px rgba(44,58,255,.2)}
+.ra-field-textarea::placeholder{color:var(--ra-muted)}
+.ra-date-input{width:100%;background:var(--ra-hover);border:1px solid var(--ra-border);border-radius:6px;padding:5px 8px;color:var(--ra-text);font-family:'Lato',sans-serif;font-size:13px;outline:none;transition:border-color .12s,box-shadow .12s;cursor:pointer}
+.ra-date-input:focus{border-color:var(--color-primary);box-shadow:0 0 0 2px rgba(44,58,255,.2)}
+.ra-date-input::-webkit-calendar-picker-indicator{filter:invert(0.6);cursor:pointer}
+#ra-wrap.light .ra-date-input::-webkit-calendar-picker-indicator{filter:none}
 .ra-field-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:9999px;font-size:12px;font-weight:700}
 .ra-field-tag{display:inline-flex;padding:3px 9px;border-radius:9999px;border:1px solid var(--ra-border);font-size:11.5px;color:var(--ra-text);margin:2px 3px 2px 0}
 
@@ -413,28 +426,29 @@ body.col-resizing{cursor:col-resize;user-select:none}
           <!-- REQUEST DETAILS -->
           <div class="ra-brief-section">
             <div class="ra-section-label">Request Details</div>
-            <div class="ra-field"><div class="ra-field-label">Request Title</div><div class="ra-field-value" id="bf-title"></div></div>
-            <div class="ra-field"><div class="ra-field-label">Request Type</div><div class="ra-field-value" id="bf-req-type"></div></div>
-            <div class="ra-field"><div class="ra-field-label">Sizes</div><div class="ra-field-value" id="bf-sizes"></div></div>
-            <div class="ra-field"><div class="ra-field-label">Formats</div><div class="ra-field-value" id="bf-formats"></div></div>
-            <div class="ra-field"><div class="ra-field-label">Channels</div><div class="ra-field-value" id="bf-channels"></div></div>
-            <div class="ra-field"><div class="ra-field-label">Target Audience</div><div class="ra-field-value" id="bf-audience"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Request Title</div><div class="ra-field-value" id="bf-title" contenteditable="true" data-placeholder="Enter title…"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Request Type</div><div class="ra-field-value" id="bf-req-type" contenteditable="true" data-placeholder="e.g. Static Social Ad Set"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Sizes</div><div class="ra-field-value" id="bf-sizes" contenteditable="true" data-placeholder="e.g. 1080×1080, 1080×1920"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Formats</div><div class="ra-field-value" id="bf-formats" contenteditable="true" data-placeholder="e.g. PNG, PDF"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Channels</div><div class="ra-field-value" id="bf-channels" contenteditable="true" data-placeholder="e.g. Instagram, Facebook"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Target Audience</div><div class="ra-field-value" id="bf-audience" contenteditable="true" data-placeholder="Describe your target audience…"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Due Date</div><input type="date" class="ra-date-input" id="bf-due-date"></div>
           </div>
 
           <!-- DIRECTIONS -->
           <div class="ra-brief-section">
             <div class="ra-section-label">Directions</div>
-            <div class="ra-field"><div class="ra-field-label">Description</div><div class="ra-field-value" id="bf-desc" style="line-height:1.6"></div></div>
-            <div class="ra-field"><div class="ra-field-label">Copy / Text</div><div class="ra-field-mono" id="bf-copy"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Description</div><div class="ra-field-value" id="bf-desc" contenteditable="true" data-placeholder="Describe what you need…" style="line-height:1.6"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Copy / Text</div><textarea class="ra-field-textarea" id="bf-copy" placeholder="Headline: …&#10;Sub: …&#10;CTA: …"></textarea></div>
           </div>
 
           <!-- INSPIRATION -->
           <div class="ra-brief-section">
             <div class="ra-section-label">Inspiration &amp; Visual Style</div>
-            <div class="ra-field"><div class="ra-field-label">Brand Profile</div><div class="ra-field-value" id="bf-brand-profile"></div></div>
-            <div class="ra-field"><div class="ra-field-label">Visual Style</div><div class="ra-field-value" id="bf-visual-style"></div></div>
-            <div class="ra-field"><div class="ra-field-label">Things to Avoid</div><div class="ra-field-value" id="bf-avoid"></div></div>
-            <div class="ra-field"><div class="ra-field-label">Visual References</div><div class="ra-field-value" id="bf-references"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Brand Profile</div><div class="ra-field-value" id="bf-brand-profile" contenteditable="true" data-placeholder="e.g. Brand Profile 1"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Visual Style</div><div class="ra-field-value" id="bf-visual-style" contenteditable="true" data-placeholder="e.g. Bold, minimal, editorial"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Things to Avoid</div><div class="ra-field-value" id="bf-avoid" contenteditable="true" data-placeholder="List what to avoid…"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Visual References</div><div class="ra-field-value" id="bf-references" contenteditable="true" data-placeholder="e.g. Nike campaign, Figma link…"></div></div>
           </div>
 
           <!-- TEAM -->
@@ -787,7 +801,9 @@ function fillBrief(pkg,type,emoji){
   set('bf-channels',pkg.channels);
   set('bf-audience',pkg.targetAudience);
   set('bf-desc',pkg.desc);
-  document.getElementById('bf-copy').textContent=pkg.copyText;
+  document.getElementById('bf-copy').value=pkg.copyText;
+  const dd=new Date();dd.setDate(dd.getDate()+7);
+  document.getElementById('bf-due-date').value=dd.toISOString().slice(0,10);
   set('bf-brand-profile',pkg.brandProfile);
   set('bf-visual-style',pkg.visualStyle);
   set('bf-avoid',pkg.thingsToAvoid);
