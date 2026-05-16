@@ -774,7 +774,14 @@ function getPkgs(type){
 
 /* ── CHAT HELPERS ── */
 const msgs=()=>document.getElementById('chat-msgs');
-function scrollChat(){setTimeout(()=>{const el=msgs();el.scrollTop=el.scrollHeight;},0);}
+function scrollChat(){
+  setTimeout(()=>{
+    const el=msgs();
+    const last=el.lastElementChild;
+    if(last) last.scrollIntoView({block:'end',behavior:'instant'});
+    else el.scrollTop=el.scrollHeight;
+  },50);
+}
 function addMsg(html,role){
   const d=document.createElement('div');d.className='ra-msg '+role;
   const isU=role==='user';
