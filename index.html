@@ -518,103 +518,137 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif
 .um-select{padding:10px 22px;border-radius:9999px;border:none;background:#111;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
 .um-select:hover{background:#333}
 
-/* DASHBOARD */
-.db-wrap{flex:1;min-height:0;overflow:hidden;display:none;flex-direction:column;background:#F6F6F6;position:relative}
-.db-wrap.show{display:flex}
-.db-ai-fab{position:absolute;bottom:28px;right:28px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F97316,#3B82F6);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(59,130,246,0.35);z-index:10;transition:opacity .15s}
+/* ── DASHBOARD (full-screen overlay, dark by default) ── */
+#db-wrap{
+  position:fixed;inset:0;z-index:100;display:none;flex-direction:row;
+  --db-bg:#0C0C0C;--db-sb:#111;--db-card:#1C1C1C;--db-border:rgba(255,255,255,.09);
+  --db-text:#fff;--db-muted:rgba(255,255,255,.42);--db-divider:rgba(255,255,255,.07);
+  --db-hover:rgba(255,255,255,.05);--db-active:rgba(255,255,255,.1);
+}
+#db-wrap.visible{display:flex}
+#db-wrap.light{
+  --db-bg:#F9F9FA;--db-sb:#fff;--db-card:#fff;--db-border:#E5E3DF;
+  --db-text:#0B0C0B;--db-muted:#888;--db-divider:#F0EDE8;
+  --db-hover:#F5F4F0;--db-active:#EDEAE4;
+}
+/* Sidebar */
+.db-sidebar{width:192px;min-width:192px;background:var(--db-sb);border-right:1px solid var(--db-border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.db-sb-top{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 10px}
+.db-logo-mark{font-size:22px;font-weight:900;letter-spacing:-.04em;line-height:1;cursor:pointer}
+#db-wrap:not(.light) .db-logo-mark{color:#D5FF02}
+#db-wrap.light .db-logo-mark{color:#0B0C0B}
+.db-collapse-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--db-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--db-muted);transition:all .12s}
+.db-collapse-btn:hover{background:var(--db-hover);color:var(--db-text)}
+.db-collapse-btn svg{width:14px;height:14px}
+.db-create-btn{margin:0 10px 14px;padding:10px 16px;border-radius:10px;background:#2C3AFF;color:#fff;font-family:inherit;font-size:13.5px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .12s}
+.db-create-btn:hover{background:#2834E5}
+.db-create-btn svg{width:14px;height:14px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;fill:none}
+.db-nav{flex:1;overflow-y:auto;padding:0 8px}
+.db-nav::-webkit-scrollbar{width:0}
+.db-nav-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .12s;margin-bottom:1px}
+.db-nav-item:hover{background:var(--db-hover)}
+.db-nav-item.active{background:var(--db-active)}
+.db-nav-left{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--db-muted);font-weight:500}
+.db-nav-left svg{width:16px;height:16px;flex-shrink:0}
+.db-nav-item.active .db-nav-left{color:var(--db-text);font-weight:600}
+.db-badge{padding:2px 7px;border-radius:9999px;background:#2C3AFF;color:#fff;font-size:10.5px;font-weight:700}
+.db-sb-footer{padding:10px 8px 0;border-top:1px solid var(--db-divider)}
+.db-sb-link{display:flex;align-items:center;padding:8px 10px;border-radius:8px;font-size:13px;color:var(--db-muted);cursor:pointer;transition:background .12s}
+.db-sb-link:hover{background:var(--db-hover);color:var(--db-text)}
+.db-sb-settings{display:flex;align-items:center;gap:8px;padding:10px 10px 14px;font-size:13px;color:var(--db-muted);cursor:pointer;margin:0 8px;border-top:1px solid var(--db-divider)}
+.db-sb-settings svg{width:15px;height:15px}
+/* Content area */
+.db-content-area{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--db-bg);overflow:hidden}
+/* Topbar */
+.db-topbar{height:56px;background:var(--db-sb);border-bottom:1px solid var(--db-border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.db-search{flex:1;max-width:380px;height:36px;background:var(--db-hover);border:1px solid var(--db-border);border-radius:9999px;display:flex;align-items:center;gap:8px;padding:0 14px;margin:0 auto}
+.db-search input{border:none;background:transparent;outline:none;font-family:inherit;font-size:13px;color:var(--db-text);flex:1}
+.db-search input::placeholder{color:var(--db-muted)}
+.db-search svg{width:15px;height:15px;color:var(--db-muted);flex-shrink:0}
+.db-topbar-r{display:flex;align-items:center;gap:8px;margin-left:auto}
+.db-icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--db-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--db-muted);transition:all .12s}
+.db-icon-btn:hover{background:var(--db-hover);color:var(--db-text)}
+.db-icon-btn svg{width:16px;height:16px}
+.db-theme-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--db-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--db-muted);font-size:15px;transition:all .12s}
+.db-theme-btn:hover{background:var(--db-hover);color:var(--db-text)}
+.db-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 8px;border-radius:8px;transition:background .12s}
+.db-user:hover{background:var(--db-hover)}
+.db-user-av{width:32px;height:32px;border-radius:50%;background:#E05A2B;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}
+.db-user-info{display:flex;flex-direction:column}
+.db-user-name{font-size:13px;font-weight:600;color:var(--db-text);white-space:nowrap}
+.db-user-role{font-size:10.5px;color:var(--db-muted)}
+/* Body layout */
+.db-body{flex:1;display:flex;overflow:hidden}
+.db-main{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:0;min-width:0}
+.db-main::-webkit-scrollbar{width:5px}
+.db-main::-webkit-scrollbar-thumb{background:var(--db-border);border-radius:3px}
+.db-page-title{font-size:26px;font-weight:800;color:var(--db-text);display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.db-page-title svg{width:18px;height:18px;color:var(--db-muted)}
+.db-cols{display:flex;gap:16px;align-items:flex-start}
+.db-center{flex:1;min-width:0;display:flex;flex-direction:column;gap:16px}
+.db-right{width:272px;min-width:272px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+/* Cards */
+.db-card{background:var(--db-card);border-radius:14px;border:1px solid var(--db-border);overflow:hidden}
+.db-card-hd{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--db-divider)}
+.db-card-title{font-size:15px;font-weight:700;color:var(--db-text)}
+.db-view-all{font-size:13px;color:var(--db-muted);cursor:pointer;transition:color .12s}
+.db-view-all:hover{color:var(--db-text)}
+/* Stat boxes */
+.db-stat-row{display:flex;gap:12px;padding:16px 20px;border-bottom:1px solid var(--db-divider)}
+.db-stat-box{flex:1;border:1px solid var(--db-border);border-radius:12px;padding:14px 16px;position:relative;cursor:pointer;background:var(--db-hover)}
+#db-wrap:not(.light) .db-stat-box.warn{background:rgba(100,50,0,.35);border-color:rgba(160,90,0,.3)}
+#db-wrap.light .db-stat-box.warn{background:#FFF8EE;border-color:#FDE68A}
+.db-stat-n{font-size:12px;color:var(--db-muted);margin-bottom:8px}
+.db-stat-v{font-size:28px;font-weight:800;color:var(--db-text)}
+.db-stat-arr{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:8px;background:var(--db-hover);display:flex;align-items:center;justify-content:center;color:var(--db-muted);font-size:16px}
+/* Table */
+.db-table{width:100%;border-collapse:collapse}
+.db-table th{font-size:11.5px;font-weight:600;color:var(--db-muted);padding:10px 20px;text-align:left;border-bottom:1px solid var(--db-divider)}
+.db-table td{padding:11px 20px;font-size:13.5px;color:var(--db-text);border-bottom:1px solid var(--db-divider);vertical-align:middle}
+.db-table tr:last-child td{border-bottom:none}
+.db-table tbody tr{transition:background .1s;cursor:pointer}
+.db-table tbody tr:hover td{background:var(--db-hover)}
+.db-req-thumb{width:36px;height:36px;border-radius:8px;flex-shrink:0}
+.db-req-name{font-size:13.5px;font-weight:500;color:var(--db-text);margin-bottom:2px}
+.db-req-tag{font-size:11.5px;color:#2C3AFF;cursor:pointer}
+.db-unassigned{display:flex;align-items:center;gap:5px;color:var(--db-muted);font-size:13px}
+.db-unassigned svg{width:16px;height:16px;flex-shrink:0}
+.db-status-tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px}
+.db-status-tag.in-progress{color:#2C3AFF;background:rgba(44,58,255,.14)}
+#db-wrap.light .db-status-tag.in-progress{background:rgba(44,58,255,.1)}
+.db-status-tag.complete{color:#71DD8C;background:rgba(113,221,140,.14)}
+.db-progress-bar{width:88px;height:5px;background:var(--db-border);border-radius:3px;overflow:hidden}
+.db-progress-fill{height:100%;background:#2C3AFF;border-radius:3px}
+/* Right cards */
+.db-right-card{background:var(--db-card);border:1px solid var(--db-border);border-radius:14px;padding:16px 18px}
+.db-rc-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.db-rc-title{font-size:14px;font-weight:700;color:var(--db-text)}
+.db-rc-action{font-size:13px;color:var(--db-muted);cursor:pointer;transition:color .12s}
+.db-rc-action:hover{color:var(--db-text)}
+.db-hours-num{font-size:32px;font-weight:800;color:var(--db-text);line-height:1;margin-bottom:4px}
+.db-hours-unit{font-size:14px;font-weight:400;color:var(--db-muted)}
+.db-hours-dot-bar{display:flex;gap:3px;margin:12px 0 8px}
+.db-hours-dot{width:8px;height:8px;border-radius:50%;background:#2C3AFF}
+.db-hours-dot.empty{background:var(--db-border)}
+.db-hours-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--db-muted)}
+.db-team-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--db-divider)}
+.db-team-row:first-child{border-top:none;padding-top:0}
+.db-team-av{width:34px;height:34px;border-radius:50%;background:var(--db-hover);border:1px solid var(--db-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--db-muted)}
+.db-team-av svg{width:18px;height:18px}
+.db-team-inf{flex:1;min-width:0}
+.db-team-email{font-size:12.5px;font-weight:500;color:var(--db-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.db-team-status{font-size:11px;color:var(--db-muted)}
+.db-resend{padding:4px 12px;border:1px solid var(--db-border);border-radius:9999px;font-size:11.5px;color:var(--db-muted);cursor:pointer;background:transparent;font-family:inherit;transition:all .12s;flex-shrink:0}
+.db-resend:hover{border-color:#2C3AFF;color:#2C3AFF}
+.db-chart-legend{display:flex;align-items:center;gap:16px;margin-top:10px;justify-content:center}
+.db-chart-legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--db-muted)}
+.db-chart-legend-line{width:20px;height:2px;border-radius:1px;background:#2C3AFF}
+.db-chart-legend-dash{width:20px;height:0;border-top:2px dashed var(--db-muted)}
+/* AI FAB */
+.db-ai-fab{position:fixed;bottom:28px;right:28px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F97316,#3B82F6);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(59,130,246,.35);z-index:200;transition:opacity .15s}
 .db-ai-fab.visible{display:flex}
 .db-ai-fab:hover{opacity:.88}
 .db-ai-fab-label{font-size:13px;font-weight:800;color:#fff;letter-spacing:.04em}
-.db-topbar{height:56px;background:#fff;border-bottom:0.5px solid #E5E3DF;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0}
-.db-brand{font-size:22px;font-weight:900;color:#111;letter-spacing:-.5px}
-.db-search{flex:1;max-width:300px;margin:0 24px;height:36px;background:#F5F4F0;border:0.5px solid #E5E3DF;border-radius:9999px;display:flex;align-items:center;gap:8px;padding:0 14px}
-.db-search input{border:none;background:transparent;outline:none;font-family:inherit;font-size:13px;color:#111;flex:1}
-.db-search input::placeholder{color:#AAA}
-.db-search svg{width:15px;height:15px;color:#AAA;flex-shrink:0}
-.db-search-icon{width:16px;height:16px;color:#AAA}
-.db-topbar-r{display:flex;align-items:center;gap:12px}
-.db-help{width:32px;height:32px;border-radius:50%;border:0.5px solid #E5E3DF;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#777;font-size:14px;font-weight:700}
-.db-notif{width:32px;height:32px;border-radius:50%;border:0.5px solid #E5E3DF;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#777}
-.db-notif svg{width:16px;height:16px}
-.db-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 8px;border-radius:8px;transition:background .12s}
-.db-user:hover{background:#F5F4F0}
-.db-user-av{width:32px;height:32px;border-radius:50%;background:#E05A2B;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;overflow:hidden}
-.db-user-info{display:flex;flex-direction:column;min-width:0}
-.db-user-name{font-size:13px;font-weight:600;color:#111;white-space:nowrap}
-.db-user-role{font-size:10.5px;color:#AAA}
-.db-body{flex:1;display:flex;overflow:hidden}
-.db-sidebar{width:180px;min-width:180px;background:#fff;border-right:0.5px solid #E5E3DF;display:flex;flex-direction:column;padding:16px 12px;overflow-y:auto;flex-shrink:0}
-.db-create-btn{width:100%;padding:10px;border-radius:10px;background:#111;color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;transition:background .12s}
-.db-create-btn:hover{background:#333}
-.db-create-btn svg{width:14px;height:14px}
-.db-nav-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .12s;margin-bottom:2px}
-.db-nav-item:hover{background:#F5F4F0}
-.db-nav-item.active{background:#F5F4F0}
-.db-nav-left{display:flex;align-items:center;gap:8px;font-size:13px;color:#333;font-weight:500}
-.db-nav-left svg{width:16px;height:16px;color:#777}
-.db-nav-left.active{color:#111;font-weight:600}
-.db-badge{padding:2px 7px;border-radius:9999px;background:#2563EB;color:#fff;font-size:10px;font-weight:700}
-.db-sidebar-footer{margin-top:auto;padding-top:16px;border-top:0.5px solid #F0EDE8}
-.db-sidebar-link{padding:8px 10px;font-size:12.5px;color:#888;cursor:pointer;border-radius:7px;transition:background .12s;display:flex;align-items:center;gap:7px}
-.db-sidebar-link:hover{background:#F5F4F0;color:#555}
-.db-sidebar-link svg{width:14px;height:14px}
-.db-main{flex:1;overflow-y:auto;padding:24px;display:flex;gap:20px;min-width:0}
-.db-main::-webkit-scrollbar{width:5px}
-.db-main::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px}
-.db-center{flex:1;min-width:0;display:flex;flex-direction:column;gap:20px}
-.db-page-title{font-size:24px;font-weight:800;color:#111;display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.db-page-title svg{width:20px;height:20px;color:#AAA}
-.db-card{background:#fff;border-radius:12px;border:0.5px solid #E5E3DF;overflow:hidden}
-.db-card-hd{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid #F0EDE8}
-.db-card-title{font-size:14px;font-weight:700;color:#111}
-.db-view-all{font-size:12.5px;color:#0A7C4A;font-weight:600;cursor:pointer}
-.db-status-row{display:flex;gap:10px;padding:14px 18px;border-bottom:0.5px solid #F0EDE8}
-.db-stat-card{flex:1;border:0.5px solid #E5E3DF;border-radius:10px;padding:14px 16px;position:relative;cursor:pointer}
-.db-stat-card.warn{border-color:#FDE68A;background:#FFFBEB}
-.db-stat-n{font-size:12px;color:#888;margin-bottom:6px}
-.db-stat-v{font-size:26px;font-weight:800;color:#111}
-.db-stat-card.warn .db-stat-v{color:#D97706}
-.db-stat-arr{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:6px;background:#F5F4F0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#555}
-.db-table{width:100%;border-collapse:collapse}
-.db-table th{font-size:11px;font-weight:700;color:#AAA;letter-spacing:.06em;text-transform:uppercase;padding:11px 18px;text-align:left;border-bottom:0.5px solid #F0EDE8}
-.db-table td{padding:12px 18px;font-size:13px;color:#333;border-bottom:0.5px solid #F7F5F1;vertical-align:middle}
-.db-table tr:last-child td{border-bottom:none}
-.db-table tr:hover td{background:#FAFAF8}
-.db-req-thumb{width:36px;height:36px;border-radius:8px;overflow:hidden;flex-shrink:0}
-.db-req-name{font-size:13px;font-weight:500;color:#111}
-.db-req-tag{font-size:11px;color:#0A7C4A;cursor:pointer}
-.db-tag{font-size:11px;padding:3px 8px;border-radius:9999px;font-weight:500}
-.db-tag.in-progress{background:#DBEAFE;color:#1D4ED8}
-.db-tag.awaiting{background:#FEF3C7;color:#D97706}
-.db-progress-bar{width:80px;height:6px;background:#E5E3DF;border-radius:3px;overflow:hidden}
-.db-progress-fill{height:100%;background:#0A7C4A;border-radius:3px}
-.db-right{width:280px;min-width:280px;display:flex;flex-direction:column;gap:16px;flex-shrink:0}
-.db-right-card{background:#fff;border:0.5px solid #E5E3DF;border-radius:12px;padding:16px}
-.db-rc-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.db-rc-title{font-size:14px;font-weight:700;color:#111}
-.db-rc-action{font-size:12px;color:#0A7C4A;font-weight:600;cursor:pointer}
-.db-hours-num{font-size:32px;font-weight:800;color:#111;margin-bottom:2px}
-.db-hours-sub{font-size:12px;color:#AAA}
-.db-hours-bar{height:4px;background:#E5E3DF;border-radius:2px;margin:12px 0 6px}
-.db-hours-fill{height:100%;background:#0A7C4A;border-radius:2px;width:40%}
-.db-team-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:0.5px solid #F0EDE8}
-.db-team-row:first-child{border-top:none}
-.db-team-av{width:30px;height:30px;border-radius:50%;background:#F0EDE8;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#777;flex-shrink:0}
-.db-team-inf{flex:1;margin-left:8px;min-width:0}
-.db-team-email{font-size:12px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.db-team-status{font-size:10.5px;color:#AAA}
-.db-resend{padding:4px 10px;border:0.5px solid #D5D2CC;border-radius:9999px;font-size:11px;color:#555;cursor:pointer;background:transparent;font-family:inherit;transition:all .12s;flex-shrink:0}
-.db-resend:hover{border-color:#0A7C4A;color:#0A7C4A}
-.db-chart-area{height:80px;display:flex;align-items:flex-end;gap:2px;padding-top:8px}
-.db-chart-bar{flex:1;background:#E5E3DF;border-radius:2px;transition:background .12s;cursor:pointer;min-width:3px}
-.db-chart-bar:hover{background:#0A7C4A}
-.db-chart-bar.today{background:#0A7C4A}
-.db-chart-line{position:relative;height:80px;width:100%;overflow:hidden}
-.db-ai-bar{position:fixed;bottom:24px;right:24px;background:#fff;border:0.5px solid #E5E3DF;border-radius:16px;padding:12px 16px;box-shadow:0 4px 16px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px;width:280px;cursor:pointer;transition:all .15s;z-index:50}
-.db-ai-bar:hover{box-shadow:0 6px 24px rgba(0,0,0,.15)}
-.db-ai-bar input{flex:1;border:none;outline:none;font-family:inherit;font-size:13px;color:#111}
-.db-ai-bar input::placeholder{color:#CCC}
-.db-ai-icon{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -749,77 +783,106 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif
           <div id="ob-hint" style="font-size:11px;color:#C0BDB8;padding:4px 2px 0">Complete each step to continue</div>
         </div>
       </div>
-      <!-- Dashboard (shown after onboarding completes) -->
-      <div id="db-wrap" class="db-wrap">
-        <div class="db-topbar">
-          <div class="db-brand">DP</div>
-          <div class="db-search"><svg class="db-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="Search"></div>
-          <div class="db-topbar-r">
-            <div class="db-help">?</div>
-            <div class="db-notif"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
-            <div class="db-user">
-              <div class="db-user-av">J</div>
-              <div class="db-user-info"><div class="db-user-name">Jane Johnson</div><div class="db-user-role">DP Admin</div></div>
-            </div>
+      <!-- Dashboard (full-screen overlay) -->
+      <div id="db-wrap">
+        <!-- SIDEBAR -->
+        <div class="db-sidebar">
+          <div class="db-sb-top">
+            <span class="db-logo-mark">dp</span>
+            <button class="db-collapse-btn" title="Collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg></button>
           </div>
+          <button class="db-create-btn" onclick="switchTab('request')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create</button>
+          <nav class="db-nav">
+            <div class="db-nav-item active"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><circle cx="12" cy="12" r="3"/></svg>Overview</div></div>
+            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Studio</div><span class="db-badge">20</span></div>
+            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Insights</div><span class="db-badge">4</span></div>
+            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>People</div></div>
+            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Brand</div><span class="db-badge">45</span></div>
+          </nav>
+          <div class="db-sb-footer">
+            <div class="db-sb-link">Billing</div>
+            <div class="db-sb-link">Integrations</div>
+            <div class="db-sb-link">My Team</div>
+            <div class="db-sb-link">Categories</div>
+            <div class="db-sb-link">White Label</div>
+          </div>
+          <div class="db-sb-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M19.07 19.07l-1.41-1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M21 12h-2M5 12H3M12 3V1M12 23v-2"/></svg>Settings</div>
         </div>
-        <div class="db-body">
-          <div class="db-sidebar">
-            <button class="db-create-btn" onclick="switchTab('request')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Create</button>
-            <div class="db-nav-item active"><div class="db-nav-left active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</div></div>
-            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Requests</div><span class="db-badge">20</span></div>
-            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Projects</div><span class="db-badge" style="background:#6366F1">4</span></div>
-            <div class="db-nav-item"><div class="db-nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Brands</div></div>
-            <div class="db-sidebar-footer">
-              <div class="db-sidebar-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Billing</div>
-              <div class="db-sidebar-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Integrations</div>
-              <div class="db-sidebar-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>My Team</div>
-              <div class="db-sidebar-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>Settings</div>
+        <!-- CONTENT -->
+        <div class="db-content-area">
+          <div class="db-topbar">
+            <div class="db-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="Search"></div>
+            <div class="db-topbar-r">
+              <button class="db-theme-btn" onclick="toggleDbTheme()" title="Toggle light/dark">☀</button>
+              <button class="db-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
+              <button class="db-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+              <div class="db-user">
+                <div class="db-user-av">J</div>
+                <div class="db-user-info"><div class="db-user-name">Jane Johnson</div><div class="db-user-role">DP Admin</div></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:13px;height:13px;color:var(--db-muted)"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
             </div>
           </div>
-          <div class="db-main">
-            <div class="db-center">
-              <div class="db-page-title">Welcome, Jane <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></div>
-              <div class="db-card">
-                <div class="db-card-hd"><span class="db-card-title">Requests</span><span class="db-view-all">View all</span></div>
-                <div class="db-status-row">
-                  <div class="db-stat-card"><div class="db-stat-n">Awaiting review</div><div class="db-stat-v">12</div><div class="db-stat-arr">↗</div></div>
-                  <div class="db-stat-card warn"><div class="db-stat-n">Needs more info</div><div class="db-stat-v">01</div><div class="db-stat-arr">↗</div></div>
+          <div class="db-body">
+            <div class="db-main">
+              <div class="db-page-title">Welcome, Jane <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              <div class="db-cols">
+                <div class="db-center">
+                  <!-- Requests card -->
+                  <div class="db-card">
+                    <div class="db-card-hd"><span class="db-card-title">Requests</span><span class="db-view-all">View all</span></div>
+                    <div class="db-stat-row">
+                      <div class="db-stat-box"><div class="db-stat-n">Awaiting review</div><div class="db-stat-v">12</div><div class="db-stat-arr">↗</div></div>
+                      <div class="db-stat-box warn"><div class="db-stat-n">Needs more info</div><div class="db-stat-v">01</div><div class="db-stat-arr">↗</div></div>
+                    </div>
+                    <table class="db-table">
+                      <thead><tr><th>Priority</th><th>Title</th><th>Project</th><th>Category</th><th>Assignee</th><th>Last</th></tr></thead>
+                      <tbody>
+                        <tr><td>1</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#2C3AFF,#8B5CF6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
+                        <tr><td>2</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#3B82F6,#2C3AFF)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
+                        <tr><td>3</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#6366F1,#3B82F6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Projects card -->
+                  <div class="db-card">
+                    <div class="db-card-hd"><span class="db-card-title">Projects</span></div>
+                    <table class="db-table">
+                      <thead><tr><th>Title</th><th># of Requests</th><th>Assets</th><th>Last Updated</th><th>Status</th><th>Complete</th></tr></thead>
+                      <tbody>
+                        <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
+                        <tr><td><div class="db-req-name">Project</div><div style="display:flex;gap:4px;margin-top:3px"><span class="db-status-tag in-progress" style="padding:2px 8px;font-size:11px">Internal</span><span class="db-status-tag in-progress" style="padding:2px 8px;font-size:11px">Graphic</span><span style="font-size:11px;color:var(--db-muted);align-self:center">+2</span></div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
+                        <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>7</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
+                        <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag complete">Complete</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:100%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-                <table class="db-table">
-                  <thead><tr><th>Priority</th><th>Title</th><th>Project</th><th>Category</th><th>Assignee</th><th>Last</th></tr></thead>
-                  <tbody>
-                    <tr><td>1</td><td><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></td><td>Youtube campaign</td><td>Marketing</td><td style="color:#AAA">Unassigned</td><td>—</td></tr>
-                    <tr><td>2</td><td><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></td><td>Youtube campaign</td><td>Marketing</td><td style="color:#AAA">Unassigned</td><td>—</td></tr>
-                    <tr><td>3</td><td><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></td><td>Youtube campaign</td><td>Marketing</td><td style="color:#AAA">Unassigned</td><td>—</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="db-card">
-                <div class="db-card-hd"><span class="db-card-title">Projects</span><span class="db-view-all">View all</span></div>
-                <table class="db-table">
-                  <thead><tr><th>Title</th><th># of Requests</th><th>Assets</th><th>Last Updated</th><th>Status</th><th>Complete</th></tr></thead>
-                  <tbody>
-                    <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>2</td><td>Sep 07, 2025</td><td><span class="db-tag in-progress">In Progress</span></td><td><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div></td></tr>
-                    <tr><td><div class="db-req-name">Project</div><div style="display:flex;gap:4px;margin-top:3px"><span class="db-tag in-progress" style="font-size:10px">Internal</span><span class="db-tag in-progress" style="font-size:10px">Graphic</span></div></td><td>8</td><td>2</td><td>Sep 07, 2025</td><td><span class="db-tag in-progress">In Progress</span></td><td><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div></td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="db-right">
-              <div class="db-right-card">
-                <div class="db-rc-hd"><span class="db-rc-title">Creative hours</span><span class="db-rc-action">+ Add hours</span></div>
-                <div class="db-hours-num">2 <span style="font-size:14px;font-weight:400;color:#AAA">hours/day</span></div>
-                <div class="db-hours-bar"><div class="db-hours-fill"></div></div>
-                <div style="font-size:11.5px;color:#AAA">Renews daily <span style="float:right">Base Platform</span></div>
-              </div>
-              <div class="db-right-card">
-                <div class="db-rc-hd"><span class="db-rc-title">My Team</span><span class="db-rc-action">View all</span></div>
-                <div id="db-team-rows"></div>
-              </div>
-              <div class="db-right-card">
-                <div class="db-rc-hd"><span class="db-rc-title">Request Usage</span><span class="db-rc-action" style="color:#555;font-size:11px">Last 7 days ▾</span></div>
-                <div class="db-chart-line"><div class="db-chart-area" id="db-chart"></div></div>
+                <!-- RIGHT SIDEBAR -->
+                <div class="db-right">
+                  <div class="db-right-card">
+                    <div class="db-rc-hd"><span class="db-rc-title">Creative hours</span><span class="db-rc-action">+ Add hours</span></div>
+                    <div class="db-hours-num">2 <span class="db-hours-unit">hours/day</span></div>
+                    <div class="db-hours-dot-bar"><div class="db-hours-dot"></div><div class="db-hours-dot empty"></div><div class="db-hours-dot empty"></div></div>
+                    <div class="db-hours-meta"><span>• Renews daily</span><span>Base Platform</span></div>
+                  </div>
+                  <div class="db-right-card">
+                    <div class="db-rc-hd"><span class="db-rc-title">My Team</span><span class="db-rc-action">View all</span></div>
+                    <div id="db-team-rows">
+                      <div class="db-team-row"><div class="db-team-av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="db-team-inf"><div class="db-team-email">alex@designpickle.com</div><div class="db-team-status">Invite pending</div></div><button class="db-resend">Resend</button></div>
+                      <div class="db-team-row"><div class="db-team-av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="db-team-inf"><div class="db-team-email">alex@designpickle.com</div><div class="db-team-status">Invite pending</div></div><button class="db-resend">Resend</button></div>
+                      <div class="db-team-row"><div class="db-team-av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="db-team-inf"><div class="db-team-email">alex@designpickle.com</div><div class="db-team-status">Invite pending</div></div><button class="db-resend">Resend</button></div>
+                    </div>
+                  </div>
+                  <div class="db-right-card">
+                    <div class="db-rc-hd"><span class="db-rc-title">Request Usage</span><span class="db-rc-action" style="font-size:12px">Last 7 days ▾</span></div>
+                    <canvas id="db-chart" style="width:100%;height:110px;display:block"></canvas>
+                    <div class="db-chart-legend">
+                      <div class="db-chart-legend-item"><div class="db-chart-legend-dash"></div>Requests</div>
+                      <div class="db-chart-legend-item"><div class="db-chart-legend-line"></div>Completed</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1546,7 +1609,7 @@ function switchTab(tab) {
   document.getElementById('tab-onboarding').classList.toggle('active', tab === 'onboarding');
   if (tab === 'onboarding') {
     // Hide dashboard, show onboarding (welcome or chat depending on progress)
-    document.getElementById('db-wrap').style.display = 'none';
+    document.getElementById('db-wrap').classList.remove('visible');
     const chatStarted = document.getElementById('ob-chat').style.display === 'flex' ||
                         document.getElementById('ob-msgs').children.length > 0;
     if (chatStarted) {
@@ -1568,11 +1631,15 @@ function showDashboard() {
   document.getElementById('tab-onboarding').classList.remove('active');
   document.getElementById('ob-welcome').style.display = 'none';
   document.getElementById('ob-chat').style.display = 'none';
-  const db = document.getElementById('db-wrap');
-  db.style.display = 'flex';
-  db.style.flexDirection = 'column';
+  document.getElementById('db-wrap').classList.add('visible');
   document.getElementById('db-ai-fab')?.classList.add('visible');
-  buildDbChart();
+  setTimeout(buildDbChart, 50);
+}
+function toggleDbTheme() {
+  document.getElementById('db-wrap').classList.toggle('light');
+  const btn = document.querySelector('.db-theme-btn');
+  if (btn) btn.textContent = document.getElementById('db-wrap').classList.contains('light') ? '🌙' : '☀';
+  setTimeout(buildDbChart, 50);
 }
 // Init: show dashboard on load
 document.addEventListener('DOMContentLoaded', function() {
@@ -2075,8 +2142,7 @@ function obFinish() {
 function obGoToDashboard() {
   document.getElementById('ob-chat').style.display = 'none';
   const db = document.getElementById('db-wrap');
-  db.style.display = 'flex';
-  db.style.flexDirection = 'column';
+  db.classList.add('visible');
   const teamRows = document.getElementById('db-team-rows');
   const emails = OB.data.emails.length ? OB.data.emails : ['alex@designpickle.com','mike@designpickle.com'];
   teamRows.innerHTML = emails.map(e => `
@@ -2097,14 +2163,64 @@ function closeUploadModal() { document.getElementById('upload-modal-back').class
    MODULE: DASHBOARD CHART
    ============================================================ */
 function buildDbChart() {
-  const container = document.getElementById('db-chart');
-  if (!container) return;
-  const vals = [30,50,45,70,55,80,60,90,75,85,65,70,80,100];
-  const max = 100;
-  container.innerHTML = vals.map((v,i) => {
-    const h = Math.round((v/max)*70);
-    return `<div class="db-chart-bar${i===vals.length-1?' today':''}" style="height:${h}px"></div>`;
-  }).join('');
+  const canvas = document.getElementById('db-chart');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const W = rect.width || 230, H = rect.height || 110;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const isLight = document.getElementById('db-wrap').classList.contains('light');
+  const gridC = isLight ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.07)';
+  const labelC = isLight ? '#AAA' : 'rgba(255,255,255,0.32)';
+  const mutedLine = isLight ? '#CCC' : 'rgba(255,255,255,0.25)';
+
+  const requests  = [1.5, 3, 2.5, 5, 4, 6.5, 8];
+  const completed = [0.8, 2, 1.5, 3.5, 2.5, 5, 7];
+  const maxV = 10;
+  const pad = {t:14, r:6, b:28, l:26};
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  const xAt = i => pad.l + (i / (requests.length - 1)) * cW;
+  const yAt = v => pad.t + cH - (v / maxV) * cH;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid + y-labels
+  [0, 5, 10].forEach(v => {
+    const y = yAt(v);
+    ctx.strokeStyle = gridC; ctx.lineWidth = 1; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    ctx.fillStyle = labelC; ctx.font = `10px 'DM Sans',sans-serif`; ctx.textAlign = 'right';
+    ctx.fillText(v + 'h', pad.l - 4, y + 3);
+  });
+
+  // X-labels
+  ['Sep 1', '', '', '', '', '', 'Sep 7'].forEach((lbl, i) => {
+    if (!lbl) return;
+    ctx.fillStyle = labelC; ctx.font = `10px 'DM Sans',sans-serif`;
+    ctx.textAlign = i === 0 ? 'left' : 'right';
+    ctx.fillText(lbl, xAt(i) + (i === 0 ? 0 : 0), H - 6);
+  });
+
+  // Draw line
+  function line(data, color, dashed) {
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2;
+    ctx.setLineDash(dashed ? [4, 4] : []);
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    data.forEach((v, i) => i === 0 ? ctx.moveTo(xAt(i), yAt(v)) : ctx.lineTo(xAt(i), yAt(v)));
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  line(requests, mutedLine, true);   // dotted — Requests
+  line(completed, '#2C3AFF', false); // solid blue — Completed
+
+  // Dots on completed line
+  ctx.fillStyle = '#2C3AFF';
+  completed.forEach((v, i) => {
+    ctx.beginPath(); ctx.arc(xAt(i), yAt(v), 3, 0, Math.PI * 2); ctx.fill();
+  });
 }
 
 </script>
