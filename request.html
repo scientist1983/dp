@@ -9,40 +9,19 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
-
+.hidden{display:none!important}
 :root{
-  --ra-bg:#0C0C0C;
-  --ra-sb:#111;
-  --ra-card:#1C1C1C;
-  --ra-card2:#242424;
-  --ra-border:rgba(255,255,255,.09);
-  --ra-text:#fff;
-  --ra-muted:rgba(255,255,255,.42);
-  --ra-divider:rgba(255,255,255,.07);
-  --ra-hover:rgba(255,255,255,.05);
-  --ra-active:rgba(255,255,255,.1);
-  --ra-input:#1a1a1a;
-  --color-primary:#2C3AFF;
-  --color-volt:#D5FF02;
-  --color-green:#71DD8C;
-  --color-orange:#F55200;
-  --color-purple:#B899EB;
+  --ra-bg:#0C0C0C;--ra-sb:#111;--ra-card:#1C1C1C;--ra-card2:#242424;
+  --ra-border:rgba(255,255,255,.09);--ra-text:#fff;--ra-muted:rgba(255,255,255,.42);
+  --ra-divider:rgba(255,255,255,.07);--ra-hover:rgba(255,255,255,.05);--ra-active:rgba(255,255,255,.1);
+  --ra-input:#1a1a1a;--color-primary:#2C3AFF;--color-volt:#D5FF02;
+  --color-green:#71DD8C;--color-orange:#F55200;--color-purple:#B899EB;
 }
 .light{
-  --ra-bg:#F0EDE8;
-  --ra-sb:#FAFAF8;
-  --ra-card:#fff;
-  --ra-card2:#F5F4F0;
-  --ra-border:#E5E3DF;
-  --ra-text:#111;
-  --ra-muted:#888;
-  --ra-divider:#EDEAE4;
-  --ra-hover:#F5F4F0;
-  --ra-active:#EDEAE4;
-  --ra-input:#F5F4F0;
+  --ra-bg:#F0EDE8;--ra-sb:#FAFAF8;--ra-card:#fff;--ra-card2:#F5F4F0;
+  --ra-border:#E5E3DF;--ra-text:#111;--ra-muted:#888;--ra-divider:#EDEAE4;
+  --ra-hover:#F5F4F0;--ra-active:#EDEAE4;--ra-input:#F5F4F0;
 }
-
-/* ── LAYOUT ── */
 #ra-wrap{display:flex;flex-direction:column;height:100vh;background:var(--ra-bg)}
 
 /* Header */
@@ -59,22 +38,22 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-theme-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);font-size:14px;transition:all .12s}
 .ra-theme-btn:hover{background:var(--ra-hover)}
 
-/* Body two-pane */
+/* Body */
 .ra-body{flex:1;display:flex;overflow:hidden}
 
-/* ── CHAT PANE ── */
+/* Chat pane */
 .ra-chat{flex:1;min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--ra-border);background:var(--ra-bg)}
 .ra-chat-msgs{flex:1;overflow-y:auto;padding:24px 20px 12px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth}
 .ra-chat-msgs::-webkit-scrollbar{width:4px}
 .ra-chat-msgs::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
 
-/* Welcome block */
+/* Welcome */
 .ra-welcome{display:flex;flex-direction:column;gap:14px;animation:fadeUp .22s ease}
 .ra-welcome-heading{font-size:28px;font-weight:900;color:var(--ra-text);letter-spacing:-.02em}
 .ra-welcome-sub{font-size:14px;color:var(--ra-muted);margin-top:-8px}
 .ra-speech{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;border-bottom-left-radius:4px;padding:14px 18px;font-size:14px;line-height:1.6;color:var(--ra-text);max-width:520px}
 
-/* Type picker card */
+/* Type picker */
 .ra-type-picker{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;max-width:600px;animation:fadeUp .22s ease}
 .ra-type-picker-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ra-muted);display:flex;align-items:center;gap:6px}
 .ra-type-picker-label svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
@@ -90,7 +69,7 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-view-all-btn{padding:6px 14px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;font-size:12.5px;color:var(--ra-text);cursor:pointer;font-family:inherit;transition:all .12s;white-space:nowrap}
 .ra-view-all-btn:hover{border-color:var(--color-primary);color:var(--color-primary)}
 
-/* AI message */
+/* Messages */
 .ra-msg{display:flex;gap:10px;animation:fadeUp .18s ease;max-width:560px}
 .ra-msg.user{flex-direction:row-reverse;align-self:flex-end;max-width:420px}
 .ra-msg-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:2px}
@@ -104,22 +83,60 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-packages{display:flex;flex-direction:column;gap:8px;max-width:560px;animation:fadeUp .22s ease}
 .ra-packages-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--color-primary);display:flex;align-items:center;gap:6px}
 .ra-packages-label::before{content:'✦';font-size:10px}
-.ra-pkg-card{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:14px;padding:16px 18px;cursor:pointer;transition:all .14s;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden}
+.ra-pkg-card{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .14s;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
 .ra-pkg-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--pkg-accent,var(--color-primary));opacity:0;transition:opacity .14s}
 .ra-pkg-card:hover{border-color:var(--pkg-accent,var(--color-primary));background:var(--ra-card2);transform:translateX(2px)}
 .ra-pkg-card:hover::before{opacity:1}
-.ra-pkg-icon{width:52px;height:52px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;position:relative}
-.ra-pkg-icon-bg{position:absolute;inset:0;border-radius:12px;opacity:.18}
-.ra-pkg-icon-em{position:relative;z-index:1;font-size:24px}
+.ra-pkg-icon{width:50px;height:50px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.ra-pkg-icon-bg{position:absolute;inset:0;border-radius:12px}
+.ra-pkg-icon-em{position:relative;z-index:1;font-size:22px}
 .ra-pkg-info{flex:1;min-width:0}
-.ra-pkg-name{font-size:14.5px;font-weight:700;color:var(--ra-text);margin-bottom:3px}
+.ra-pkg-name{font-size:14px;font-weight:700;color:var(--ra-text);margin-bottom:3px}
 .ra-pkg-desc{font-size:12.5px;color:var(--ra-muted);line-height:1.45;margin-bottom:7px}
-.ra-pkg-tags{display:flex;flex-wrap:wrap;gap:5px}
+.ra-pkg-tags{display:flex;flex-wrap:wrap;gap:4px}
 .ra-pkg-tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:9999px;background:var(--ra-hover);border:1px solid var(--ra-border);color:var(--ra-muted)}
-.ra-pkg-arrow{color:var(--ra-muted);flex-shrink:0;font-size:18px;opacity:0;transition:opacity .14s}
+.ra-pkg-arrow{color:var(--ra-muted);flex-shrink:0;font-size:20px;opacity:0;transition:opacity .14s}
 .ra-pkg-card:hover .ra-pkg-arrow{opacity:1}
 .ra-pkg-custom{border-style:dashed;background:transparent}
 .ra-pkg-custom:hover{background:var(--ra-hover)}
+
+/* Brief-ready card in chat */
+.ra-brc{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:14px;overflow:hidden;max-width:480px;animation:fadeUp .2s ease}
+.ra-brc-top{padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--ra-divider)}
+.ra-brc-icon-wrap{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative}
+.ra-brc-name{font-size:14px;font-weight:700;color:var(--ra-text);margin-bottom:2px}
+.ra-brc-type{font-size:12px;color:var(--ra-muted)}
+.ra-brc-badge{margin-left:auto;padding:4px 10px;border-radius:9999px;font-size:11.5px;font-weight:700;background:rgba(113,221,140,.15);color:var(--color-green);flex-shrink:0}
+.ra-brc-rows{padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.ra-brc-row{display:flex;align-items:flex-start;gap:8px;font-size:12.5px}
+.ra-brc-row-label{color:var(--ra-muted);min-width:80px;flex-shrink:0}
+.ra-brc-row-val{color:var(--ra-text);line-height:1.4}
+.ra-brc-footer{padding:10px 16px;border-top:1px solid var(--ra-divider);font-size:12px;color:var(--ra-muted)}
+
+/* Asset review list in chat */
+.ra-asset-review{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:14px;overflow:hidden;max-width:520px;animation:fadeUp .2s ease}
+.ra-asset-review-label{padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--color-green);border-bottom:1px solid var(--ra-divider);display:flex;align-items:center;gap:5px}
+.ra-asset-review-label::before{content:'✦';font-size:10px}
+.ra-asset-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--ra-divider);transition:background .1s;cursor:pointer}
+.ra-asset-row:last-child{border-bottom:none}
+.ra-asset-row:hover{background:var(--ra-hover)}
+.ra-asset-thumb-wrap{width:48px;height:48px;border-radius:8px;overflow:hidden;flex-shrink:0;position:relative}
+.ra-asset-label-badge{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;letter-spacing:.04em}
+.ra-asset-info{flex:1;min-width:0}
+.ra-asset-name{font-size:13px;font-weight:600;color:var(--ra-text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-asset-meta{font-size:11.5px;color:var(--ra-muted)}
+.ra-asset-open{color:var(--color-primary);cursor:pointer;font-weight:600}
+.ra-asset-actions{display:flex;gap:6px;flex-shrink:0}
+.ra-av-btn{width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .12s;flex-shrink:0}
+.ra-av-btn.approve{background:rgba(113,221,140,.18);color:var(--color-green)}
+.ra-av-btn.approve.active{background:var(--color-green);color:#111}
+.ra-av-btn.reject{background:rgba(255,255,255,.06);color:var(--ra-muted)}
+.ra-av-btn.reject.active{background:#EF4444;color:#fff}
+.ra-review-footer{padding:12px 14px;display:flex;gap:8px;border-top:1px solid var(--ra-divider)}
+.ra-approve-all-btn{flex:1;padding:10px;border-radius:9999px;background:var(--color-green);color:#111;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:opacity .12s}
+.ra-approve-all-btn:hover{opacity:.85}
+.ra-changes-btn{flex:1;padding:10px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-text);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
+.ra-changes-btn:hover{border-color:var(--color-primary);color:var(--color-primary)}
 
 /* Typing indicator */
 .ra-typing-wrap{display:flex;gap:10px;animation:fadeUp .18s ease}
@@ -128,7 +145,7 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-dot:nth-child(2){animation-delay:.2s}
 .ra-dot:nth-child(3){animation-delay:.4s}
 
-/* Chat input bar — always at bottom */
+/* Chat input */
 .ra-chat-bar{padding:14px 16px;border-top:1px solid var(--ra-border);background:var(--ra-sb);flex-shrink:0}
 .ra-chat-bar-inner{display:flex;align-items:flex-end;gap:8px;background:var(--ra-input);border:1px solid var(--ra-border);border-radius:14px;padding:10px 12px;transition:border-color .12s}
 .ra-chat-bar-inner:focus-within{border-color:var(--color-primary)}
@@ -144,57 +161,64 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-send-btn:hover{background:#2834E5}
 .ra-send-btn svg{width:15px;height:15px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
 
-/* ── BRIEF PANEL ── */
-.ra-brief{width:330px;min-width:330px;background:var(--ra-sb);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+/* Brief panel */
+.ra-brief{width:340px;min-width:340px;background:var(--ra-sb);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
 .ra-brief-hd{padding:14px 18px 12px;border-bottom:1px solid var(--ra-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .ra-brief-title{font-size:14px;font-weight:700;color:var(--ra-text)}
 .ra-brief-badge{font-size:11px;padding:3px 9px;border-radius:9999px;font-weight:700;background:rgba(44,58,255,.15);color:var(--color-primary)}
 .ra-brief-badge.ready{background:rgba(113,221,140,.15);color:var(--color-green)}
-.ra-brief-badge.submitted{background:rgba(113,221,140,.2);color:var(--color-green)}
-.ra-brief-body{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:14px}
+.ra-brief-badge.sent{background:rgba(113,221,140,.2);color:var(--color-green)}
+.ra-brief-body{flex:1;overflow-y:auto;padding:0;display:flex;flex-direction:column}
 .ra-brief-body::-webkit-scrollbar{width:4px}
 .ra-brief-body::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
-.ra-bf-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;color:var(--ra-muted);text-align:center;padding:24px}
+
+/* Brief empty */
+.ra-bf-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;flex:1;color:var(--ra-muted);text-align:center;padding:24px}
 .ra-bf-empty svg{width:36px;height:36px;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;fill:none;opacity:.4}
 .ra-bf-empty p{font-size:13px;line-height:1.55;max-width:200px}
 
-/* Brief fields */
-.ra-field{display:flex;flex-direction:column;gap:5px}
-.ra-field-label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ra-muted)}
-.ra-field-value{font-size:13.5px;color:var(--ra-text);line-height:1.45}
-.ra-field-divider{border:none;border-top:1px solid var(--ra-divider);margin:0 -18px}
-.ra-field-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:9999px;background:rgba(44,58,255,.14);color:var(--color-primary);font-size:12px;font-weight:700}
+/* Brief locked banner */
+.ra-brief-locked{padding:12px 18px;background:rgba(113,221,140,.12);border-bottom:1px solid rgba(113,221,140,.2);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--color-green);flex-shrink:0}
+
+/* Brief sections */
+.ra-brief-section{padding:14px 18px;border-bottom:1px solid var(--ra-divider)}
+.ra-brief-section:last-child{border-bottom:none}
+.ra-section-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ra-muted);margin-bottom:12px}
+.ra-field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.ra-field:last-child{margin-bottom:0}
+.ra-field-label{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ra-muted)}
+.ra-field-value{font-size:13px;color:var(--ra-text);line-height:1.5}
+.ra-field-mono{font-size:12.5px;color:var(--ra-text);line-height:1.7;background:var(--ra-hover);border-radius:8px;padding:8px 10px;border:1px solid var(--ra-border);font-family:'Lato',monospace}
+.ra-field-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:9999px;font-size:12px;font-weight:700}
 .ra-field-tag{display:inline-flex;padding:3px 9px;border-radius:9999px;border:1px solid var(--ra-border);font-size:11.5px;color:var(--ra-text);margin:2px 3px 2px 0}
-.ra-pkg-selected-banner{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:2px}
-.ra-pkg-selected-icon{width:38px;height:38px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative}
-.ra-pkg-selected-name{font-size:13px;font-weight:700;color:var(--ra-text)}
-.ra-pkg-selected-type{font-size:11.5px;color:var(--ra-muted)}
 
-/* Assets grid */
-.ra-assets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.ra-asset-thumb{aspect-ratio:1;border-radius:8px;border:1px solid var(--ra-border);background:var(--ra-hover);overflow:hidden;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;color:var(--ra-muted)}
-.ra-asset-thumb img{width:100%;height:100%;object-fit:cover}
-.ra-add-asset{border:1px dashed var(--ra-border);background:transparent;cursor:pointer;transition:all .12s;font-family:inherit}
-.ra-add-asset:hover{border-color:var(--color-primary);color:var(--color-primary);background:rgba(44,58,255,.07)}
+/* Brief assets list (after sent) */
+.ra-brief-asset-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--ra-divider)}
+.ra-brief-asset-row:last-child{border-bottom:none}
+.ra-brief-asset-thumb{width:36px;height:36px;border-radius:7px;overflow:hidden;flex-shrink:0}
+.ra-brief-asset-info{flex:1;min-width:0}
+.ra-brief-asset-name{font-size:12.5px;font-weight:600;color:var(--ra-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-brief-asset-type{font-size:11px;color:var(--ra-muted)}
+.ra-dl-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--ra-border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ra-muted);flex-shrink:0}
+.ra-dl-btn svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
 
-/* Roles */
-.ra-roles-row{display:flex;align-items:center;gap:8px}
-.ra-role-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;flex-shrink:0;color:#fff}
-.ra-role-name{font-size:13px;color:var(--ra-text);flex:1}
-.ra-role-label{font-size:11px;color:var(--ra-muted)}
-.ra-add-role{padding:5px 12px;border-radius:9999px;border:1px dashed var(--ra-border);background:transparent;font-size:12px;color:var(--ra-muted);cursor:pointer;font-family:inherit;transition:all .12s;display:inline-flex;align-items:center;gap:5px}
-.ra-add-role:hover{border-color:var(--color-primary);color:var(--color-primary)}
+/* Workflows row */
+.ra-workflow-row{display:flex;align-items:center;gap:8px;padding-top:4px}
+.ra-wf-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.ra-wf-av+.ra-wf-av{margin-left:-8px}
+.ra-wf-avatars{display:flex}
+.ra-wf-info{font-size:12px;color:var(--ra-muted);margin-left:4px}
 
 /* Brief footer */
 .ra-brief-footer{padding:12px 18px;border-top:1px solid var(--ra-border);display:flex;flex-direction:column;gap:7px;flex-shrink:0}
-.ra-submit-btn{width:100%;padding:12px;border-radius:10px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background .12s;display:flex;align-items:center;justify-content:center;gap:8px}
+.ra-submit-btn{width:100%;padding:12px;border-radius:10px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:8px}
 .ra-submit-btn:hover:not(:disabled){background:#2834E5}
 .ra-submit-btn:disabled{opacity:.35;cursor:not-allowed}
-.ra-submit-btn svg{width:14px;height:14px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;fill:none}
+.ra-submit-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none}
 .ra-save-btn{width:100%;padding:9px;border-radius:10px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
 .ra-save-btn:hover{border-color:var(--color-primary);color:var(--color-primary)}
 
-/* ── MODALS ── */
+/* Modals */
 .ra-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
 .ra-modal-bg.hidden{display:none}
 .ra-modal{background:var(--ra-card);border:1px solid var(--ra-border);border-radius:16px;width:100%;max-width:460px;overflow:hidden;animation:fadeUp .18s ease}
@@ -203,27 +227,11 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-modal-close{width:26px;height:26px;border-radius:6px;border:1px solid var(--ra-border);background:transparent;cursor:pointer;color:var(--ra-muted);font-size:16px;line-height:1;transition:all .12s;display:flex;align-items:center;justify-content:center}
 .ra-modal-close:hover{background:var(--ra-hover);color:var(--ra-text)}
 .ra-modal-body{padding:18px 20px}
-
-/* Full type grid modal */
 .ra-full-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .ra-full-type-card{border:1px solid var(--ra-border);border-radius:11px;padding:14px 10px;cursor:pointer;transition:all .12s;text-align:center;background:var(--ra-hover);display:flex;flex-direction:column;align-items:center;gap:6px}
 .ra-full-type-card:hover{border-color:var(--color-primary);background:rgba(44,58,255,.08)}
 .ra-full-type-icon{font-size:22px}
 .ra-full-type-name{font-size:12px;font-weight:700;color:var(--ra-text)}
-
-/* Upload modal */
-.ra-drop-zone{border:2px dashed var(--ra-border);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:8px}
-.ra-drop-zone:hover,.ra-drop-zone.drag-over{border-color:var(--color-primary);background:rgba(44,58,255,.06)}
-.ra-drop-zone svg{width:28px;height:28px;stroke:var(--ra-muted);stroke-width:1.6;stroke-linecap:round;fill:none}
-.ra-drop-zone p{font-size:13px;color:var(--ra-muted)}
-.ra-drop-zone strong{color:var(--color-primary)}
-.ra-modal-footer{padding:12px 20px;border-top:1px solid var(--ra-divider);display:flex;justify-content:flex-end;gap:8px}
-.ra-btn-primary{padding:9px 20px;border-radius:9999px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:background .12s}
-.ra-btn-primary:hover{background:#2834E5}
-.ra-btn-secondary{padding:9px 20px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
-.ra-btn-secondary:hover{border-color:var(--color-primary);color:var(--color-primary)}
-
-/* Roles modal */
 .ra-roles-search{width:100%;padding:9px 14px;border-radius:10px;border:1px solid var(--ra-border);background:var(--ra-input);color:var(--ra-text);font-family:inherit;font-size:13px;outline:none;margin-bottom:12px;transition:border-color .12s}
 .ra-roles-search:focus{border-color:var(--color-primary)}
 .ra-roles-search::placeholder{color:var(--ra-muted)}
@@ -232,6 +240,84 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 .ra-role-option-av{width:30px;height:30px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
 .ra-role-option-name{font-size:13px;font-weight:600;color:var(--ra-text)}
 .ra-role-option-email{font-size:11.5px;color:var(--ra-muted)}
+.ra-modal-footer{padding:12px 20px;border-top:1px solid var(--ra-divider);display:flex;justify-content:flex-end;gap:8px}
+.ra-btn-primary{padding:9px 20px;border-radius:9999px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:background .12s}
+.ra-btn-primary:hover{background:#2834E5}
+.ra-btn-secondary{padding:9px 20px;border-radius:9999px;border:1px solid var(--ra-border);background:transparent;color:var(--ra-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s}
+.ra-btn-secondary:hover{border-color:var(--color-primary);color:var(--color-primary)}
+.ra-drop-zone{border:2px dashed var(--ra-border);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:8px}
+.ra-drop-zone:hover,.ra-drop-zone.drag-over{border-color:var(--color-primary);background:rgba(44,58,255,.06)}
+.ra-drop-zone svg{width:28px;height:28px;stroke:var(--ra-muted);stroke-width:1.6;stroke-linecap:round;fill:none}
+.ra-drop-zone p{font-size:13px;color:var(--ra-muted)}
+.ra-drop-zone strong{color:var(--color-primary)}
+
+/* ── FULLSCREEN ANNOTATION VIEWER ── */
+.ra-fs-viewer{position:fixed;inset:0;background:#0a0a0a;z-index:1000;display:flex;flex-direction:column}
+.ra-fs-viewer.hidden{display:none}
+.ra-fs-topbar{height:52px;background:#111;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;padding:0 20px;flex-shrink:0;gap:16px}
+.ra-fs-asset-name{font-size:14px;font-weight:600;color:#fff;flex:1}
+.ra-fs-counter{padding:4px 12px;border-radius:9999px;background:rgba(255,255,255,.1);font-size:12px;font-weight:700;color:#fff}
+.ra-fs-close{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);font-size:18px;line-height:1;transition:all .12s}
+.ra-fs-close:hover{background:rgba(255,255,255,.1);color:#fff}
+.ra-fs-main{flex:1;display:flex;overflow:hidden}
+.ra-fs-nav-btn{width:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:rgba(255,255,255,.35);font-size:32px;transition:color .12s}
+.ra-fs-nav-btn:hover{color:#fff}
+.ra-fs-canvas-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:crosshair}
+.ra-fs-canvas-area.tool-default{cursor:default}
+.ra-fs-img-wrap{position:relative;display:inline-block;line-height:0}
+.ra-fs-img-wrap canvas{display:block;border-radius:8px}
+.ra-fs-pins-layer{position:absolute;inset:0;pointer-events:none}
+.ra-fs-pin{position:absolute;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;transform:translate(-50%,-50%);cursor:pointer;pointer-events:all;box-shadow:0 2px 8px rgba(0,0,0,.5);border:2px solid rgba(255,255,255,.3);z-index:10;transition:transform .1s}
+.ra-fs-pin:hover{transform:translate(-50%,-50%) scale(1.15)}
+
+/* Annotation right panel */
+.ra-fs-right{width:280px;background:#111;border-left:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;flex-shrink:0}
+.ra-fs-right-scroll{flex:1;overflow-y:auto;padding:16px 14px}
+.ra-fs-right-scroll::-webkit-scrollbar{width:3px}
+.ra-fs-right-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.ra-ann-section-title{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:12px}
+.ra-ann-empty{font-size:12.5px;color:rgba(255,255,255,.3);line-height:1.6;text-align:center;padding:20px 10px}
+.ra-ann-entry{display:flex;gap:8px;margin-bottom:10px;animation:fadeUp .15s ease}
+.ra-ann-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px}
+.ra-ann-text{flex:1;min-width:0}
+.ra-ann-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:12.5px;line-height:1.5;resize:none;outline:none;transition:border-color .12s;min-height:56px}
+.ra-ann-input:focus{border-color:rgba(255,255,255,.3)}
+.ra-ann-input::placeholder{color:rgba(255,255,255,.25)}
+.ra-ann-del{width:18px;height:18px;border-radius:4px;border:none;background:transparent;cursor:pointer;color:rgba(255,255,255,.25);font-size:14px;line-height:1;flex-shrink:0;margin-top:4px;display:flex;align-items:center;justify-content:center;transition:color .12s}
+.ra-ann-del:hover{color:rgba(255,255,255,.7)}
+
+/* Tools panel */
+.ra-fs-tools{padding:14px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.ra-fs-tools-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px}
+.ra-fs-tool-row{display:flex;gap:6px;margin-bottom:12px}
+.ra-fs-tool-btn{width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);font-size:14px;transition:all .12s}
+.ra-fs-tool-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.ra-fs-tool-btn.active{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff}
+.ra-fs-colors{display:flex;gap:6px;margin-bottom:12px}
+.ra-fs-color-dot{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .1s}
+.ra-fs-color-dot:hover{transform:scale(1.2)}
+.ra-fs-color-dot.active{border-color:#fff;transform:scale(1.1)}
+.ra-fs-size-row{display:flex;align-items:center;gap:8px}
+.ra-fs-size-row input{flex:1;accent-color:#fff}
+.ra-fs-size-labels{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.3);margin-top:4px}
+
+/* FS bottom actions */
+.ra-fs-actions{padding:12px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:7px;flex-shrink:0}
+.ra-fs-send-btn{flex:1;padding:9px 12px;border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.7);font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
+.ra-fs-send-btn:hover{border-color:rgba(255,255,255,.4);color:#fff}
+.ra-fs-reject-btn{padding:9px 14px;border-radius:9999px;border:1px solid rgba(239,68,68,.4);background:transparent;color:#EF4444;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .12s;white-space:nowrap}
+.ra-fs-reject-btn:hover{background:rgba(239,68,68,.12)}
+.ra-fs-approve-btn{padding:9px 16px;border-radius:9999px;background:var(--color-green);color:#111;font-family:inherit;font-size:12.5px;font-weight:700;border:none;cursor:pointer;transition:opacity .12s;white-space:nowrap}
+.ra-fs-approve-btn:hover{opacity:.85}
+
+/* Roles in brief */
+.ra-roles-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ra-roles-row:last-child{margin-bottom:0}
+.ra-role-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;flex-shrink:0;color:#fff}
+.ra-role-name-el{font-size:13px;color:var(--ra-text);flex:1}
+.ra-role-lbl{font-size:11px;color:var(--ra-muted)}
+.ra-add-role{padding:5px 12px;border-radius:9999px;border:1px dashed var(--ra-border);background:transparent;font-size:12px;color:var(--ra-muted);cursor:pointer;font-family:inherit;transition:all .12s;display:inline-flex;align-items:center;gap:5px;margin-top:6px}
+.ra-add-role:hover{border-color:var(--color-primary);color:var(--color-primary)}
 
 @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
@@ -240,13 +326,12 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 <body>
 <div id="ra-wrap">
 
-  <!-- HEADER -->
   <header class="ra-header">
     <a href="index.html" class="ra-logo">dp</a>
     <div class="ra-header-sep"></div>
     <span class="ra-header-title">Request Agent</span>
     <div class="ra-header-r">
-      <button class="ra-theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
+      <button class="ra-theme-btn" onclick="toggleTheme()">☀</button>
       <a href="index.html" class="ra-icon-btn" title="Close">
         <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </a>
@@ -255,11 +340,9 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
 
   <div class="ra-body">
 
-    <!-- ── CHAT PANE ── -->
+    <!-- CHAT -->
     <div class="ra-chat">
       <div class="ra-chat-msgs" id="chat-msgs">
-
-        <!-- Welcome -->
         <div class="ra-welcome" id="welcome-block">
           <div>
             <div class="ra-welcome-heading">Welcome, Jane 👋</div>
@@ -267,67 +350,39 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
           </div>
           <div class="ra-speech">To get started choose a request type below — or describe what you need in the box.</div>
         </div>
-
-        <!-- Type picker -->
         <div class="ra-type-picker" id="type-picker">
           <div class="ra-type-picker-label">
             <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
             Create
           </div>
-          <div class="ra-type-tiles" id="type-tiles">
-            <div class="ra-type-tile" style="background:linear-gradient(145deg,#5B5BD6,#8B5CF6)" onclick="selectType('Social Ads','📱')">
-              <div class="ra-type-tile-emoji">📱</div>
-              <div class="ra-type-tile-name">Social Ads</div>
-            </div>
-            <div class="ra-type-tile" style="background:linear-gradient(145deg,#2A7A4B,#3CB371)" onclick="selectType('Logo','🎨')">
-              <div class="ra-type-tile-emoji">🎨</div>
-              <div class="ra-type-tile-name">Logo</div>
-            </div>
-            <div class="ra-type-tile" style="background:linear-gradient(145deg,#E8520A,#F97316)" onclick="selectType('Email','✉️')">
-              <div class="ra-type-tile-emoji">✉️</div>
-              <div class="ra-type-tile-name">Email</div>
-            </div>
-            <div class="ra-type-tile" style="background:linear-gradient(145deg,#1a6db5,#2C3AFF)" onclick="selectType('Video','🎬')">
-              <div class="ra-type-tile-emoji">🎬</div>
-              <div class="ra-type-tile-name">Video</div>
-            </div>
-            <div class="ra-type-tile" style="background:var(--ra-card2);border:1px solid var(--ra-border)" onclick="openModal('type-modal')">
-              <div style="font-size:22px;margin-bottom:6px;color:var(--ra-muted)">···</div>
-              <div class="ra-type-tile-name" style="color:var(--ra-muted)">More</div>
-            </div>
+          <div class="ra-type-tiles">
+            <div class="ra-type-tile" style="background:linear-gradient(145deg,#5B5BD6,#8B5CF6)" onclick="selectType('Social Ads','📱')"><div class="ra-type-tile-emoji">📱</div><div class="ra-type-tile-name">Social Ads</div></div>
+            <div class="ra-type-tile" style="background:linear-gradient(145deg,#2A7A4B,#3CB371)" onclick="selectType('Logo','🎨')"><div class="ra-type-tile-emoji">🎨</div><div class="ra-type-tile-name">Logo</div></div>
+            <div class="ra-type-tile" style="background:linear-gradient(145deg,#E8520A,#F97316)" onclick="selectType('Email','✉️')"><div class="ra-type-tile-emoji">✉️</div><div class="ra-type-tile-name">Email</div></div>
+            <div class="ra-type-tile" style="background:linear-gradient(145deg,#1a6db5,#2C3AFF)" onclick="selectType('Video','🎬')"><div class="ra-type-tile-emoji">🎬</div><div class="ra-type-tile-name">Video</div></div>
+            <div class="ra-type-tile" style="background:var(--ra-card2);border:1px solid var(--ra-border)" onclick="openModal('type-modal')"><div style="font-size:22px;margin-bottom:6px;color:var(--ra-muted)">···</div><div class="ra-type-tile-name" style="color:var(--ra-muted)">More</div></div>
           </div>
           <div class="ra-type-picker-footer">
             <div class="ra-type-picker-meta">
-              <svg viewBox="0 0 24 24"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
-              Ratio
+              <svg viewBox="0 0 24 24"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>Ratio
             </div>
             <button class="ra-view-all-btn" onclick="openModal('type-modal')">View all request types →</button>
           </div>
         </div>
-
       </div>
-
-      <!-- Static input bar -->
       <div class="ra-chat-bar">
         <div class="ra-chat-bar-inner">
           <div class="ra-chat-bar-left">
-            <button class="ra-attach-btn" onclick="openModal('upload-modal')" title="Attach file">
-              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <div class="ra-brand-pill" onclick="cycleBrand()">
-              <span id="brand-label">Nike.com</span>
-              <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
+            <button class="ra-attach-btn" onclick="openModal('upload-modal')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+            <div class="ra-brand-pill" onclick="cycleBrand()"><span id="brand-label">Nike.com</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
           </div>
           <textarea class="ra-chat-input" id="chat-input" placeholder="Describe what you want to request…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-          <button class="ra-send-btn" onclick="sendMessage()">
-            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
+          <button class="ra-send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
         </div>
       </div>
     </div>
 
-    <!-- ── BRIEF PANEL ── -->
+    <!-- BRIEF PANEL -->
     <aside class="ra-brief">
       <div class="ra-brief-hd">
         <span class="ra-brief-title">Creative Brief</span>
@@ -338,85 +393,75 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
           <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           <p>Choose a request type and package to auto-fill your brief</p>
         </div>
-        <div id="brief-fields" style="display:none;flex-direction:column;gap:14px">
 
-          <!-- Package banner -->
-          <div id="bf-pkg-banner"></div>
+        <!-- Locked banner (hidden until sent) -->
+        <div class="ra-brief-locked hidden" id="brief-locked">🔒 Brief locked — sent to your designer</div>
 
-          <div class="ra-field">
-            <div class="ra-field-label">Type</div>
-            <div id="bf-type"></div>
+        <!-- Brief sections (hidden until package selected) -->
+        <div id="brief-sections" style="display:none">
+
+          <!-- REQUEST DETAILS -->
+          <div class="ra-brief-section">
+            <div class="ra-section-label">Request Details</div>
+            <div class="ra-field"><div class="ra-field-label">Request Title</div><div class="ra-field-value" id="bf-title"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Request Type</div><div class="ra-field-value" id="bf-req-type"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Sizes</div><div class="ra-field-value" id="bf-sizes"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Formats</div><div class="ra-field-value" id="bf-formats"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Channels</div><div class="ra-field-value" id="bf-channels"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Target Audience</div><div class="ra-field-value" id="bf-audience"></div></div>
           </div>
 
-          <hr class="ra-field-divider">
-
-          <div class="ra-field">
-            <div class="ra-field-label">Title</div>
-            <div id="bf-title" class="ra-field-value"></div>
+          <!-- DIRECTIONS -->
+          <div class="ra-brief-section">
+            <div class="ra-section-label">Directions</div>
+            <div class="ra-field"><div class="ra-field-label">Description</div><div class="ra-field-value" id="bf-desc" style="line-height:1.6"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Copy / Text</div><div class="ra-field-mono" id="bf-copy"></div></div>
           </div>
 
-          <div class="ra-field">
-            <div class="ra-field-label">Format / Size</div>
-            <div id="bf-format" class="ra-field-value"></div>
+          <!-- INSPIRATION -->
+          <div class="ra-brief-section">
+            <div class="ra-section-label">Inspiration &amp; Visual Style</div>
+            <div class="ra-field"><div class="ra-field-label">Brand Profile</div><div class="ra-field-value" id="bf-brand-profile"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Visual Style</div><div class="ra-field-value" id="bf-visual-style"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Things to Avoid</div><div class="ra-field-value" id="bf-avoid"></div></div>
+            <div class="ra-field"><div class="ra-field-label">Visual References</div><div class="ra-field-value" id="bf-references"></div></div>
           </div>
 
-          <div class="ra-field">
-            <div class="ra-field-label">Deliverables</div>
-            <div id="bf-deliverables" class="ra-field-value"></div>
-          </div>
-
-          <hr class="ra-field-divider">
-
-          <div class="ra-field">
-            <div class="ra-field-label">Description</div>
-            <div id="bf-desc" class="ra-field-value" style="line-height:1.55"></div>
-          </div>
-
-          <div class="ra-field">
-            <div class="ra-field-label">Tone &amp; Style</div>
-            <div id="bf-tone" class="ra-field-value"></div>
-          </div>
-
-          <hr class="ra-field-divider">
-
-          <div class="ra-field">
-            <div class="ra-field-label">Reference Assets</div>
-            <div class="ra-assets-grid" id="assets-grid">
-              <button class="ra-asset-thumb ra-add-asset" onclick="openModal('upload-modal')">
-                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </button>
+          <!-- TEAM -->
+          <div class="ra-brief-section" id="brief-team-section">
+            <div class="ra-section-label">Team</div>
+            <div id="roles-list">
+              <div class="ra-roles-row"><div class="ra-role-av" style="background:#E05A2B">J</div><div style="flex:1"><div class="ra-role-name-el">Jane Johnson</div><div class="ra-role-lbl">Requester</div></div></div>
             </div>
-          </div>
-
-          <hr class="ra-field-divider">
-
-          <div class="ra-field">
-            <div class="ra-field-label" style="margin-bottom:6px">Team</div>
-            <div id="roles-list" style="display:flex;flex-direction:column;gap:8px">
-              <div class="ra-roles-row">
-                <div class="ra-role-av" style="background:#E05A2B">J</div>
-                <div style="flex:1"><div class="ra-role-name">Jane Johnson</div><div class="ra-role-label">Requester</div></div>
-              </div>
-            </div>
-            <button class="ra-add-role" onclick="openModal('roles-modal')" style="margin-top:8px">
-              <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Add person
+            <button class="ra-add-role" onclick="openModal('roles-modal')">
+              <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add person
             </button>
           </div>
 
-          <hr class="ra-field-divider">
+          <!-- ASSETS (shown after sent) -->
+          <div class="ra-brief-section hidden" id="brief-assets-section">
+            <div class="ra-section-label">Assets</div>
+            <div id="brief-assets-list"></div>
+          </div>
 
-          <div class="ra-field">
-            <div class="ra-field-label">Tags</div>
-            <div id="bf-tags" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:2px"></div>
+          <!-- WORKFLOWS (shown after sent) -->
+          <div class="ra-brief-section hidden" id="brief-workflows-section">
+            <div class="ra-section-label">Workflows</div>
+            <div class="ra-workflow-row">
+              <div class="ra-wf-avatars">
+                <div class="ra-wf-av" style="background:#5CD801;color:#111">V</div>
+                <div class="ra-wf-av" style="background:#2C3AFF">S</div>
+                <div class="ra-wf-av" style="background:#E05A2B">J</div>
+              </div>
+              <div class="ra-wf-info">Team · Design Pickle · Your team · You</div>
+            </div>
           </div>
 
         </div>
       </div>
       <div class="ra-brief-footer">
         <button class="ra-submit-btn" id="submit-btn" disabled onclick="submitRequest()">
-          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Submit Request
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Submit Request
         </button>
         <button class="ra-save-btn" onclick="saveDraft()">Save as Draft</button>
       </div>
@@ -424,13 +469,61 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
   </div>
 </div>
 
-<!-- ── MODAL: All Types ── -->
+<!-- FULLSCREEN ANNOTATION VIEWER -->
+<div class="ra-fs-viewer hidden" id="fs-viewer">
+  <div class="ra-fs-topbar">
+    <span class="ra-fs-asset-name" id="fs-title">Asset</span>
+    <span class="ra-fs-counter" id="fs-counter">1/3</span>
+    <button class="ra-fs-close" onclick="closeFS()">×</button>
+  </div>
+  <div class="ra-fs-main">
+    <button class="ra-fs-nav-btn" onclick="fsNav(-1)">‹</button>
+    <div class="ra-fs-canvas-area" id="fs-canvas-area" onclick="handleCanvasClick(event)">
+      <div class="ra-fs-img-wrap" id="fs-img-wrap">
+        <canvas id="fs-canvas"></canvas>
+        <div class="ra-fs-pins-layer" id="fs-pins-layer"></div>
+      </div>
+    </div>
+    <button class="ra-fs-nav-btn" onclick="fsNav(1)">›</button>
+    <div class="ra-fs-right">
+      <div class="ra-fs-right-scroll">
+        <div class="ra-ann-section-title">Annotations</div>
+        <div id="fs-ann-list"><div class="ra-ann-empty">Click anywhere on the image to drop a pin and add a note.</div></div>
+      </div>
+      <div class="ra-fs-tools">
+        <div class="ra-fs-tools-label" style="margin-bottom:6px">Tool</div>
+        <div class="ra-fs-tool-row">
+          <button class="ra-fs-tool-btn active" id="tool-pin" onclick="setTool('pin')" title="Pin">📌</button>
+          <button class="ra-fs-tool-btn" id="tool-text" onclick="setTool('text')" title="Text">T</button>
+          <button class="ra-fs-tool-btn" id="tool-arrow" onclick="setTool('arrow')" title="Arrow">↗</button>
+          <button class="ra-fs-tool-btn" id="tool-erase" onclick="setTool('erase')" title="Delete last">🗑</button>
+        </div>
+        <div class="ra-fs-tools-label" style="margin-bottom:6px">Color</div>
+        <div class="ra-fs-colors">
+          <div class="ra-fs-color-dot active" style="background:#EF4444" onclick="setColor('#EF4444',this)"></div>
+          <div class="ra-fs-color-dot" style="background:#F97316" onclick="setColor('#F97316',this)"></div>
+          <div class="ra-fs-color-dot" style="background:#EAB308" onclick="setColor('#EAB308',this)"></div>
+          <div class="ra-fs-color-dot" style="background:#22C55E" onclick="setColor('#22C55E',this)"></div>
+          <div class="ra-fs-color-dot" style="background:#3B82F6" onclick="setColor('#3B82F6',this)"></div>
+          <div class="ra-fs-color-dot" style="background:#A855F7" onclick="setColor('#A855F7',this)"></div>
+        </div>
+        <div class="ra-fs-tools-label" style="margin-bottom:4px">Size</div>
+        <div class="ra-fs-size-row"><input type="range" id="pin-size" min="1" max="3" value="2" style="flex:1;accent-color:#fff"></div>
+        <div class="ra-fs-size-labels"><span>S</span><span>M</span><span>L</span></div>
+      </div>
+      <div class="ra-fs-actions">
+        <button class="ra-fs-send-btn" onclick="sendFSNotes()">Send notes to designer</button>
+        <button class="ra-fs-reject-btn" onclick="rejectFSAsset()">✕ Reject</button>
+        <button class="ra-fs-approve-btn" onclick="approveFSAsset()">Approve</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
 <div class="ra-modal-bg hidden" id="type-modal">
   <div class="ra-modal">
-    <div class="ra-modal-hd">
-      <span class="ra-modal-title">All Request Types</span>
-      <button class="ra-modal-close" onclick="closeModal('type-modal')">×</button>
-    </div>
+    <div class="ra-modal-hd"><span class="ra-modal-title">All Request Types</span><button class="ra-modal-close" onclick="closeModal('type-modal')">×</button></div>
     <div class="ra-modal-body">
       <div class="ra-full-type-grid">
         <div class="ra-full-type-card" onclick="selectType('Social Ads','📱');closeModal('type-modal')"><div class="ra-full-type-icon">📱</div><div class="ra-full-type-name">Social Ads</div></div>
@@ -447,430 +540,498 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif;overflow:hidden}
   </div>
 </div>
 
-<!-- ── MODAL: Roles ── -->
 <div class="ra-modal-bg hidden" id="roles-modal">
   <div class="ra-modal">
-    <div class="ra-modal-hd">
-      <span class="ra-modal-title">Add Team Member</span>
-      <button class="ra-modal-close" onclick="closeModal('roles-modal')">×</button>
-    </div>
+    <div class="ra-modal-hd"><span class="ra-modal-title">Add Team Member</span><button class="ra-modal-close" onclick="closeModal('roles-modal')">×</button></div>
     <div class="ra-modal-body">
       <input class="ra-roles-search" placeholder="Search name or email…" oninput="filterRoles(this.value)">
       <div id="roles-options">
         <div class="ra-role-option" onclick="addRole('Alex Chen','alex@designpickle.com','#5CD801')"><div class="ra-role-option-av" style="background:#5CD801;color:#111">A</div><div><div class="ra-role-option-name">Alex Chen</div><div class="ra-role-option-email">alex@designpickle.com</div></div></div>
         <div class="ra-role-option" onclick="addRole('Maria Santos','maria@designpickle.com','#B899EB')"><div class="ra-role-option-av" style="background:#B899EB;color:#111">M</div><div><div class="ra-role-option-name">Maria Santos</div><div class="ra-role-option-email">maria@designpickle.com</div></div></div>
         <div class="ra-role-option" onclick="addRole('Tom Bradley','tom@designpickle.com','#FFB55B')"><div class="ra-role-option-av" style="background:#FFB55B;color:#111">T</div><div><div class="ra-role-option-name">Tom Bradley</div><div class="ra-role-option-email">tom@designpickle.com</div></div></div>
-        <div class="ra-role-option" onclick="addRole('Sam Rivera','sam@designpickle.com','#00F6FF')"><div class="ra-role-option-av" style="background:#00F6FF;color:#111">S</div><div><div class="ra-role-option-name">Sam Rivera</div><div class="ra-role-option-email">sam@designpickle.com</div></div></div>
       </div>
     </div>
-    <div class="ra-modal-footer">
-      <button class="ra-btn-secondary" onclick="closeModal('roles-modal')">Cancel</button>
-    </div>
+    <div class="ra-modal-footer"><button class="ra-btn-secondary" onclick="closeModal('roles-modal')">Cancel</button></div>
   </div>
 </div>
 
-<!-- ── MODAL: Upload ── -->
 <div class="ra-modal-bg hidden" id="upload-modal">
   <div class="ra-modal">
-    <div class="ra-modal-hd">
-      <span class="ra-modal-title">Add Reference</span>
-      <button class="ra-modal-close" onclick="closeModal('upload-modal')">×</button>
-    </div>
+    <div class="ra-modal-hd"><span class="ra-modal-title">Add Reference</span><button class="ra-modal-close" onclick="closeModal('upload-modal')">×</button></div>
     <div class="ra-modal-body">
-      <div class="ra-drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+      <div class="ra-drop-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault()" ondrop="event.preventDefault()">
         <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
         <p>Drop files here or <strong>browse</strong></p>
-        <p style="font-size:11.5px">PNG, JPG, GIF, PDF, AI, PSD</p>
       </div>
-      <input type="file" id="file-input" style="display:none" multiple accept="image/*,.pdf,.ai,.psd" onchange="handleFiles(this.files)">
-      <div id="upload-previews" style="display:flex;flex-wrap:wrap;gap:7px;margin-top:10px"></div>
+      <input type="file" id="file-input" style="display:none" multiple accept="image/*">
     </div>
-    <div class="ra-modal-footer">
-      <button class="ra-btn-secondary" onclick="closeModal('upload-modal')">Cancel</button>
-      <button class="ra-btn-primary" onclick="confirmUpload()">Add to Brief</button>
-    </div>
+    <div class="ra-modal-footer"><button class="ra-btn-secondary" onclick="closeModal('upload-modal')">Cancel</button><button class="ra-btn-primary" onclick="closeModal('upload-modal')">Done</button></div>
   </div>
 </div>
 
 <script>
-/* ────────────────────────────────
-   STATE
-──────────────────────────────── */
-const state = {
-  type: null, typeEmoji: null,
-  package: null,
-  assets: [], pendingFiles: [],
-  roles: [{ name:'Jane Johnson', color:'#E05A2B', initial:'J', label:'Requester' }],
-  history: [] // learns from previous picks
+/* ── STATE ── */
+const S = {
+  type:null, typeEmoji:null, pkg:null,
+  roles:[{name:'Jane Johnson',color:'#E05A2B',initial:'J',label:'Requester'}],
+  history:[], deliverables:[], approvals:{},
+  fsCurrent:0, fsPins:[], fsColor:'#EF4444', fsTool:'pin'
 };
+const brands=['Nike.com','Bloom App','TechMart','Vaultly']; let brandIdx=0;
+function cycleBrand(){brandIdx=(brandIdx+1)%brands.length;document.getElementById('brand-label').textContent=brands[brandIdx];}
 
-const brands = ['Nike.com','Bloom App','TechMart','Vaultly'];
-let brandIdx = 0;
-function cycleBrand(){ brandIdx=(brandIdx+1)%brands.length; document.getElementById('brand-label').textContent=brands[brandIdx]; }
-
-/* ────────────────────────────────
-   PACKAGE DATA
-──────────────────────────────── */
+/* ── PACKAGES ── */
 const PACKAGES = {
-  'Social Ads': [
-    { id:'sa1', name:'Instagram Product Launch', desc:'Eye-catching single-image post announcing a new product. Hero visual, bold typography, price or CTA overlay.', format:'1080 × 1080 px (Square)', deliverables:'3 static image variants + 1 Story cut', tone:'Bold, aspirational, minimal copy', tags:['Instagram','Product','Launch'], accent:'#5B5BD6', emoji:'📱' },
-    { id:'sa2', name:'Facebook Ad — Conversion', desc:'Click-driven ad optimised for conversions. Strong headline, benefit copy, prominent CTA button.', format:'1200 × 628 px (16:9)', deliverables:'2 ad variants (image + text layout)', tone:'Direct, persuasive, benefit-led', tags:['Facebook','Ad','CTA'], accent:'#3B82F6', emoji:'🎯' },
-    { id:'sa3', name:'Instagram Stories Series', desc:'3-frame sequential story designed to guide a viewer to swipe up or tap. Motion-ready statics.', format:'1080 × 1920 px (Stories)', deliverables:'3 story frames (static, export-ready)', tone:'Energetic, fast, thumb-stopping', tags:['Stories','Series','Instagram'], accent:'#F97316', emoji:'📲' },
-    { id:'sa4', name:'LinkedIn Thought Leadership', desc:'Professional editorial post that builds brand authority. Headline card with supporting data visual.', format:'1200 × 627 px', deliverables:'1 hero card + 1 data/quote card', tone:'Professional, authoritative, clean', tags:['LinkedIn','B2B','Editorial'], accent:'#2C3AFF', emoji:'💼' },
-    { id:'sa5', name:'TikTok / Reels Cover', desc:'Thumbnail-style cover optimised for TikTok or Instagram Reels. High contrast, large text.', format:'1080 × 1920 px', deliverables:'2 cover variants (light + dark)', tone:'Gen-Z, vibrant, bold', tags:['TikTok','Reels','Cover'], accent:'#D5FF02', emoji:'🎵' },
-  ],
-  'Logo': [
-    { id:'lo1', name:'Primary Wordmark', desc:'Clean typographic logo with the brand name. Delivered in full colour, reversed (white), and single-colour (black) on transparent background.', format:'Vector (SVG, PDF) + PNG 2× & 4×', deliverables:'3 colour variants, all formats', tone:'Timeless, confident, refined', tags:['Wordmark','Identity'], accent:'#71DD8C', emoji:'🔤' },
-    { id:'lo2', name:'Icon + Wordmark Lockup', desc:'A custom graphic icon paired with the brand name. Horizontal and stacked arrangements. Full brand kit.', format:'SVG, PDF, PNG (all sizes)', deliverables:'2 lockup layouts × 3 colour variants', tone:'Modern, memorable, versatile', tags:['Lockup','Icon','Kit'], accent:'#B899EB', emoji:'🏷️' },
-    { id:'lo3', name:'Monogram / Lettermark', desc:'Initials-based logo mark — compact, works great as an avatar, favicon, or stamp.', format:'SVG, PNG (512 px, 1024 px)', deliverables:'1 monogram × 3 colour variants', tone:'Sophisticated, minimal, compact', tags:['Monogram','Favicon'], accent:'#FFB55B', emoji:'🔡' },
-    { id:'lo4', name:'Brand Refresh', desc:'Update and modernise an existing logo while maintaining brand equity. Provide current files in the references.', format:'SVG, PDF, PNG — all variants', deliverables:'Refined logo set + comparison sheet', tone:'Evolved, premium, on-trend', tags:['Refresh','Rebrand'], accent:'#F55200', emoji:'✨' },
-    { id:'lo5', name:'Sub-brand / Product Logo', desc:'A derivative logo for a product line, campaign, or division that sits within the parent brand system.', format:'SVG, PDF, PNG', deliverables:'Sub-brand lockup + usage guide', tone:'Consistent with parent brand', tags:['Sub-brand','Product'], accent:'#2C3AFF', emoji:'🌿' },
-  ],
-  'Email': [
-    { id:'em1', name:'Launch Announcement', desc:'Announcement email to existing subscribers or waitlist. Personal tone, hero image, single prominent CTA button.', format:'600 px wide, mobile responsive', deliverables:'Full email HTML + 1× header image asset', tone:'Warm, personal, excitement-building', tags:['Launch','Announcement'], accent:'#F97316', emoji:'🚀' },
-    { id:'em2', name:'Promotional Sale Email', desc:'High-urgency promotional design for a sale or limited offer. Bold product visuals, countdown-ready banner.', format:'600 px wide, mobile responsive', deliverables:'Email HTML + 3× product image slots', tone:'Urgent, bold, conversion-focused', tags:['Promo','Sale','Offer'], accent:'#EF4444', emoji:'🏷️' },
-    { id:'em3', name:'Welcome / Onboarding Email', desc:'First email a new user or customer receives. Warm welcome, next-steps layout, brand introduction.', format:'600 px wide, mobile responsive', deliverables:'Email HTML + welcome hero image', tone:'Friendly, helpful, encouraging', tags:['Welcome','Onboarding'], accent:'#71DD8C', emoji:'🤝' },
-    { id:'em4', name:'Newsletter Header Template', desc:'Reusable masthead and layout template for recurring newsletters. Section dividers, image placeholders, CTA block.', format:'600 px wide, exportable sections', deliverables:'Figma/HTML template + asset exports', tone:'Consistent, editorial, on-brand', tags:['Newsletter','Template'], accent:'#B899EB', emoji:'📰' },
-    { id:'em5', name:'Event Invitation', desc:'Premium invite email for a webinar, product launch, or brand event. RSVP CTA, date/location block, map graphic.', format:'600 px wide, mobile responsive', deliverables:'Email HTML + event hero image', tone:'Premium, exclusive, clear', tags:['Event','Invite','RSVP'], accent:'#2C3AFF', emoji:'🎟️' },
-  ],
-  'Video': [
-    { id:'vi1', name:'Social Ad — 15s Cut-down', desc:'Short punchy video ad for social feeds. Motion graphics, product highlight, end-card with CTA.', format:'1080 × 1080 or 9:16 (Stories), 15s', deliverables:'MP4 export × 2 aspect ratios', tone:'Fast, thumb-stopping, branded', tags:['15s','Ad','Motion'], accent:'#3B82F6', emoji:'⚡' },
-    { id:'vi2', name:'Brand Explainer — 60s', desc:'60-second animated or live-action explainer covering the product\'s core value proposition.', format:'1920 × 1080 (16:9), 60s', deliverables:'MP4 final + 30s cut-down', tone:'Clear, friendly, informative', tags:['Explainer','60s'], accent:'#5B5BD6', emoji:'💡' },
-    { id:'vi3', name:'YouTube Intro / Outro', desc:'5-second branded intro bumper and 10-second outro with subscribe CTA and social links.', format:'1920 × 1080, up to 15s total', deliverables:'Intro + Outro MP4 + After Effects source', tone:'Energetic, branded, professional', tags:['YouTube','Intro','Outro'], accent:'#F97316', emoji:'▶️' },
-    { id:'vi4', name:'Product Demo Walkthrough', desc:'Screen-recorded or animated product walkthrough with voiceover text overlays and branded endcard.', format:'1920 × 1080 (16:9), 60–120s', deliverables:'MP4 + chapter timestamps doc', tone:'Clear, confident, helpful', tags:['Demo','Product','Walkthrough'], accent:'#71DD8C', emoji:'🖥️' },
-    { id:'vi5', name:'Event Highlight Reel', desc:'Montage of event footage or photos cut to music, branded lower-thirds and endcard.', format:'1920 × 1080, up to 90s', deliverables:'MP4 final + 30s social cut', tone:'Energetic, celebratory, premium', tags:['Event','Reel','Highlight'], accent:'#D5FF02', emoji:'🎉' },
-  ],
-  'Print': [
-    { id:'pr1', name:'A4 Brochure (Trifold)', desc:'Three-panel folding brochure. Front cover, interior spread, and back panel. Print-ready PDF.', format:'A4 tri-fold (210 × 297 mm), 3mm bleed', deliverables:'Print-ready PDF + editable source file', tone:'Professional, informative, premium', tags:['Brochure','Print','A4'], accent:'#2C3AFF', emoji:'📄' },
-    { id:'pr2', name:'Event Flyer', desc:'Single-page event flyer. Key info hierarchy: event name, date, venue, ticket link.', format:'A5 (148 × 210 mm) or US Letter', deliverables:'Print-ready PDF × 2 sizes', tone:'Eye-catching, clear, energetic', tags:['Flyer','Event'], accent:'#F97316', emoji:'📋' },
-    { id:'pr3', name:'Business Card Set', desc:'Double-sided business card design. Front: logo + name. Back: contact details.', format:'85 × 55 mm, 3mm bleed, CMYK', deliverables:'Print-ready PDF (front + back) per person', tone:'Professional, minimal, brand-consistent', tags:['Business Card','Identity'], accent:'#71DD8C', emoji:'🪪' },
-    { id:'pr4', name:'Roll-up / Pull-up Banner', desc:'Vertical event banner. Logo at top, key visual in centre, tagline and website at base.', format:'850 × 2000 mm standard roll-up', deliverables:'Print-ready PDF, 300 dpi', tone:'Bold, legible at distance, branded', tags:['Banner','Event','Large Format'], accent:'#B899EB', emoji:'🪧' },
-    { id:'pr5', name:'Poster (A2)', desc:'Large-format promotional or informational poster. Strong headline, feature image, supporting copy.', format:'A2 (420 × 594 mm), 300 dpi, CMYK', deliverables:'Print-ready PDF + low-res digital preview', tone:'Impactful, visual, on-brand', tags:['Poster','Large Format'], accent:'#F55200', emoji:'🗺️' },
-  ],
-  'Illustration': [
-    { id:'il1', name:'Brand Character / Mascot', desc:'Custom illustrated brand character for use across digital and print. Multiple poses or expressions.', format:'SVG + PNG (transparent, 2× & 4×)', deliverables:'3 poses × layered source file', tone:'Friendly, on-brand, distinctive', tags:['Mascot','Character'], accent:'#FFB55B', emoji:'🤖' },
-    { id:'il2', name:'Icon Set (20 icons)', desc:'Custom line or filled icon set matching brand style. Covers product UI and marketing needs.', format:'SVG (24 × 24 px grid) + PNG sprite', deliverables:'20 icons × 2 styles (line + filled)', tone:'Consistent, minimal, geometric', tags:['Icons','UI','Set'], accent:'#2C3AFF', emoji:'🔲' },
-    { id:'il3', name:'Hero Illustration (Web)', desc:'Large editorial illustration for a landing page hero or About section. Narrative scene or abstract visual.', format:'SVG + PNG 2× (min 1440 px wide)', deliverables:'1 hero illo + 2 spot details', tone:'Creative, editorial, brand-expressive', tags:['Hero','Web','Illustration'], accent:'#5B5BD6', emoji:'🖼️' },
-    { id:'il4', name:'Infographic', desc:'Data or process visualisation. Up to 6 steps or data points with charts, icons, and branded layout.', format:'1200 × 2000 px PNG + PDF', deliverables:'1 infographic (vertical) + wide crop', tone:'Clear, informative, visually engaging', tags:['Infographic','Data','Process'], accent:'#71DD8C', emoji:'📊' },
-    { id:'il5', name:'Pattern / Texture Design', desc:'Seamless repeating pattern using brand colours and motifs. For packaging, backgrounds, or merchandise.', format:'SVG tile + seamless PNG 2×', deliverables:'1 pattern × 3 colour variants', tone:'Playful or refined (specify in notes)', tags:['Pattern','Texture','Brand'], accent:'#D5FF02', emoji:'🎨' },
-  ],
-  'Presentation': [
-    { id:'ppt1', name:'Pitch Deck Template (10 slides)', desc:'Investor or sales pitch deck. Cover, problem, solution, market, traction, team, ask. Fully editable.', format:'16:9 widescreen (1920 × 1080 px)', deliverables:'PPTX + Google Slides + PDF export', tone:'Professional, confident, investor-ready', tags:['Pitch','Deck','Investor'], accent:'#2C3AFF', emoji:'📈' },
-    { id:'ppt2', name:'Company Overview Deck', desc:'One-pager or multi-slide overview of the company, products, and team for partner or client meetings.', format:'16:9 (1920 × 1080 px)', deliverables:'PPTX + PDF export', tone:'Corporate, clear, trustworthy', tags:['Overview','Corporate'], accent:'#3B82F6', emoji:'🏢' },
-    { id:'ppt3', name:'Product Launch Keynote', desc:'High-design presentation for a product announcement. Big visuals, minimal text, reveal-style flow.', format:'16:9 (2560 × 1440 px for Retina)', deliverables:'Keynote + PPTX + PDF', tone:'Premium, Apple-style, dramatic', tags:['Keynote','Product','Launch'], accent:'#F97316', emoji:'🎙️' },
-    { id:'ppt4', name:'Report / Data Deck', desc:'Quarterly or annual report presentation. Charts, KPIs, branded data visualisations.', format:'16:9 (1920 × 1080 px)', deliverables:'PPTX + PDF, all charts editable', tone:'Analytical, clear, data-driven', tags:['Report','Data','KPI'], accent:'#71DD8C', emoji:'📋' },
-    { id:'ppt5', name:'Workshop / Training Deck', desc:'Interactive training or workshop slide deck. Activities, sections, exercises, icon-driven layout.', format:'16:9 (1920 × 1080 px)', deliverables:'PPTX + facilitator notes PDF', tone:'Engaging, educational, friendly', tags:['Training','Workshop'], accent:'#B899EB', emoji:'🎓' },
-  ],
-  'Web / UI': [
-    { id:'ui1', name:'Landing Page Design', desc:'Single-page marketing design: hero, features section, testimonials, pricing, footer. Desktop + mobile.', format:'1440 px desktop + 375 px mobile', deliverables:'Figma file + exported assets', tone:'Conversion-focused, modern, on-brand', tags:['Landing Page','Web'], accent:'#2C3AFF', emoji:'🌐' },
-    { id:'ui2', name:'Email Banner Set', desc:'Set of 5 reusable promotional banners for email headers and hero sections.', format:'600 × 200 px each', deliverables:'5 PNG exports + Figma source', tone:'Clean, branded, campaign-specific', tags:['Banner','Email'], accent:'#F97316', emoji:'🖼️' },
-    { id:'ui3', name:'App Screenshot Set', desc:'Polished app store screenshots for iOS or Android. 3–6 frames with device mockups and captions.', format:'6.7″ iPhone + 12.9″ iPad (App Store)', deliverables:'6 PNG screenshots per device size', tone:'Premium, benefit-focused, App Store-ready', tags:['App Store','Screenshots','iOS'], accent:'#71DD8C', emoji:'📱' },
-    { id:'ui4', name:'Dashboard UI Mockup', desc:'High-fidelity dashboard or admin panel mockup for a SaaS or internal tool.', format:'1440 px desktop, light + dark', deliverables:'Figma file (light + dark), interactive prototype', tone:'Clean, data-dense, professional', tags:['Dashboard','SaaS','UI'], accent:'#5B5BD6', emoji:'📊' },
-    { id:'ui5', name:'Error / Empty State Illustrations', desc:'Custom UI illustrations for 404, empty state, success, and error screens — matching product style.', format:'SVG + PNG 2× per illustration', deliverables:'4 illustrations × 2 colour modes', tone:'Friendly, on-brand, delightful', tags:['Illustration','UI','Empty State'], accent:'#B899EB', emoji:'🎨' },
-  ],
-  'Photo Edit': [
-    { id:'pe1', name:'Product Photo Retouch', desc:'Clean professional retouch of product photos. Background removal, colour correction, shadow.', format:'PNG (transparent BG) + JPEG, 300 dpi', deliverables:'Up to 5 images, 2 export versions each', tone:'Clean, accurate, commercial', tags:['Retouch','Product','Background Removal'], accent:'#2C3AFF', emoji:'📸' },
-    { id:'pe2', name:'Lifestyle / Campaign Composite', desc:'Composite multiple photos or place product into a lifestyle scene. Seamless blending, colour grading.', format:'JPEG / PNG, 300 dpi, as specified', deliverables:'3 composite variations', tone:'Aspirational, natural-looking, on-brand', tags:['Composite','Lifestyle','Grading'], accent:'#F97316', emoji:'🌅' },
-    { id:'pe3', name:'Headshot Polish', desc:'Professional headshot retouching for team pages or LinkedIn. Skin smoothing, background clean-up.', format:'JPEG, 1000 × 1000 px minimum', deliverables:'Up to 10 retouched headshots', tone:'Natural, professional, unforced', tags:['Headshot','Portrait','Team'], accent:'#71DD8C', emoji:'🙂' },
-    { id:'pe4', name:'Social Media Photo Set', desc:'Batch colour-grading and crop of a photo set for a consistent Instagram or campaign look.', format:'1080 × 1080 + 1080 × 1350 crops', deliverables:'Up to 12 images, 2 crops each', tone:'Consistent, vibrant, feed-ready', tags:['Instagram','Grading','Batch'], accent:'#D5FF02', emoji:'🎞️' },
-    { id:'pe5', name:'Before & After Infographic', desc:'Side-by-side visual transformation layout — product, space, or result. Clean split or overlay format.', format:'1200 × 630 px (social) + A4 (print)', deliverables:'2 export sizes', tone:'Clear, dramatic, trustworthy', tags:['Before/After','Infographic'], accent:'#B899EB', emoji:'🔄' },
-  ],
+'Social Ads':[
+  {id:'sa1',name:'Black Friday Countdown',emoji:'🛍️',accent:'#EF4444',
+   reqType:'Static Social Ad Set',sizes:'Feed 1080×1080, Stories 1080×1920',formats:'PNG, PDF',
+   channels:'Instagram, Facebook',targetAudience:'Broad adult audience, deal-focused',
+   desc:'5-day countdown series building urgency toward Black Friday. Each frame escalates tension — Day 5 to Day 1 — with a final release post. High energy, bold type, urgent CTAs drive click-throughs to the sale landing page.',
+   copyText:'Headline: [BRAND] — Black Friday Sale\nSub: Up to 50% off. Ends midnight Friday.\nCTA: Shop Now → [URL]',
+   brandProfile:'Brand Profile 2',visualStyle:'Bold, high-contrast, typographic-led',
+   thingsToAvoid:'Stock photography, clashing neons, discount-flyer aesthetic',
+   visualReferences:'Nike SNKRS campaign, Glossier Black Friday 2023',
+   tags:['Black Friday','Countdown','Urgency'],tone:'Urgent, bold, high-energy'},
+  {id:'sa2',name:'Product Launch Post',emoji:'🚀',accent:'#5B5BD6',
+   reqType:'Static Social Ad Set',sizes:'Feed 1080×1080, Stories 1080×1920',formats:'PNG, PDF',
+   channels:'Instagram, TikTok',targetAudience:'18–34 trend-aware consumers',
+   desc:'Hero launch post announcing a new product. Single centred product shot with clean background, bold product name overlay, and a short punchy benefit line. The composition should feel premium and aspirational — this is the first impression.',
+   copyText:'Headline: Meet [PRODUCT NAME]\nSub: Designed for people who move fast.\nCTA: Available now → [URL]',
+   brandProfile:'Brand Profile 1',visualStyle:'Minimal, product-hero, premium',
+   thingsToAvoid:'Busy backgrounds, overlong copy, generic lifestyle clichés',
+   visualReferences:'Apple product launches, Teenage Engineering aesthetics',
+   tags:['Launch','Product','Hero'],tone:'Aspirational, minimal, confident'},
+  {id:'sa3',name:'Stories Series (3-frame)',emoji:'📲',accent:'#F97316',
+   reqType:'Animated Story Set',sizes:'Stories 1080×1920',formats:'PNG, MP4',
+   channels:'Instagram Stories, Facebook Stories',targetAudience:'Existing followers, retargeting audience',
+   desc:'Three-frame sequential story designed to hold attention across swipes. Frame 1: hook/question. Frame 2: reveal/benefit. Frame 3: CTA with link sticker. Motion-ready static design with clear tap-zone indicators.',
+   copyText:'Frame 1: "Still paying full price?"\nFrame 2: "We have a better idea."\nFrame 3: Tap to claim your 20% off → [URL]',
+   brandProfile:'Brand Profile 1',visualStyle:'Energetic, full-bleed colour, thumb-stopping',
+   thingsToAvoid:'Small text, cluttered layout, muted colours',
+   visualReferences:'Duolingo Stories, Spotify Stories campaigns',
+   tags:['Stories','3-Frame','Sequential'],tone:'Conversational, fast, direct'},
+  {id:'sa4',name:'LinkedIn Thought Leadership',emoji:'💼',accent:'#2C3AFF',
+   reqType:'Static Editorial Post',sizes:'1200×627',formats:'PNG',
+   channels:'LinkedIn',targetAudience:'B2B decision-makers, 30–55',
+   desc:'Editorial card post designed to stop the scroll on LinkedIn. Data-backed headline with a strong visual pull-quote or stat. Supporting context copy below. Clean grid layout with brand colours — professional authority without being boring.',
+   copyText:'Headline: "78% of teams waste 6 hours/week on this."\nSub: Here\'s the fix we shipped this quarter.\nCTA: Read the full breakdown → [URL]',
+   brandProfile:'Brand Profile 3 (Corporate)',visualStyle:'Editorial, grid-based, data-forward',
+   thingsToAvoid:'Generic stock photos, overly casual tone, clip art',
+   visualReferences:'HBR social cards, McKinsey report visuals',
+   tags:['LinkedIn','B2B','Editorial'],tone:'Authoritative, clear, professional'},
+  {id:'sa5',name:'Reels / TikTok Cover',emoji:'🎵',accent:'#D5FF02',
+   reqType:'Static Cover Image',sizes:'1080×1920 (9:16)',formats:'PNG',
+   channels:'TikTok, Instagram Reels',targetAudience:'Gen-Z, 16–28',
+   desc:'Thumbnail-style cover image for a Reels or TikTok video. High contrast, maximum legibility at small size, large display text that reads in 0.5 seconds. Bold crop, off-centre composition, uses brand accent as dominant colour.',
+   copyText:'Cover text: "[PUNCHY TITLE IN 5 WORDS MAX]"\nSub-label: Category or series name',
+   brandProfile:'Brand Profile 1',visualStyle:'Gen-Z bold, kinetic, maximalist',
+   thingsToAvoid:'Flat corporate aesthetics, muted palettes, serif fonts',
+   visualReferences:'MSCHF drops, Supreme weekly drops visual language',
+   tags:['TikTok','Reels','Cover'],tone:'Bold, irreverent, Gen-Z'},
+],
+'Email':[
+  {id:'em1',name:'Launch Announcement Email',emoji:'🚀',accent:'#F97316',
+   reqType:'HTML Email Template',sizes:'600px wide, mobile responsive',formats:'HTML, PNG assets',
+   channels:'Email (Mailchimp / Klaviyo)',targetAudience:'Existing waitlist / subscribers',
+   desc:'First email in a launch sequence, sent to subscribers who have been waiting. It should feel personal and celebratory — the payoff for their patience. Hero image above the fold, short punchy body copy (max 80 words), single CTA button centred below.',
+   copyText:'Headline: It\'s here. Finally.\nSub: [PRODUCT] is officially live — and you\'re first.\nBody: We\'ve been building this for months. You signed up because you believed in it. Now it\'s time to experience it.\nCTA: Claim Your Early Access →',
+   brandProfile:'Brand Profile 1',visualStyle:'Warm, celebratory, personal — NOT corporate',
+   thingsToAvoid:'Multiple CTAs, walls of text, generic stock imagery, formal language',
+   visualReferences:'Notion launch email, Linear launch sequence',
+   tags:['Launch','Announcement','Waitlist'],tone:'Warm, personal, excitement-building'},
+  {id:'em2',name:'Black Friday Promo Email',emoji:'🏷️',accent:'#EF4444',
+   reqType:'HTML Email Template',sizes:'600px wide, mobile responsive',formats:'HTML, PNG assets',
+   channels:'Email (Klaviyo)',targetAudience:'Full subscriber list + purchaser segment',
+   desc:'High-urgency promotional email for Black Friday / Cyber Monday. Bold hero with sale percentage, product grid (3 items), countdown timer graphic, and two CTA blocks. Designed for maximum scan-ability — most readers spend <8 seconds.',
+   copyText:'Headline: BOGO SUMMER SALE\nSub: Shop before it\'s gone\nProduct 1: [NAME] — Was $X Now $Y\nProduct 2: [NAME] — Was $X Now $Y\nCTA: acme.com/summer',
+   brandProfile:'Brand Profile 2',visualStyle:'Bold, high-contrast, urgency-driven',
+   thingsToAvoid:'Soft colours, long paragraphs, multiple unrelated product categories',
+   visualReferences:'Nike SNKRS campaign, ASOS sale emails',
+   tags:['Promo','Sale','Black Friday'],tone:'Urgent, direct, conversion-focused'},
+  {id:'em3',name:'Welcome / Onboarding Email',emoji:'🤝',accent:'#71DD8C',
+   reqType:'HTML Email Template',sizes:'600px wide, mobile responsive',formats:'HTML, PNG assets',
+   channels:'Email (automated trigger)',targetAudience:'New sign-ups / first-time customers',
+   desc:'The very first email a new user receives. Sets the tone for the relationship. Warm welcome, brand introduction, 3 "what to expect" icons/steps, and a clear first action CTA. Should feel like a personal note, not a system email.',
+   copyText:'Headline: Welcome to [BRAND], [FIRST NAME] 👋\nSub: You\'re in. Here\'s what happens next.\nStep 1: Complete your profile\nStep 2: Explore [feature]\nStep 3: [Key action]\nCTA: Get Started →',
+   brandProfile:'Brand Profile 1',visualStyle:'Friendly, icon-forward, clean white layout',
+   thingsToAvoid:'Dark/heavy design, complex layout, more than one CTA',
+   visualReferences:'Superhuman welcome email, Loom onboarding',
+   tags:['Welcome','Onboarding','Automated'],tone:'Friendly, helpful, encouraging'},
+  {id:'em4',name:'Newsletter Masthead Template',emoji:'📰',accent:'#B899EB',
+   reqType:'Reusable HTML Template',sizes:'600px wide, responsive',formats:'HTML + Figma source',
+   channels:'Email newsletter (weekly / monthly)',targetAudience:'Subscriber base',
+   desc:'Reusable newsletter shell: masthead with logo + issue number + date, hero story slot, 3 secondary story cards with thumbnails, quote/callout block, and branded footer with social links. All slots are clearly labelled for easy swap-out.',
+   copyText:'Masthead: [BRAND] Weekly — Issue #[N]\nHero: [TITLE] — [SUBTITLE]\nSection 2: [STORY 1] / [STORY 2] / [STORY 3]\nFooter: Unsubscribe · Privacy · [Social links]',
+   brandProfile:'Brand Profile 1',visualStyle:'Editorial, grid-structured, readable at pace',
+   thingsToAvoid:'Overly designed hero, hard-coded content, non-editable text in images',
+   visualReferences:'Morning Brew, The Hustle, Dense Discovery newsletter',
+   tags:['Newsletter','Template','Reusable'],tone:'Editorial, consistent, on-brand'},
+  {id:'em5',name:'Event Invitation Email',emoji:'🎟️',accent:'#2C3AFF',
+   reqType:'HTML Email Template',sizes:'600px wide, mobile responsive',formats:'HTML, PNG assets',
+   channels:'Email',targetAudience:'VIP list, media, partners',
+   desc:'Premium event invite email. Exclusive feel — dark or rich-colour hero, event name in display type, date/time/location clearly blocked out, RSVP CTA button, optional map thumbnail or venue photo. Should feel like a physical invite, not a notification.',
+   copyText:'Headline: You\'re Invited\nSub: [EVENT NAME] — [DATE] at [VENUE]\nBody: Join us for an evening of [description].\nCTA: RSVP Now — Seats are limited →',
+   brandProfile:'Brand Profile 3 (Premium)',visualStyle:'Dark, premium, typographic — invitation aesthetic',
+   thingsToAvoid:'Casual tone, bright/busy backgrounds, too many event details above fold',
+   visualReferences:'Apple WWDC invites, MoMA event emails',
+   tags:['Event','Invitation','RSVP'],tone:'Premium, exclusive, clear'},
+],
 };
 
-/* Default for unlisted types */
-function defaultPackages(type, emoji) {
-  return [
-    { id:'d1', name:`${type} — Standard`, desc:`A standard ${type.toLowerCase()} request. Full brief including dimensions, copy, and reference assets.`, format:'As specified in notes', deliverables:'Final files + source', tone:'On-brand, professional', tags:[type], accent:'#2C3AFF', emoji },
-    { id:'d2', name:`${type} — Express`, desc:`Faster turn-around ${type.toLowerCase()} with a focused single deliverable.`, format:'As specified', deliverables:'1 primary deliverable', tone:'Clean, efficient', tags:[type,'Express'], accent:'#71DD8C', emoji },
-    { id:'d3', name:`${type} — Premium`, desc:`High-detail ${type.toLowerCase()} with multiple revisions and full source file hand-off.`, format:'As specified', deliverables:'Multiple variants + source files', tone:'Premium, detailed', tags:[type,'Premium'], accent:'#B899EB', emoji },
+function getPkgs(type){
+  if(PACKAGES[type]) return PACKAGES[type];
+  return [{id:'d1',name:`${type} — Standard`,emoji:'📄',accent:'#2C3AFF',reqType:type,sizes:'As specified',formats:'PNG, PDF',channels:'All channels',targetAudience:'Broad audience',desc:`A professionally produced ${type.toLowerCase()} asset built to your specifications. This brief will be reviewed by a senior designer who will confirm dimensions, copy requirements, and style direction before production begins.`,copyText:'Headline: [YOUR HEADLINE]\nSub: [YOUR SUBHEADING]\nCTA: [YOUR CTA] → [URL]',brandProfile:'Brand Profile 1',visualStyle:'On-brand, professional',thingsToAvoid:'Off-brand colours, unapproved fonts, busy layouts',visualReferences:'Previous approved work',tags:[type],tone:'Professional, on-brand'},
+  {id:'d2',name:`${type} — Express`,emoji:'⚡',accent:'#71DD8C',reqType:type,sizes:'As specified',formats:'PNG',channels:'Primary channel',targetAudience:'Core audience',desc:`Fast-turnaround single ${type.toLowerCase()} deliverable. Focused scope — one key visual, one key message, one CTA. Ideal for time-sensitive campaigns where speed is prioritised over complexity.`,copyText:'Headline: [HEADLINE]\nCTA: [URL]',brandProfile:'Brand Profile 1',visualStyle:'Clean, focused, direct',thingsToAvoid:'Complex layouts, multiple messages',visualReferences:'Keep it simple',tags:[type,'Express'],tone:'Direct, clean'},
+  {id:'d3',name:`${type} — Premium`,emoji:'✨',accent:'#B899EB',reqType:type,sizes:'As specified',formats:'PNG, PDF, Source files',channels:'All channels',targetAudience:'Broad audience',desc:`High-production ${type.toLowerCase()} with multiple revision rounds, detailed art direction, and full source file hand-off. Includes a creative brief call with the assigned designer before production begins.`,copyText:'Headline: [YOUR HEADLINE]\nSub: [YOUR SUBHEADING]\nCTA: [URL]',brandProfile:'Brand Profile 2 (Premium)',visualStyle:'Premium, detailed, bespoke',thingsToAvoid:'Off-brief creative direction',visualReferences:'To be discussed in brief call',tags:[type,'Premium'],tone:'Premium, bespoke'}];
+}
+
+/* ── CHAT HELPERS ── */
+const msgs=()=>document.getElementById('chat-msgs');
+function scrollChat(){const el=msgs();el.scrollTop=el.scrollHeight;}
+function addMsg(html,role){
+  const d=document.createElement('div');d.className='ra-msg '+role;
+  const isU=role==='user';
+  d.innerHTML=`<div class="ra-msg-av ${role}">${isU?'J':'AI'}</div><div class="ra-bubble">${html}</div>`;
+  msgs().appendChild(d);scrollChat();
+}
+function showTyping(cb,delay=700){
+  const t=document.createElement('div');t.className='ra-typing-wrap';t.id='typing';
+  t.innerHTML='<div class="ra-msg-av ai">AI</div><div class="ra-typing"><div class="ra-dot"></div><div class="ra-dot"></div><div class="ra-dot"></div></div>';
+  msgs().appendChild(t);scrollChat();
+  setTimeout(()=>{const el=document.getElementById('typing');if(el)el.remove();cb();},delay);
+}
+
+/* ── TYPE SELECTION ── */
+function selectType(type,emoji){
+  if(S.type===type)return;
+  S.type=type;S.typeEmoji=emoji;
+  document.querySelectorAll('.ra-type-tile').forEach(t=>t.classList.remove('selected'));
+  addMsg(`${emoji} ${type}`,'user');
+  // Collapse welcome + type picker after selection
+  ['welcome-block','type-picker'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
+  showTyping(()=>{
+    const hist=S.history.filter(h=>h.type===type);
+    addMsg(hist.length
+      ?`You've done <strong>${type}</strong> before — here are 5 packages. Pick one and the brief fills instantly.`
+      :`Great — <strong>${type}</strong>. Here are 5 packages tailored to this request type. Pick one and I'll build the full brief automatically.`,'ai');
+    showPackages(type,emoji);
+  });
+}
+
+function showPackages(type,emoji){
+  const old=document.getElementById('pkg-list');if(old)old.remove();
+  const wrap=document.createElement('div');wrap.className='ra-packages';wrap.id='pkg-list';
+  const lbl=document.createElement('div');lbl.className='ra-packages-label';
+  lbl.textContent=`${type} Packages — Pick one to build your brief`;wrap.appendChild(lbl);
+  getPkgs(type).forEach(pkg=>{
+    const c=document.createElement('div');c.className='ra-pkg-card';
+    c.style.setProperty('--pkg-accent',pkg.accent);
+    c.innerHTML=`<div class="ra-pkg-icon"><div class="ra-pkg-icon-bg" style="background:${pkg.accent};opacity:.18"></div><div class="ra-pkg-icon-em">${pkg.emoji}</div></div><div class="ra-pkg-info"><div class="ra-pkg-name">${pkg.name}</div><div class="ra-pkg-desc">${pkg.desc.slice(0,110)}…</div><div class="ra-pkg-tags">${pkg.tags.map(t=>`<span class="ra-pkg-tag">${t}</span>`).join('')}<span class="ra-pkg-tag" style="border-color:${pkg.accent};color:${pkg.accent}">${pkg.sizes.split(',')[0].trim()}</span></div></div><div class="ra-pkg-arrow">›</div>`;
+    c.onclick=()=>selectPackage(pkg,type,emoji);wrap.appendChild(c);
+  });
+  const custom=document.createElement('div');custom.className='ra-pkg-card ra-pkg-custom';
+  custom.style.setProperty('--pkg-accent','var(--ra-muted)');
+  custom.innerHTML='<div class="ra-pkg-icon"><div class="ra-pkg-icon-em" style="opacity:.5">✏️</div></div><div class="ra-pkg-info"><div class="ra-pkg-name" style="color:var(--ra-muted)">Custom brief</div><div class="ra-pkg-desc">Describe exactly what you need below and I\'ll build a brief around your requirements.</div></div><div class="ra-pkg-arrow">›</div>';
+  custom.onclick=()=>document.getElementById('chat-input').focus();
+  wrap.appendChild(custom);msgs().appendChild(wrap);scrollChat();
+}
+
+/* ── PACKAGE SELECTION ── */
+function selectPackage(pkg,type,emoji){
+  S.pkg=pkg;S.history.push({type,pkgId:pkg.id,pkgName:pkg.name});
+  const old=document.getElementById('pkg-list');if(old)old.remove();
+  addMsg(`${pkg.emoji} ${pkg.name}`,'user');
+  showTyping(()=>{
+    // Rich brief-ready card in chat
+    const card=document.createElement('div');card.className='ra-brc';
+    card.innerHTML=`
+      <div class="ra-brc-top">
+        <div class="ra-brc-icon-wrap" style="background:${pkg.accent}22"><span>${pkg.emoji}</span></div>
+        <div style="flex:1;min-width:0"><div class="ra-brc-name">${pkg.name}</div><div class="ra-brc-type">${type} · ${pkg.channels}</div></div>
+        <span class="ra-brc-badge">Ready</span>
+      </div>
+      <div class="ra-brc-rows">
+        <div class="ra-brc-row"><span class="ra-brc-row-label">Format</span><span class="ra-brc-row-val">${pkg.sizes}</span></div>
+        <div class="ra-brc-row"><span class="ra-brc-row-label">Deliverables</span><span class="ra-brc-row-val">${pkg.formats}</span></div>
+        <div class="ra-brc-row"><span class="ra-brc-row-label">Tone</span><span class="ra-brc-row-val">${pkg.tone}</span></div>
+        <div class="ra-brc-row"><span class="ra-brc-row-label">Audience</span><span class="ra-brc-row-val">${pkg.targetAudience}</span></div>
+      </div>
+      <div class="ra-brc-footer">Review and edit the full brief in the panel on the right →</div>`;
+    msgs().appendChild(card);scrollChat();
+    fillBrief(pkg,type,emoji);
+  });
+}
+
+/* ── FILL BRIEF ── */
+function fillBrief(pkg,type,emoji){
+  document.getElementById('brief-empty').style.display='none';
+  document.getElementById('brief-sections').style.display='block';
+  set('bf-title',pkg.name);
+  set('bf-req-type',pkg.reqType);
+  set('bf-sizes',pkg.sizes);
+  set('bf-formats',pkg.formats);
+  set('bf-channels',pkg.channels);
+  set('bf-audience',pkg.targetAudience);
+  set('bf-desc',pkg.desc);
+  document.getElementById('bf-copy').textContent=pkg.copyText;
+  set('bf-brand-profile',pkg.brandProfile);
+  set('bf-visual-style',pkg.visualStyle);
+  set('bf-avoid',pkg.thingsToAvoid);
+  set('bf-references',pkg.visualReferences);
+  const badge=document.getElementById('brief-badge');
+  badge.textContent='Ready';badge.className='ra-brief-badge ready';
+  document.getElementById('submit-btn').disabled=false;
+  // Store deliverables
+  S.deliverables=[
+    {id:'d1',name:`${pkg.name} — Feed Ad`,label:'Feed',ratio:'1:1',accent:pkg.accent},
+    {id:'d2',name:`${pkg.name} — Story Ad`,label:'Story',ratio:'9:16',accent:pkg.accent},
+    {id:'d3',name:`${pkg.name} — Landscape`,label:'Landscape',ratio:'16:9',accent:pkg.accent},
   ];
 }
+function set(id,text){document.getElementById(id).textContent=text;}
 
-/* ────────────────────────────────
-   CHAT HELPERS
-──────────────────────────────── */
-function addMsg(text, role) {
-  const msgs = document.getElementById('chat-msgs');
-  const d = document.createElement('div');
-  d.className = 'ra-msg ' + role;
-  const isUser = role === 'user';
-  d.innerHTML = `<div class="ra-msg-av ${role}">${isUser ? 'J' : 'AI'}</div><div class="ra-bubble">${text}</div>`;
-  msgs.appendChild(d);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function showTyping(cb) {
-  const msgs = document.getElementById('chat-msgs');
-  const t = document.createElement('div');
-  t.className = 'ra-typing-wrap'; t.id = 'typing';
-  t.innerHTML = `<div class="ra-msg-av ai">AI</div><div class="ra-typing"><div class="ra-dot"></div><div class="ra-dot"></div><div class="ra-dot"></div></div>`;
-  msgs.appendChild(t); msgs.scrollTop = msgs.scrollHeight;
-  setTimeout(() => { const el = document.getElementById('typing'); if(el)el.remove(); cb(); }, 700);
-}
-
-/* ────────────────────────────────
-   TYPE SELECTION → show packages
-──────────────────────────────── */
-function selectType(type, emoji) {
-  if (state.type === type) return;
-  state.type = type; state.typeEmoji = emoji;
-
-  // Highlight selected tile
-  document.querySelectorAll('.ra-type-tile').forEach(t => t.classList.remove('selected'));
-  event && event.currentTarget && event.currentTarget.classList.add('selected');
-
-  addMsg(`${emoji} ${type}`, 'user');
-
-  showTyping(() => {
-    const history = state.history.filter(h => h.type === type);
-    let intro = history.length
-      ? `You've done <strong>${type}</strong> before. Here are 5 packages — pick the one that fits best and I'll build the brief instantly.`
-      : `Great — <strong>${type}</strong>. Here are 5 ready-to-go packages. Pick one and your brief will be filled out automatically.`;
-    addMsg(intro, 'ai');
-    showPackages(type, emoji);
+/* ── SUBMIT ── */
+function submitRequest(){
+  addMsg('Submit Request ✓','user');
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.style.background='var(--color-green)';btn.style.color='#111';
+  btn.innerHTML='<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#111;stroke-width:2.8;stroke-linecap:round;fill:none"><polyline points="20 6 9 17 4 12"/></svg> Sent to Designer';
+  document.getElementById('brief-badge').textContent='Sent';
+  document.getElementById('brief-badge').className='ra-brief-badge sent';
+  document.getElementById('brief-locked').classList.remove('hidden');
+  document.getElementById('brief-assets-section').classList.remove('hidden');
+  document.getElementById('brief-workflows-section').classList.remove('hidden');
+  renderBriefAssets();
+  showTyping(()=>{
+    addMsg('Brief locked and sent to your designer 🔒 Sit tight — we\'ll notify you when assets are ready.','ai');
+    // Designer responds after delay
+    showTyping(()=>{
+      addMsg('Your designer nailed it 🎉 Here are the assets from your brief — have a look! Tap any asset to open it full screen, annotate feedback, or just approve / reject inline.','ai');
+      showAssetReview();
+    },2200);
   });
 }
 
-function showPackages(type, emoji) {
-  const msgs = document.getElementById('chat-msgs');
-  const pkgs = PACKAGES[type] || defaultPackages(type, emoji);
+function renderBriefAssets(){
+  const list=document.getElementById('brief-assets-list');
+  list.innerHTML=S.deliverables.map((d,i)=>`
+    <div class="ra-brief-asset-row">
+      <div class="ra-brief-asset-thumb"><canvas id="bthumb-${i}" width="36" height="36" style="border-radius:7px"></canvas></div>
+      <div class="ra-brief-asset-info"><div class="ra-brief-asset-name">${d.name}</div><div class="ra-brief-asset-type">Image</div></div>
+      <button class="ra-dl-btn" onclick="openFS(${i})" title="Open"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+    </div>`).join('');
+  S.deliverables.forEach((_,i)=>drawThumb(document.getElementById(`bthumb-${i}`),S.deliverables[i],36,36));
+}
 
-  // Remove old package list if present
-  const old = document.getElementById('pkg-list');
-  if (old) old.remove();
-
-  const wrap = document.createElement('div');
-  wrap.className = 'ra-packages'; wrap.id = 'pkg-list';
-
-  const label = document.createElement('div');
-  label.className = 'ra-packages-label';
-  label.innerHTML = `${type} Packages — PICK ONE OR DESCRIBE YOUR OWN BELOW`;
-  wrap.appendChild(label);
-
-  pkgs.forEach(pkg => {
-    const card = document.createElement('div');
-    card.className = 'ra-pkg-card';
-    card.style.setProperty('--pkg-accent', pkg.accent);
-    card.innerHTML = `
-      <div class="ra-pkg-icon">
-        <div class="ra-pkg-icon-bg" style="background:${pkg.accent}"></div>
-        <div class="ra-pkg-icon-em">${pkg.emoji}</div>
-      </div>
-      <div class="ra-pkg-info">
-        <div class="ra-pkg-name">${pkg.name}</div>
-        <div class="ra-pkg-desc">${pkg.desc}</div>
-        <div class="ra-pkg-tags">
-          ${pkg.tags.map(t=>`<span class="ra-pkg-tag">${t}</span>`).join('')}
-          <span class="ra-pkg-tag" style="border-color:${pkg.accent};color:${pkg.accent}">${pkg.format.split('(')[0].trim()}</span>
+function showAssetReview(){
+  const wrap=document.createElement('div');wrap.className='ra-asset-review';
+  wrap.innerHTML=`<div class="ra-asset-review-label">Assets ready for your review — tap to open full screen</div>`+
+    S.deliverables.map((d,i)=>`
+      <div class="ra-asset-row" onclick="openFS(${i})">
+        <div class="ra-asset-thumb-wrap"><canvas id="athumb-${i}" width="48" height="48"></canvas><div class="ra-asset-label-badge">${d.label}</div></div>
+        <div class="ra-asset-info"><div class="ra-asset-name">${d.name}</div><div class="ra-asset-meta">Image · <span class="ra-asset-open">Open full screen</span></div></div>
+        <div class="ra-asset-actions">
+          <button class="ra-av-btn approve" id="chat-approve-${i}" onclick="event.stopPropagation();toggleApproval(${i},'approve')" title="Approve">✓</button>
+          <button class="ra-av-btn reject" id="chat-reject-${i}" onclick="event.stopPropagation();toggleApproval(${i},'reject')" title="Reject">✕</button>
         </div>
-      </div>
-      <div class="ra-pkg-arrow">›</div>`;
-    card.onclick = () => selectPackage(pkg, type, emoji);
-    wrap.appendChild(card);
+      </div>`).join('')+
+    `<div class="ra-review-footer"><button class="ra-approve-all-btn" onclick="approveAll()">Approve all ✓</button><button class="ra-changes-btn" onclick="requestChanges()">Request changes</button></div>`;
+  msgs().appendChild(wrap);scrollChat();
+  S.deliverables.forEach((_,i)=>setTimeout(()=>{
+    const c=document.getElementById(`athumb-${i}`);
+    if(c)drawThumb(c,S.deliverables[i],48,48);
+  },50));
+}
+
+function toggleApproval(idx,action){
+  S.approvals[idx]=S.approvals[idx]===action?null:action;
+  const ab=document.getElementById(`chat-approve-${idx}`);
+  const rb=document.getElementById(`chat-reject-${idx}`);
+  if(ab){ab.classList.toggle('active',S.approvals[idx]==='approve');}
+  if(rb){rb.classList.toggle('active',S.approvals[idx]==='reject');}
+}
+function approveAll(){
+  S.deliverables.forEach((_,i)=>{S.approvals[i]='approve';toggleApproval(i,'approve');});
+  showTyping(()=>addMsg('All assets approved ✓ Your request is marked complete. Great work!','ai'),600);
+}
+function requestChanges(){
+  showTyping(()=>addMsg('No problem — annotate the specific changes on each asset using the fullscreen viewer, then tap "Send notes to designer".','ai'),600);
+}
+
+/* ── DRAW THUMBNAIL CANVAS ── */
+function drawThumb(canvas,d,w,h){
+  if(!canvas)return;
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=w*dpr;canvas.height=h*dpr;
+  canvas.style.width=w+'px';canvas.style.height=h+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  const grad=ctx.createLinearGradient(0,0,w,h);
+  grad.addColorStop(0,d.accent+'CC');grad.addColorStop(1,darken(d.accent,40));
+  ctx.fillStyle=grad;ctx.beginPath();
+  ctx.roundRect?ctx.roundRect(0,0,w,h,6):ctx.rect(0,0,w,h);
+  ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.85)';
+  ctx.font=`bold ${Math.max(7,w*0.18)}px Lato,sans-serif`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(d.label,w/2,h/2);
+}
+
+function drawFSCanvas(canvas,d,w,h){
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=w*dpr;canvas.height=h*dpr;
+  canvas.style.width=w+'px';canvas.style.height=h+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  const grad=ctx.createLinearGradient(0,0,w,h);
+  grad.addColorStop(0,d.accent+'EE');grad.addColorStop(0.6,darken(d.accent,30));
+  grad.addColorStop(1,'#000');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='rgba(255,255,255,0.35)';
+  ctx.font=`700 ${Math.round(w*0.028)}px Lato,sans-serif`;
+  ctx.textAlign='center';ctx.textBaseline='bottom';
+  ctx.fillText(d.label.toUpperCase()+' '+d.ratio,w/2,h/2-6);
+  ctx.fillStyle='rgba(255,255,255,0.9)';
+  ctx.font=`900 ${Math.round(w*0.06)}px Lato,sans-serif`;
+  ctx.textBaseline='top';
+  ctx.fillText(d.name.split('—')[1]?.trim()||d.label+' Ad',w/2,h/2+6);
+}
+
+function darken(hex,pct){
+  const n=parseInt(hex.slice(1),16);
+  const f=1-pct/100;
+  const r=Math.round((n>>16)*f),g=Math.round(((n>>8)&0xff)*f),b=Math.round((n&0xff)*f);
+  return `#${[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('')}`;
+}
+
+/* ── FULLSCREEN VIEWER ── */
+function openFS(idx){
+  S.fsCurrent=idx;S.fsPins=[];
+  document.getElementById('fs-viewer').classList.remove('hidden');
+  renderFS();
+}
+function closeFS(){document.getElementById('fs-viewer').classList.add('hidden');}
+function fsNav(dir){
+  S.fsCurrent=(S.fsCurrent+dir+S.deliverables.length)%S.deliverables.length;
+  S.fsPins=[];renderFS();
+}
+function renderFS(){
+  const d=S.deliverables[S.fsCurrent];
+  document.getElementById('fs-title').textContent=d.name;
+  document.getElementById('fs-counter').textContent=`${S.fsCurrent+1}/${S.deliverables.length}`;
+  document.getElementById('fs-ann-list').innerHTML='<div class="ra-ann-empty">Click anywhere on the image to drop a pin and add a note.</div>';
+  document.getElementById('fs-pins-layer').innerHTML='';
+  // Draw canvas
+  const area=document.getElementById('fs-canvas-area');
+  const maxW=area.clientWidth-60||600;
+  const maxH=area.clientHeight-60||400;
+  const ratio=d.ratio==='9:16'?9/16:d.ratio==='1:1'?1:16/9;
+  let cw,ch;
+  if(ratio<1){ch=Math.min(maxH,maxW/ratio);cw=ch*ratio;}
+  else{cw=Math.min(maxW,maxH*ratio);ch=cw/ratio;}
+  cw=Math.round(cw);ch=Math.round(ch);
+  const canvas=document.getElementById('fs-canvas');
+  drawFSCanvas(canvas,d,cw,ch);
+}
+function handleCanvasClick(e){
+  if(S.fsTool==='erase'){eraseLastPin();return;}
+  const wrap=document.getElementById('fs-img-wrap');
+  const rect=wrap.getBoundingClientRect();
+  const x=((e.clientX-rect.left)/rect.width*100).toFixed(1);
+  const y=((e.clientY-rect.top)/rect.height*100).toFixed(1);
+  if(x<0||x>100||y<0||y>100)return;
+  const sz=[22,28,34][parseInt(document.getElementById('pin-size').value)-1];
+  const num=S.fsPins.length+1;
+  S.fsPins.push({x,y,color:S.fsColor,num,note:'',sz});
+  addPin(x,y,S.fsColor,num,sz);
+  addAnnEntry(num,S.fsColor);
+}
+function addPin(x,y,color,num,sz){
+  const layer=document.getElementById('fs-pins-layer');
+  const pin=document.createElement('div');
+  pin.className='ra-fs-pin';pin.id='pin-'+num;
+  pin.style.cssText=`left:${x}%;top:${y}%;width:${sz}px;height:${sz}px;background:${color};font-size:${sz*0.45}px`;
+  pin.textContent=num;layer.appendChild(pin);
+}
+function addAnnEntry(num,color){
+  const list=document.getElementById('fs-ann-list');
+  const emp=list.querySelector('.ra-ann-empty');if(emp)emp.remove();
+  const d=document.createElement('div');d.className='ra-ann-entry';d.id='ann-'+num;
+  d.innerHTML=`<div class="ra-ann-num" style="background:${color}">${num}</div><div class="ra-ann-text"><textarea class="ra-ann-input" placeholder="Describe the change you want here…" oninput="updatePinNote(${num},this.value)" rows="2"></textarea></div><button class="ra-ann-del" onclick="removePin(${num})">×</button>`;
+  list.appendChild(d);
+}
+function updatePinNote(num,val){const p=S.fsPins.find(p=>p.num===num);if(p)p.note=val;}
+function removePin(num){
+  S.fsPins=S.fsPins.filter(p=>p.num!==num);
+  const pin=document.getElementById('pin-'+num);if(pin)pin.remove();
+  const ann=document.getElementById('ann-'+num);if(ann)ann.remove();
+  if(!S.fsPins.length)document.getElementById('fs-ann-list').innerHTML='<div class="ra-ann-empty">Click anywhere on the image to drop a pin and add a note.</div>';
+}
+function eraseLastPin(){if(S.fsPins.length)removePin(S.fsPins[S.fsPins.length-1].num);}
+function setTool(t){
+  S.fsTool=t;
+  document.querySelectorAll('.ra-fs-tool-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tool-'+t)?.classList.add('active');
+  document.getElementById('fs-canvas-area').style.cursor=t==='erase'?'not-allowed':t==='pin'?'crosshair':'default';
+}
+function setColor(c,el){
+  S.fsColor=c;
+  document.querySelectorAll('.ra-fs-color-dot').forEach(d=>d.classList.remove('active'));
+  el.classList.add('active');
+}
+function sendFSNotes(){
+  const notes=S.fsPins.filter(p=>p.note.trim()).length;
+  closeFS();
+  showTyping(()=>addMsg(`Notes sent to the designer (${notes||'no'} annotation${notes!==1?'s':''}). They\'ll come back with revisions shortly.`,'ai'),400);
+}
+function rejectFSAsset(){const d=S.deliverables[S.fsCurrent];S.approvals[S.fsCurrent]='reject';toggleApproval(S.fsCurrent,'reject');closeFS();addMsg(`${d.label} Ad marked for revision.`,'user');}
+function approveFSAsset(){const d=S.deliverables[S.fsCurrent];S.approvals[S.fsCurrent]='approve';toggleApproval(S.fsCurrent,'approve');closeFS();addMsg(`${d.label} Ad approved ✓`,'user');}
+
+/* ── SEND / CHAT ── */
+function sendMessage(){
+  const inp=document.getElementById('chat-input');const text=inp.value.trim();
+  if(!text)return;inp.value='';inp.style.height='';
+  addMsg(text,'user');
+  showTyping(()=>{
+    if(!S.type)addMsg('Which type of asset is this for? Pick one from the tiles above.','ai');
+    else if(!S.pkg){
+      const custom={id:'custom',name:text.length>60?text.slice(0,57)+'…':text,emoji:'✏️',accent:'#2C3AFF',
+        reqType:S.type,sizes:'As specified',formats:'PNG, PDF',channels:'All channels',targetAudience:'As specified',
+        desc:text,copyText:'Headline: [YOUR HEADLINE]\nSub: [YOUR SUB]\nCTA: [URL]',
+        brandProfile:'Brand Profile 1',visualStyle:'On-brand, professional',
+        thingsToAvoid:'Off-brand elements',visualReferences:'Previous approved work',
+        tags:[S.type,'Custom'],tone:'Professional'};
+      fillBrief(custom,S.type,S.typeEmoji||'✏️');
+      addMsg(`Built a custom brief from your description. Review the panel on the right and submit when ready.`,'ai');
+    } else addMsg(`Got it — the brief is set. Feel free to edit any field in the panel, then submit when ready.`,'ai');
   });
-
-  // Custom option
-  const custom = document.createElement('div');
-  custom.className = 'ra-pkg-card ra-pkg-custom';
-  custom.style.setProperty('--pkg-accent', 'var(--ra-muted)');
-  custom.innerHTML = `<div class="ra-pkg-icon"><div class="ra-pkg-icon-em" style="opacity:.5">✏️</div></div><div class="ra-pkg-info"><div class="ra-pkg-name" style="color:var(--ra-muted)">Custom brief</div><div class="ra-pkg-desc">Describe exactly what you need in the chat below and I'll build the brief around your requirements.</div></div><div class="ra-pkg-arrow">›</div>`;
-  custom.onclick = () => {
-    document.getElementById('chat-input').focus();
-    addMsg('Sure — describe exactly what you need and I\'ll build a custom brief for you.', 'ai');
-  };
-  wrap.appendChild(custom);
-
-  msgs.appendChild(wrap);
-  msgs.scrollTop = msgs.scrollHeight;
 }
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px';}
+function saveDraft(){addMsg('Draft saved — finish it anytime from the Dashboard.','ai');}
 
-/* ────────────────────────────────
-   PACKAGE SELECTION → fill brief
-──────────────────────────────── */
-function selectPackage(pkg, type, emoji) {
-  state.package = pkg;
-
-  // Save to history for learning
-  state.history.push({ type, pkgId: pkg.id, pkgName: pkg.name });
-
-  // Remove package list
-  const pl = document.getElementById('pkg-list');
-  if (pl) pl.remove();
-
-  addMsg(`${pkg.emoji} ${pkg.name}`, 'user');
-
-  showTyping(() => {
-    addMsg(`Done — I've built the full brief for <strong>${pkg.name}</strong>. Review it on the right, tweak anything you need, then submit.`, 'ai');
-    fillBrief(pkg, type, emoji);
-  });
-}
-
-function fillBrief(pkg, type, emoji) {
-  // Show fields, hide empty state
-  document.getElementById('brief-empty').style.display = 'none';
-  const fields = document.getElementById('brief-fields');
-  fields.style.display = 'flex';
-
-  // Package banner
-  document.getElementById('bf-pkg-banner').innerHTML = `
-    <div class="ra-pkg-selected-banner">
-      <div class="ra-pkg-selected-icon" style="background:${pkg.accent}22">
-        <span style="font-size:20px;position:relative;z-index:1">${pkg.emoji}</span>
-      </div>
-      <div>
-        <div class="ra-pkg-selected-name">${pkg.name}</div>
-        <div class="ra-pkg-selected-type">${type}</div>
-      </div>
-    </div>`;
-
-  document.getElementById('bf-type').innerHTML = `<span class="ra-field-pill" style="background:${pkg.accent}22;color:${pkg.accent}">${emoji} ${type}</span>`;
-  document.getElementById('bf-title').textContent = pkg.name;
-  document.getElementById('bf-format').textContent = pkg.format;
-  document.getElementById('bf-deliverables').textContent = pkg.deliverables;
-  document.getElementById('bf-desc').textContent = pkg.desc;
-  document.getElementById('bf-tone').textContent = pkg.tone;
-
-  const tagsEl = document.getElementById('bf-tags');
-  tagsEl.innerHTML = pkg.tags.map(t=>`<span class="ra-field-tag">${t}</span>`).join('');
-
-  // Status
-  const badge = document.getElementById('brief-badge');
-  badge.textContent = 'Ready';
-  badge.className = 'ra-brief-badge ready';
-
-  // Enable submit
-  document.getElementById('submit-btn').disabled = false;
-}
-
-/* ────────────────────────────────
-   SEND MESSAGE
-──────────────────────────────── */
-function sendMessage() {
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = ''; input.style.height = '';
-  addMsg(text, 'user');
-  showTyping(() => {
-    if (!state.type) {
-      addMsg('Got it. Which type of creative asset is this for? Pick one from the tiles above or tell me.', 'ai');
-    } else if (!state.package) {
-      addMsg(`I'll build a custom brief for that <strong>${state.type}</strong> request. Give me a moment…`, 'ai');
-      const custom = {
-        id:'custom', name: text.length > 60 ? text.slice(0,57)+'…' : text,
-        desc: text, format:'As specified', deliverables:'Final files + source',
-        tone:'To be discussed', tags:[state.type,'Custom'],
-        accent:state.typeEmoji ? '#2C3AFF' : '#2C3AFF', emoji: state.typeEmoji || '✏️'
-      };
-      fillBrief(custom, state.type, state.typeEmoji || '✏️');
-    } else {
-      addMsg(`Got it. I've noted that. Feel free to edit the brief panel directly or submit when ready.`, 'ai');
-    }
-  });
-}
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
-}
-
-/* ────────────────────────────────
-   ROLES
-──────────────────────────────── */
-function addRole(name, email, color) {
-  if (!state.roles.find(r => r.email === email)) {
-    state.roles.push({ name, email, color, initial: name[0], label: 'Collaborator' });
-    renderRoles();
+/* ── ROLES ── */
+function addRole(name,email,color){
+  if(!S.roles.find(r=>r.email===email)){
+    S.roles.push({name,email,color,initial:name[0],label:'Collaborator'});
+    const list=document.getElementById('roles-list');
+    const row=document.createElement('div');row.className='ra-roles-row';
+    row.innerHTML=`<div class="ra-role-av" style="background:${color}">${name[0]}</div><div style="flex:1"><div class="ra-role-name-el">${name}</div><div class="ra-role-lbl">Collaborator</div></div>`;
+    list.appendChild(row);
   }
   closeModal('roles-modal');
 }
+function filterRoles(q){document.querySelectorAll('#roles-options .ra-role-option').forEach(o=>{o.style.display=o.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';});}
 
-function renderRoles() {
-  document.getElementById('roles-list').innerHTML = state.roles.map(r =>
-    `<div class="ra-roles-row"><div class="ra-role-av" style="background:${r.color}">${r.initial}</div><div style="flex:1"><div class="ra-role-name">${r.name}</div><div class="ra-role-label">${r.label}</div></div></div>`
-  ).join('');
-}
+/* ── MODALS ── */
+function openModal(id){document.getElementById(id).classList.remove('hidden');}
+function closeModal(id){document.getElementById(id).classList.add('hidden');}
+document.querySelectorAll('.ra-modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.add('hidden');}));
 
-function filterRoles(q) {
-  document.querySelectorAll('#roles-options .ra-role-option').forEach(o => {
-    o.style.display = o.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
-  });
-}
-
-/* ────────────────────────────────
-   ASSETS
-──────────────────────────────── */
-function renderAssets() {
-  const grid = document.getElementById('assets-grid');
-  grid.innerHTML = state.assets.map((a,i) =>
-    `<div class="ra-asset-thumb" title="${a.name}"><img src="${a.src}" alt="${a.name}"></div>`
-  ).join('') +
-  `<button class="ra-asset-thumb ra-add-asset" onclick="openModal('upload-modal')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>`;
-}
-
-function handleFiles(files) {
-  Array.from(files).forEach(f => {
-    const r = new FileReader();
-    r.onload = ev => {
-      state.pendingFiles.push({ src: ev.target.result, name: f.name });
-      const prev = document.getElementById('upload-previews');
-      const img = document.createElement('img');
-      img.src = ev.target.result;
-      img.style.cssText = 'width:68px;height:68px;object-fit:cover;border-radius:8px;border:1px solid var(--ra-border)';
-      prev.appendChild(img);
-    };
-    r.readAsDataURL(f);
-  });
-}
-
-function confirmUpload() {
-  state.assets.push(...state.pendingFiles);
-  state.pendingFiles = [];
-  document.getElementById('upload-previews').innerHTML = '';
-  renderAssets();
-  closeModal('upload-modal');
-}
-
-function dragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
-function dragLeave() { document.getElementById('drop-zone').classList.remove('drag-over'); }
-function dropFile(e) { e.preventDefault(); dragLeave(); handleFiles(e.dataTransfer.files); }
-
-/* ────────────────────────────────
-   MODALS
-──────────────────────────────── */
-function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-document.querySelectorAll('.ra-modal-bg').forEach(m => m.addEventListener('click', e => { if(e.target===m)m.classList.add('hidden'); }));
-
-/* ────────────────────────────────
-   SUBMIT / SAVE
-──────────────────────────────── */
-function submitRequest() {
-  const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#111;stroke-width:2.8;stroke-linecap:round;fill:none"><polyline points="20 6 9 17 4 12"/></svg> Submitted!';
-  btn.style.background = 'var(--color-green)';
-  btn.style.color = '#111';
-  document.getElementById('brief-badge').textContent = 'Submitted';
-  document.getElementById('brief-badge').className = 'ra-brief-badge submitted';
-  addMsg('Your request is submitted! The team will pick it up shortly. Track progress on the <a href="index.html" style="color:var(--color-primary);font-weight:700">Dashboard</a>.', 'ai');
-}
-
-function saveDraft() {
-  addMsg('Draft saved — you can finish it anytime from the Dashboard.', 'ai');
-}
-
-/* ────────────────────────────────
-   THEME
-──────────────────────────────── */
-function toggleTheme() {
-  const w = document.getElementById('ra-wrap');
-  w.classList.toggle('light');
-  document.querySelector('.ra-theme-btn').textContent = w.classList.contains('light') ? '🌙' : '☀';
+/* ── THEME ── */
+function toggleTheme(){
+  const w=document.getElementById('ra-wrap');w.classList.toggle('light');
+  document.querySelector('.ra-theme-btn').textContent=w.classList.contains('light')?'🌙':'☀';
 }
 </script>
 </body>
