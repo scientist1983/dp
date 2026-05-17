@@ -247,11 +247,37 @@ body.col-resizing{cursor:col-resize;user-select:none}
 .ra-modal-close{width:26px;height:26px;border-radius:6px;border:1px solid var(--ra-border);background:transparent;cursor:pointer;color:var(--ra-muted);font-size:16px;line-height:1;transition:all .12s;display:flex;align-items:center;justify-content:center}
 .ra-modal-close:hover{background:var(--ra-hover);color:var(--ra-text)}
 .ra-modal-body{padding:18px 20px}
-.ra-full-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.ra-full-type-card{border:1px solid var(--ra-border);border-radius:11px;padding:14px 10px;cursor:pointer;transition:all .12s;text-align:center;background:var(--ra-hover);display:flex;flex-direction:column;align-items:center;gap:6px}
-.ra-full-type-card:hover{border-color:var(--color-primary);background:rgba(44,58,255,.08)}
-.ra-full-type-icon{font-size:22px}
-.ra-full-type-name{font-size:12px;font-weight:700;color:var(--ra-text)}
+/* ── Type picker modal (wide) ── */
+.ra-type-modal{max-width:900px;height:580px;display:flex;flex-direction:column}
+.ra-type-modal .ra-modal-hd{flex-shrink:0}
+.ra-type-search-bar{flex-shrink:0;padding:10px 20px;border-bottom:1px solid var(--ra-divider);display:flex;align-items:center;gap:10px}
+.ra-type-search-bar svg{width:16px;height:16px;stroke:var(--ra-muted);stroke-width:2;stroke-linecap:round;flex-shrink:0;fill:none}
+.ra-type-search-input{flex:1;background:transparent;border:none;outline:none;font-family:inherit;font-size:13px;color:var(--ra-text)}
+.ra-type-search-input::placeholder{color:var(--ra-muted)}
+.ra-type-layout{display:flex;flex:1;overflow:hidden}
+.ra-type-sidebar{width:200px;flex-shrink:0;border-right:1px solid var(--ra-divider);overflow-y:auto;padding:8px 0}
+.ra-type-sidebar::-webkit-scrollbar{width:0}
+.ra-type-cat{padding:8px 18px;font-size:13px;color:var(--ra-muted);cursor:pointer;border-radius:0;transition:all .1s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-type-cat:hover{color:var(--ra-text);background:var(--ra-hover)}
+.ra-type-cat.active{color:var(--ra-text);font-weight:700;background:var(--ra-hover)}
+.ra-type-grid-area{flex:1;overflow-y:auto;padding:14px 18px}
+.ra-type-grid-area::-webkit-scrollbar{width:4px}
+.ra-type-grid-area::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
+.ra-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ra-type-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--ra-border);border-radius:10px;cursor:pointer;transition:all .12s;user-select:none}
+.ra-type-item:hover{border-color:var(--color-primary);background:rgba(44,58,255,.06)}
+.ra-type-item.selected{border-color:var(--color-primary);background:rgba(44,58,255,.1)}
+.ra-type-check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--ra-border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.ra-type-item.selected .ra-type-check{background:var(--color-primary);border-color:var(--color-primary)}
+.ra-type-check svg{width:10px;height:10px;stroke:#fff;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;fill:none;display:none}
+.ra-type-item.selected .ra-type-check svg{display:block}
+.ra-type-item-name{font-size:12.5px;color:var(--ra-text);line-height:1.3}
+.ra-type-footer{flex-shrink:0;padding:12px 20px;border-top:1px solid var(--ra-divider);display:flex;align-items:center;justify-content:space-between}
+.ra-type-footer-label{font-size:12.5px;color:var(--ra-muted)}
+.ra-type-select-btn{padding:9px 22px;border-radius:10px;background:var(--color-primary);color:#fff;font-family:inherit;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:opacity .12s}
+.ra-type-select-btn:disabled{opacity:.35;cursor:not-allowed}
+.ra-type-select-btn:not(:disabled):hover{opacity:.85}
+.ra-type-no-results{grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--ra-muted);font-size:13px}
 .ra-roles-search{width:100%;padding:9px 14px;border-radius:10px;border:1px solid var(--ra-border);background:var(--ra-input);color:var(--ra-text);font-family:inherit;font-size:13px;outline:none;margin-bottom:12px;transition:border-color .12s}
 .ra-roles-search:focus{border-color:var(--color-primary)}
 .ra-roles-search::placeholder{color:var(--ra-muted)}
@@ -643,20 +669,24 @@ body.col-resizing{cursor:col-resize;user-select:none}
 
 <!-- MODALS -->
 <div class="ra-modal-bg hidden" id="type-modal">
-  <div class="ra-modal">
-    <div class="ra-modal-hd"><span class="ra-modal-title">All Request Types</span><button class="ra-modal-close" onclick="closeModal('type-modal')">×</button></div>
-    <div class="ra-modal-body">
-      <div class="ra-full-type-grid">
-        <div class="ra-full-type-card" onclick="selectType('Social Ads','📱');closeModal('type-modal')"><div class="ra-full-type-icon">📱</div><div class="ra-full-type-name">Social Ads</div></div>
-        <div class="ra-full-type-card" onclick="selectType('Logo','🎨');closeModal('type-modal')"><div class="ra-full-type-icon">🎨</div><div class="ra-full-type-name">Logo</div></div>
-        <div class="ra-full-type-card" onclick="selectType('Email','✉️');closeModal('type-modal')"><div class="ra-full-type-icon">✉️</div><div class="ra-full-type-name">Email</div></div>
-        <div class="ra-full-type-card" onclick="selectType('Video','🎬');closeModal('type-modal')"><div class="ra-full-type-icon">🎬</div><div class="ra-full-type-name">Video</div></div>
-        <div class="ra-full-type-card" onclick="selectType('Print','🖨️');closeModal('type-modal')"><div class="ra-full-type-icon">🖨️</div><div class="ra-full-type-name">Print</div></div>
-        <div class="ra-full-type-card" onclick="selectType('Illustration','✏️');closeModal('type-modal')"><div class="ra-full-type-icon">✏️</div><div class="ra-full-type-name">Illustration</div></div>
-        <div class="ra-full-type-card" onclick="selectType('Presentation','📊');closeModal('type-modal')"><div class="ra-full-type-icon">📊</div><div class="ra-full-type-name">Presentation</div></div>
-        <div class="ra-full-type-card" onclick="selectType('Web / UI','🖥️');closeModal('type-modal')"><div class="ra-full-type-icon">🖥️</div><div class="ra-full-type-name">Web / UI</div></div>
-        <div class="ra-full-type-card" onclick="selectType('Photo Edit','📸');closeModal('type-modal')"><div class="ra-full-type-icon">📸</div><div class="ra-full-type-name">Photo Edit</div></div>
+  <div class="ra-modal ra-type-modal">
+    <div class="ra-modal-hd">
+      <span class="ra-modal-title">Select request type</span>
+      <button class="ra-modal-close" onclick="closeModal('type-modal')">×</button>
+    </div>
+    <div class="ra-type-search-bar">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="ra-type-search-input" id="type-search" placeholder="Search request types…" oninput="filterTypeItems(this.value)">
+    </div>
+    <div class="ra-type-layout">
+      <div class="ra-type-sidebar" id="type-sidebar"></div>
+      <div class="ra-type-grid-area">
+        <div class="ra-type-grid" id="type-grid"></div>
       </div>
+    </div>
+    <div class="ra-type-footer">
+      <span class="ra-type-footer-label" id="type-footer-label">No type selected</span>
+      <button class="ra-type-select-btn" id="type-select-btn" disabled onclick="confirmTypeSelection()">Select type</button>
     </div>
   </div>
 </div>
@@ -1565,8 +1595,172 @@ function addRole(name,email,color){
 function filterRoles(q){document.querySelectorAll('#roles-options .ra-role-option').forEach(o=>{o.style.display=o.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';});}
 
 /* ── MODALS ── */
-function openModal(id){document.getElementById(id).classList.remove('hidden');}
+function openModal(id){
+  document.getElementById(id).classList.remove('hidden');
+  if(id==='type-modal')initTypeModal();
+}
 function closeModal(id){document.getElementById(id).classList.add('hidden');}
+
+/* ── TYPE PICKER MODAL ── */
+const TYPE_DATA=[
+  // Brand Identity
+  {name:'Primary logo design',       cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Secondary / Alternate logo', cat:'Brand Identity',         type:'Logo',         emoji:'🎨'},
+  {name:'Logo refresh',              cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Full rebrand',              cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Brand guideline (full)',    cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Brand guideline (lite)',    cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Color palette definition',  cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Typography system',         cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Iconography system',        cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Brand patterns',            cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Sub-brand creation',        cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Campaign brand identity',   cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Brand audit',               cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Logo usage rules',          cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Brand asset cleanup',       cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Brand color update',        cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  {name:'Font replacement',          cat:'Brand Identity',          type:'Logo',         emoji:'🎨'},
+  // Marketing & Advertising
+  {name:'Static social ad (single)', cat:'Marketing & Advertising', type:'Social Ads',   emoji:'📱'},
+  {name:'Static social ad set',      cat:'Marketing & Advertising', type:'Social Ads',   emoji:'📱'},
+  {name:'Paid ad copy',              cat:'Marketing & Advertising', type:'Social Ads',   emoji:'📱'},
+  {name:'Headline variations',       cat:'Marketing & Advertising', type:'Social Ads',   emoji:'📱'},
+  {name:'CTA variations',            cat:'Marketing & Advertising', type:'Social Ads',   emoji:'📱'},
+  {name:'Social media post graphic', cat:'Marketing & Advertising', type:'Social Ads',   emoji:'📱'},
+  {name:'Social media post copy',    cat:'Marketing & Advertising', type:'Social Ads',   emoji:'📱'},
+  {name:'Email marketing campaign',  cat:'Marketing & Advertising', type:'Email',        emoji:'✉️'},
+  {name:'Newsletter design',         cat:'Marketing & Advertising', type:'Email',        emoji:'✉️'},
+  {name:'Display banner ad',         cat:'Marketing & Advertising', type:'Social Ads',   emoji:'📱'},
+  {name:'Flyer',                     cat:'Marketing & Advertising', type:'Print',        emoji:'🖨️'},
+  {name:'Brochure',                  cat:'Marketing & Advertising', type:'Print',        emoji:'🖨️'},
+  // Digital & Web
+  {name:'Website redesign',          cat:'Digital & Web',           type:'Web / UI',     emoji:'🖥️'},
+  {name:'Landing page',              cat:'Digital & Web',           type:'Web / UI',     emoji:'🖥️'},
+  {name:'UI / UX mockup',            cat:'Digital & Web',           type:'Web / UI',     emoji:'🖥️'},
+  {name:'App design',                cat:'Digital & Web',           type:'Web / UI',     emoji:'🖥️'},
+  {name:'Icon set',                  cat:'Digital & Web',           type:'Web / UI',     emoji:'🖥️'},
+  {name:'Web illustration',          cat:'Digital & Web',           type:'Illustration', emoji:'✏️'},
+  {name:'Favicon & app icon',        cat:'Digital & Web',           type:'Web / UI',     emoji:'🖥️'},
+  // Ebooks & Digital Report
+  {name:'Ebook design',              cat:'Ebooks & Digital Report',  type:'Presentation', emoji:'📊'},
+  {name:'Digital report',            cat:'Ebooks & Digital Report',  type:'Presentation', emoji:'📊'},
+  {name:'White paper',               cat:'Ebooks & Digital Report',  type:'Presentation', emoji:'📊'},
+  {name:'Case study',                cat:'Ebooks & Digital Report',  type:'Presentation', emoji:'📊'},
+  {name:'Research summary',          cat:'Ebooks & Digital Report',  type:'Presentation', emoji:'📊'},
+  // Motion & Video
+  {name:'Social video',              cat:'Motion & Video',           type:'Video',        emoji:'🎬'},
+  {name:'Explainer video',           cat:'Motion & Video',           type:'Video',        emoji:'🎬'},
+  {name:'Animation',                 cat:'Motion & Video',           type:'Video',        emoji:'🎬'},
+  {name:'Video thumbnail',           cat:'Motion & Video',           type:'Video',        emoji:'🎬'},
+  {name:'Motion graphics',           cat:'Motion & Video',           type:'Video',        emoji:'🎬'},
+  {name:'GIF / Cinemagraph',         cat:'Motion & Video',           type:'Video',        emoji:'🎬'},
+  // Apparel & Merchandise
+  {name:'T-shirt design',            cat:'Apparel & Merchandise',    type:'Print',        emoji:'🖨️'},
+  {name:'Merch design',              cat:'Apparel & Merchandise',    type:'Print',        emoji:'🖨️'},
+  {name:'Product label',             cat:'Apparel & Merchandise',    type:'Print',        emoji:'🖨️'},
+  {name:'Hat / cap design',          cat:'Apparel & Merchandise',    type:'Print',        emoji:'🖨️'},
+  // Product & Packaging
+  {name:'Product packaging',         cat:'Product & Packaging',      type:'Print',        emoji:'🖨️'},
+  {name:'Label design',              cat:'Product & Packaging',      type:'Print',        emoji:'🖨️'},
+  {name:'Box design',                cat:'Product & Packaging',      type:'Print',        emoji:'🖨️'},
+  {name:'Hang tag',                  cat:'Product & Packaging',      type:'Print',        emoji:'🖨️'},
+  // Corporate & Internal
+  {name:'Presentation deck',         cat:'Corporate & Internal',     type:'Presentation', emoji:'📊'},
+  {name:'Report design',             cat:'Corporate & Internal',     type:'Presentation', emoji:'📊'},
+  {name:'Internal newsletter',       cat:'Corporate & Internal',     type:'Email',        emoji:'✉️'},
+  {name:'Org chart',                 cat:'Corporate & Internal',     type:'Illustration', emoji:'✏️'},
+  {name:'Certificate design',        cat:'Corporate & Internal',     type:'Print',        emoji:'🖨️'},
+  // Environmental & Event
+  {name:'Event banner',              cat:'Environmental & Event',    type:'Print',        emoji:'🖨️'},
+  {name:'Signage',                   cat:'Environmental & Event',    type:'Print',        emoji:'🖨️'},
+  {name:'Trade show materials',      cat:'Environmental & Event',    type:'Print',        emoji:'🖨️'},
+  {name:'Step and repeat',           cat:'Environmental & Event',    type:'Print',        emoji:'🖨️'},
+  // Illustration & Artwork
+  {name:'Custom illustration',       cat:'Illustration & Artwork',   type:'Illustration', emoji:'✏️'},
+  {name:'Character design',          cat:'Illustration & Artwork',   type:'Illustration', emoji:'✏️'},
+  {name:'Infographic',               cat:'Illustration & Artwork',   type:'Illustration', emoji:'✏️'},
+  {name:'Icon design',               cat:'Illustration & Artwork',   type:'Illustration', emoji:'✏️'},
+  {name:'Pattern design',            cat:'Illustration & Artwork',   type:'Illustration', emoji:'✏️'},
+  // Presentations
+  {name:'Pitch deck',                cat:'Presentations',            type:'Presentation', emoji:'📊'},
+  {name:'Sales deck',                cat:'Presentations',            type:'Presentation', emoji:'📊'},
+  {name:'Investor presentation',     cat:'Presentations',            type:'Presentation', emoji:'📊'},
+  {name:'Template design',           cat:'Presentations',            type:'Presentation', emoji:'📊'},
+  {name:'Board deck',                cat:'Presentations',            type:'Presentation', emoji:'📊'},
+  // Print
+  {name:'Business card',             cat:'Print',                    type:'Print',        emoji:'🖨️'},
+  {name:'Letterhead',                cat:'Print',                    type:'Print',        emoji:'🖨️'},
+  {name:'Poster',                    cat:'Print',                    type:'Print',        emoji:'🖨️'},
+  {name:'Direct mail piece',         cat:'Print',                    type:'Print',        emoji:'🖨️'},
+  {name:'Menu design',               cat:'Print',                    type:'Print',        emoji:'🖨️'},
+  {name:'Magazine / book layout',    cat:'Print',                    type:'Print',        emoji:'🖨️'},
+];
+
+let _typeSelected=null;
+let _typeActiveCat='All';
+
+function initTypeModal(){
+  _typeSelected=null;
+  _typeActiveCat='All';
+  document.getElementById('type-search').value='';
+  document.getElementById('type-footer-label').textContent='No type selected';
+  document.getElementById('type-select-btn').disabled=true;
+  buildTypeSidebar();
+  renderTypeGrid(TYPE_DATA);
+}
+
+function buildTypeSidebar(){
+  const cats=['All',...[...new Set(TYPE_DATA.map(t=>t.cat))]];
+  const sidebar=document.getElementById('type-sidebar');
+  sidebar.innerHTML=cats.map(c=>`<div class="ra-type-cat${c===_typeActiveCat?' active':''}" onclick="setTypeCat('${c}')">${c}</div>`).join('');
+}
+
+function setTypeCat(cat){
+  _typeActiveCat=cat;
+  document.getElementById('type-search').value='';
+  buildTypeSidebar();
+  const items=cat==='All'?TYPE_DATA:TYPE_DATA.filter(t=>t.cat===cat);
+  renderTypeGrid(items);
+}
+
+function filterTypeItems(q){
+  const items=q?TYPE_DATA.filter(t=>t.name.toLowerCase().includes(q.toLowerCase())):
+    (_typeActiveCat==='All'?TYPE_DATA:TYPE_DATA.filter(t=>t.cat===_typeActiveCat));
+  renderTypeGrid(items);
+}
+
+function renderTypeGrid(items){
+  const grid=document.getElementById('type-grid');
+  if(!items.length){
+    grid.innerHTML='<div class="ra-type-no-results">No results found</div>';
+    return;
+  }
+  grid.innerHTML=items.map(t=>{
+    const sel=_typeSelected&&_typeSelected.name===t.name;
+    return `<div class="ra-type-item${sel?' selected':''}" onclick="pickTypeItem(${JSON.stringify(t).replace(/"/g,'&quot;')})">
+      <div class="ra-type-check"><svg viewBox="0 0 12 12"><polyline points="1.5 6 4.5 9 10.5 3"/></svg></div>
+      <span class="ra-type-item-name">${t.name}</span>
+    </div>`;
+  }).join('');
+}
+
+function pickTypeItem(t){
+  _typeSelected=(_typeSelected&&_typeSelected.name===t.name)?null:t;
+  const label=document.getElementById('type-footer-label');
+  const btn=document.getElementById('type-select-btn');
+  label.textContent=_typeSelected?`1 type selected — ${_typeSelected.name}`:'No type selected';
+  btn.disabled=!_typeSelected;
+  // Re-render to update checked state
+  const q=document.getElementById('type-search').value;
+  filterTypeItems(q);
+}
+
+function confirmTypeSelection(){
+  if(!_typeSelected)return;
+  selectType(_typeSelected.type,_typeSelected.emoji);
+  closeModal('type-modal');
+}
 document.querySelectorAll('.ra-modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.add('hidden');}));
 
 /* ── RESIZE ── */
