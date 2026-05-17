@@ -445,9 +445,11 @@ body.col-resizing{cursor:col-resize;user-select:none}
 .ra-nav-item{padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .1s;margin-bottom:2px}
 .ra-nav-item:hover{background:var(--ra-hover)}
 .ra-nav-item.active{background:var(--ra-active)}
-.ra-nav-item-title{font-size:12.5px;font-weight:500;color:var(--ra-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-nav-item-title{font-size:12.5px;font-weight:500;color:var(--ra-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px}
 .ra-nav-item-time{font-size:11px;color:var(--ra-muted);margin-top:2px}
 .ra-nav-empty{padding:24px 14px;font-size:12px;color:var(--ra-muted);text-align:center}
+/* Unread delivery indicator */
+.ra-nav-item.unread .ra-nav-item-title::after{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--color-primary);flex-shrink:0}
 
 /* Request detail panel inside aside */
 .ra-req-detail{display:none;flex-direction:column;flex:1;overflow:hidden}
@@ -1041,9 +1043,41 @@ function fillBrief(pkg,type,emoji){
 }
 function set(id,text){document.getElementById(id).textContent=text;}
 
+/* ── BACKGROUND CHAT DELIVERY ── */
+// Deliver content to a specific chat even if the user has switched to a different one.
+// Does a silent synchronous DOM swap: swap to target, run fn(), save, swap back.
+function bgDeliverToChat(targetChatId, fn){
+  const returnId=S.activeChatId;
+  saveCurrentChat(); // snapshot the chat the user is currently viewing
+  const target=S.chats.find(c=>c.id===targetChatId);
+  if(!target){fn();return;} // fallback: just run in current chat
+  // Swap to target chat context
+  S.activeChatId=targetChatId;
+  msgs().innerHTML=target.html;
+  restoreBriefState(target.brief);
+  // Deliver (no typing animation — synchronous injection)
+  fn();
+  // Save the target chat with its new content
+  saveCurrentChat();
+  // Mark the sidebar item as having new content
+  const navItem=document.querySelector(`[onclick="loadChat('${targetChatId}')"]`);
+  if(navItem)navItem.classList.add('unread');
+  // Swap back to what the user was looking at
+  const ret=S.chats.find(c=>c.id===returnId);
+  if(ret){
+    S.activeChatId=returnId;
+    msgs().innerHTML=ret.html;
+    restoreBriefState(ret.brief);
+  }
+  renderNavList();
+}
+
 /* ── SUBMIT ── */
 function submitRequest(){
   addMsg('Submit Request ✓','user');
+  // Capture the chat this request belongs to — delivery must always come back here
+  const deliverChatId=S.activeChatId||('chat_'+Date.now());
+  if(!S.activeChatId)S.activeChatId=deliverChatId;
   // Save to dashboard
   S._reqId='req_'+Date.now();
   const dd=new Date();dd.setDate(dd.getDate()+7);
@@ -1058,11 +1092,23 @@ function submitRequest(){
   document.getElementById('brief-workflows-section').classList.remove('hidden');
   renderBriefAssets();
   showTyping(()=>{
-    addMsg('Brief locked and sent to your designer 🔒 Sit tight — we\'ll notify you when assets are ready.','ai');
-    // Designer responds after delay
+    // "Brief locked" — deliver to the originating chat
+    if(S.activeChatId===deliverChatId){
+      addMsg('Brief locked and sent to your designer 🔒 Sit tight — we\'ll notify you when assets are ready.','ai');
+    } else {
+      bgDeliverToChat(deliverChatId,()=>addMsg('Brief locked and sent to your designer 🔒 Sit tight — we\'ll notify you when assets are ready.','ai'));
+    }
+    // Asset delivery — check again at delivery time
     showTyping(()=>{
-      addMsg('Your designer nailed it 🎉 Here are the assets from your brief — have a look! Tap any asset to open it full screen, annotate feedback, or just approve / reject inline.','ai');
-      showAssetReview();
+      if(S.activeChatId===deliverChatId){
+        addMsg('Your designer nailed it 🎉 Here are the assets from your brief — have a look! Tap any asset to open it full screen, annotate feedback, or just approve / reject inline.','ai');
+        showAssetReview();
+      } else {
+        bgDeliverToChat(deliverChatId,()=>{
+          addMsg('Your designer nailed it 🎉 Here are the assets from your brief — have a look! Tap any asset to open it full screen, annotate feedback, or just approve / reject inline.','ai');
+          showAssetReview();
+        });
+      }
     },2200);
   });
 }
@@ -1124,27 +1170,37 @@ function requestChanges(){
 
 /* ── PROJECT ASSET DELIVERY ── */
 function scheduleProjectDelivery(idx){
-  // Stagger: each new request gets a random 5-9s delay after submission
+  // Capture the chat this project belongs to before any delay
+  const deliverChatId=S.activeChatId||('chat_'+Date.now());
+  if(!S.activeChatId)S.activeChatId=deliverChatId;
   const delay=5000+Math.floor(Math.random()*4000);
-  setTimeout(()=>deliverProjectAssets(idx),delay);
+  setTimeout(()=>deliverProjectAssets(idx,deliverChatId),delay);
 }
 
-function deliverProjectAssets(idx){
-  const r=S.project[idx];
-  if(!r||r.status==='approved')return;
-  r.status='review';
-  if(r._reqId)dbUpdateReq(r._reqId,{status:'assets-ready'});
-  r.deliverables=[
-    {id:'d1',name:`${r.title} — Feed Ad`,label:'Feed',ratio:'1:1',accent:r.accent},
-    {id:'d2',name:`${r.title} — Story Ad`,label:'Story',ratio:'9:16',accent:r.accent},
-    {id:'d3',name:`${r.title} — Landscape`,label:'Landscape',ratio:'16:9',accent:r.accent},
-  ];
-  r.approvals={};
-  renderProjectPanel();
-  showTyping(()=>{
+function deliverProjectAssets(idx,deliverChatId){
+  // doDeliver runs in the correct chat context (active or background)
+  const doDeliver=()=>{
+    const r=S.project[idx]; // re-read after any potential restoreBriefState
+    if(!r||r.status==='approved')return;
+    r.status='review';
+    if(r._reqId)dbUpdateReq(r._reqId,{status:'assets-ready'});
+    r.deliverables=[
+      {id:'d1',name:`${r.title} — Feed Ad`,label:'Feed',ratio:'1:1',accent:r.accent},
+      {id:'d2',name:`${r.title} — Story Ad`,label:'Story',ratio:'9:16',accent:r.accent},
+      {id:'d3',name:`${r.title} — Landscape`,label:'Landscape',ratio:'16:9',accent:r.accent},
+    ];
+    r.approvals={};
+    renderProjectPanel();
     addMsg(`Your designer delivered assets for <strong>${r.title}</strong> 🎉 Tap any to open full screen, or approve all inline.`,'ai');
     showProjectAssetReview(idx);
-  },600);
+  };
+  if(!deliverChatId||S.activeChatId===deliverChatId){
+    // Still on the originating chat — show typing animation then deliver
+    showTyping(doDeliver,600);
+  } else {
+    // User switched away — deliver silently to the correct background chat
+    bgDeliverToChat(deliverChatId,doDeliver);
+  }
 }
 
 function showProjectAssetReview(idx){
@@ -1924,6 +1980,8 @@ function saveCurrentChat(){
 }
 
 function renderNavList(filter){
+  // Persist to localStorage every time list changes
+  try{localStorage.setItem('dp_chats',JSON.stringify(S.chats));}catch(e){}
   const list=document.getElementById('nav-list');
   if(!list)return;
   const q=(filter||'').toLowerCase();
@@ -1933,7 +1991,7 @@ function renderNavList(filter){
     return;
   }
   list.innerHTML=items.map(c=>`
-    <div class="ra-nav-item${c.id===S.activeChatId?' active':''}" onclick="loadChat('${c.id}')">
+    <div class="ra-nav-item${c.id===S.activeChatId?' active':''}${c.unread?' unread':''}" onclick="loadChat('${c.id}')">
       <div class="ra-nav-item-title">${c.title}</div>
       <div class="ra-nav-item-time">${navTimeLabel(c.timestamp)}</div>
     </div>`).join('');
@@ -1945,14 +2003,24 @@ function loadChat(id){
   if(!chat)return;
   S.activeChatId=id;
   S._chatSaved=true;
+  chat.unread=false; // clear unread marker
   msgs().innerHTML=chat.html;
   // Restore brief panel state for this chat
   restoreBriefState(chat.brief);
-  // Redraw chat asset thumbnails
+  // Redraw single-request asset thumbnails
   S.deliverables.forEach((_,i)=>setTimeout(()=>{
     const c=document.getElementById(`athumb-${i}`);
     if(c)drawThumb(c,S.deliverables[i],48,48);
   },50*i));
+  // Redraw project asset thumbnails (may have been delivered in background)
+  S.project.forEach((r,ri)=>{
+    if(r.deliverables){
+      r.deliverables.forEach((d,di)=>setTimeout(()=>{
+        const c=document.getElementById(`pthumb-${ri}-${di}`);
+        if(c)drawThumb(c,d,48,48);
+      },50*(ri*3+di)));
+    }
+  });
   scrollChat();
   renderNavList();
 }
@@ -2051,6 +2119,14 @@ function toggleTheme(){
   const w=document.getElementById('ra-wrap');w.classList.toggle('light');
   document.querySelector('.ra-theme-btn').textContent=w.classList.contains('light')?'🌙':'☀';
 }
+
+/* ── INIT: restore chat history from localStorage ── */
+(function initChats(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('dp_chats')||'[]');
+    if(saved.length){S.chats=saved;renderNavList();}
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
