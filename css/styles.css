@@ -122,7 +122,7 @@ body:has(#ra-wrap){overflow:hidden}
 .db-view-all:hover{color:var(--db-text)}
 
 /* Stat boxes */
-.db-stat-row{display:flex;gap:12px;padding:16px 20px;border-bottom:1px solid var(--db-divider)}
+.db-stat-row{display:flex;gap:12px;padding:16px 20px;border-bottom:1px solid var(--db-divider);min-width:0}
 .db-stat-box{flex:1;border:1px solid var(--db-border);border-radius:12px;padding:14px 16px;position:relative;cursor:pointer;background:var(--db-hover)}
 #db-wrap:not(.light) .db-stat-box.warn{background:rgba(100,50,0,.35);border-color:rgba(160,90,0,.3)}
 #db-wrap.light .db-stat-box.warn{background:#FFF8EE;border-color:#FDE68A}
@@ -137,7 +137,7 @@ body:has(#ra-wrap){overflow:hidden}
 .db-table tr:last-child td{border-bottom:none}
 .db-table tbody tr{transition:background .1s;cursor:pointer}
 .db-table tbody tr:hover td{background:var(--db-hover)}
-.db-req-thumb{width:36px;height:36px;border-radius:8px;flex-shrink:0}
+.db-req-thumb{width:36px;height:36px;border-radius:8px;flex-shrink:0;display:block}
 .db-req-name{font-size:13.5px;font-weight:500;color:var(--db-text);margin-bottom:2px}
 .db-req-tag{font-size:11.5px;color:var(--color-primary);cursor:pointer}
 .db-unassigned{display:flex;align-items:center;gap:5px;color:var(--db-muted);font-size:13px}
@@ -150,7 +150,7 @@ body:has(#ra-wrap){overflow:hidden}
 .db-progress-fill{height:100%;background:var(--color-primary);border-radius:3px}
 
 /* Right cards */
-.db-right-card{background:var(--db-card);border:1px solid var(--db-border);border-radius:14px;padding:16px 18px}
+.db-right-card{background:var(--db-card);border:1px solid var(--db-border);border-radius:14px;padding:16px 18px;overflow:hidden}
 .db-rc-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .db-rc-title{font-size:14px;font-weight:700;color:var(--db-text)}
 .db-rc-action{font-size:13px;color:var(--db-muted);cursor:pointer;transition:color .12s}
@@ -199,7 +199,7 @@ body:has(#ra-wrap){overflow:hidden}
 /* "+N more" overflow hint */
 .db-tag-more{font-size:11px;color:var(--db-muted);align-self:center}
 /* Chart canvas */
-.db-chart-canvas{width:100%;height:110px;display:block}
+.db-chart-canvas{width:100%;max-width:100%;height:110px;display:block}
 /* Small variant for rc-action */
 .db-rc-action-sm{font-size:12px}
 
