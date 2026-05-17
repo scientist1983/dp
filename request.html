@@ -1820,16 +1820,104 @@ function navTimeLabel(ts){
   const d=new Date(ts);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
 }
 
+function saveBriefState(){
+  const g=id=>document.getElementById(id);
+  return {
+    // Badge + button
+    badgeText:g('brief-badge').textContent,
+    badgeClass:g('brief-badge').className,
+    submitDisabled:g('submit-btn').disabled,
+    submitHTML:g('submit-btn').innerHTML,
+    submitStyle:g('submit-btn').style.cssText,
+    // Section visibility
+    sectionsDisplay:g('brief-sections').style.display,
+    emptyDisplay:g('brief-empty').style.display,
+    lockedHidden:g('brief-locked').classList.contains('hidden'),
+    assetsHidden:g('brief-assets-section').classList.contains('hidden'),
+    workflowsHidden:g('brief-workflows-section').classList.contains('hidden'),
+    // Brief body / header / footer (hidden in project mode)
+    briefBodyDisplay:g('brief-body').style.display,
+    briefHdDisplay:document.querySelector('.ra-brief-hd').style.display,
+    briefFooterDisplay:document.querySelector('.ra-brief-footer').style.display,
+    // Project panel
+    projectPanelDisplay:g('project-panel').style.display,
+    projectPanelHTML:g('project-panel').innerHTML,
+    // Fields
+    title:g('bf-title').textContent,
+    reqType:g('bf-req-type').textContent,
+    sizes:g('bf-sizes').textContent,
+    formats:g('bf-formats').textContent,
+    channels:g('bf-channels').textContent,
+    audience:g('bf-audience').textContent,
+    desc:g('bf-desc').textContent,
+    copyText:g('bf-copy').value,
+    dueDate:g('bf-due-date').value,
+    brandProfile:g('bf-brand-profile').textContent,
+    visualStyle:g('bf-visual-style').textContent,
+    avoid:g('bf-avoid').textContent,
+    references:g('bf-references').textContent,
+    // Relevant S state
+    type:S.type,typeEmoji:S.typeEmoji,pkg:S.pkg,
+    deliverables:JSON.parse(JSON.stringify(S.deliverables||[])),
+    approvals:{...S.approvals},
+    project:JSON.parse(JSON.stringify(S.project||[])),
+    projectName:S.projectName,
+    _reqId:S._reqId,_projId:S._projId
+  };
+}
+
+function restoreBriefState(bs){
+  if(!bs)return;
+  const g=id=>document.getElementById(id);
+  // Badge + button
+  g('brief-badge').textContent=bs.badgeText||'Draft';
+  g('brief-badge').className=bs.badgeClass||'ra-brief-badge draft';
+  const btn=g('submit-btn');
+  btn.disabled=bs.submitDisabled;
+  btn.innerHTML=bs.submitHTML||'Submit Request';
+  btn.style.cssText=bs.submitStyle||'';
+  // Section visibility
+  g('brief-sections').style.display=bs.sectionsDisplay||'none';
+  g('brief-empty').style.display=bs.emptyDisplay||'';
+  g('brief-locked').classList.toggle('hidden',bs.lockedHidden!==false);
+  g('brief-assets-section').classList.toggle('hidden',bs.assetsHidden!==false);
+  g('brief-workflows-section').classList.toggle('hidden',bs.workflowsHidden!==false);
+  // Panel visibility
+  g('brief-body').style.display=bs.briefBodyDisplay||'';
+  document.querySelector('.ra-brief-hd').style.display=bs.briefHdDisplay||'';
+  document.querySelector('.ra-brief-footer').style.display=bs.briefFooterDisplay||'';
+  g('project-panel').style.display=bs.projectPanelDisplay||'none';
+  if(bs.projectPanelHTML)g('project-panel').innerHTML=bs.projectPanelHTML;
+  g('req-detail-panel').style.display='none';
+  // Fields
+  set('bf-title',bs.title||'');set('bf-req-type',bs.reqType||'');
+  set('bf-sizes',bs.sizes||'');set('bf-formats',bs.formats||'');
+  set('bf-channels',bs.channels||'');set('bf-audience',bs.audience||'');
+  set('bf-desc',bs.desc||'');
+  g('bf-copy').value=bs.copyText||'';
+  g('bf-due-date').value=bs.dueDate||'';
+  set('bf-brand-profile',bs.brandProfile||'');set('bf-visual-style',bs.visualStyle||'');
+  set('bf-avoid',bs.avoid||'');set('bf-references',bs.references||'');
+  // S state
+  S.type=bs.type||null;S.typeEmoji=bs.typeEmoji||null;S.pkg=bs.pkg||null;
+  S.deliverables=bs.deliverables||[];S.approvals=bs.approvals||{};
+  S.project=bs.project||[];S.projectName=bs.projectName||'New Project';
+  S._reqId=bs._reqId||null;S._projId=bs._projId||null;
+  // Redraw brief asset thumbnails if present
+  S.deliverables.forEach((_,i)=>setTimeout(()=>{
+    const c=g(`bthumb-${i}`);if(c)drawThumb(c,S.deliverables[i],36,36);
+  },40*i));
+}
+
 function saveCurrentChat(){
   const el=msgs();
   if(!el||!el.children.length)return;
-  // Derive title from first user bubble text
   const firstUser=el.querySelector('.ra-msg.user .ra-bubble');
   const raw=firstUser?firstUser.textContent.trim():'New conversation';
   const title=raw.length>40?raw.slice(0,40)+'…':raw;
   if(!S.activeChatId)S.activeChatId='chat_'+Date.now();
   const existing=S.chats.find(c=>c.id===S.activeChatId);
-  const snap={id:S.activeChatId,title,html:el.innerHTML,timestamp:Date.now()};
+  const snap={id:S.activeChatId,title,html:el.innerHTML,brief:saveBriefState(),timestamp:Date.now()};
   if(existing)Object.assign(existing,snap);
   else S.chats.unshift(snap);
   renderNavList();
@@ -1856,14 +1944,42 @@ function loadChat(id){
   const chat=S.chats.find(c=>c.id===id);
   if(!chat)return;
   S.activeChatId=id;
+  S._chatSaved=true;
   msgs().innerHTML=chat.html;
-  // Re-draw any canvases that were in the restored HTML
+  // Restore brief panel state for this chat
+  restoreBriefState(chat.brief);
+  // Redraw chat asset thumbnails
   S.deliverables.forEach((_,i)=>setTimeout(()=>{
     const c=document.getElementById(`athumb-${i}`);
     if(c)drawThumb(c,S.deliverables[i],48,48);
-  },50));
+  },50*i));
   scrollChat();
   renderNavList();
+}
+
+function resetBriefPanel(){
+  const g=id=>document.getElementById(id);
+  g('brief-empty').style.display='';
+  g('brief-sections').style.display='none';
+  g('brief-badge').textContent='Draft';
+  g('brief-badge').className='ra-brief-badge draft';
+  const btn=g('submit-btn');
+  btn.disabled=true;btn.style.cssText='';
+  btn.innerHTML='<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Submit Request';
+  g('brief-locked').classList.add('hidden');
+  g('brief-assets-section').classList.add('hidden');
+  g('brief-workflows-section').classList.add('hidden');
+  g('project-panel').style.display='none';
+  g('req-detail-panel').style.display='none';
+  g('brief-body').style.display='';
+  document.querySelector('.ra-brief-hd').style.display='';
+  document.querySelector('.ra-brief-footer').style.display='';
+  // Clear all brief fields
+  ['bf-title','bf-req-type','bf-sizes','bf-formats','bf-channels','bf-audience',
+   'bf-desc','bf-brand-profile','bf-visual-style','bf-avoid','bf-references']
+    .forEach(id=>{const el=g(id);if(el)el.textContent='';});
+  g('bf-copy').value='';
+  g('bf-due-date').value='';
 }
 
 function startNewChat(){
@@ -1897,23 +2013,8 @@ function startNewChat(){
   }
   const wb=document.getElementById('welcome-block');
   if(wb)wb.style.display='';
-  // Reset brief panel
-  document.getElementById('brief-empty').style.display='';
-  document.getElementById('brief-sections').style.display='none';
-  document.getElementById('brief-badge').textContent='Draft';
-  document.getElementById('brief-badge').className='ra-brief-badge draft';
-  document.getElementById('submit-btn').disabled=true;
-  document.getElementById('submit-btn').style.cssText='';
-  document.getElementById('submit-btn').innerHTML='<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Submit Request';
-  document.getElementById('brief-locked').classList.add('hidden');
-  document.getElementById('brief-assets-section').classList.add('hidden');
-  document.getElementById('brief-workflows-section').classList.add('hidden');
-  // Hide project panel if visible
-  document.getElementById('project-panel').style.display='none';
-  document.getElementById('req-detail-panel').style.display='none';
-  document.getElementById('brief-body').style.display='';
-  document.querySelector('.ra-brief-hd').style.display='';
-  document.querySelector('.ra-brief-footer').style.display='';
+  // Reset brief panel to empty state
+  resetBriefPanel();
   scrollChat();
   renderNavList();
 }
