@@ -1875,6 +1875,11 @@ function startNewChat(){
   S.deliverables=[];S.approvals={};S.fsPins=[];
   S.project=[];S.projectName='New Project';
   S._reqId=null;S._projId=null;
+  // Detach picker BEFORE wiping innerHTML so it isn't destroyed
+  const picker=document.getElementById('type-picker');
+  if(picker)picker.remove();
+  // Reset picker tile selection state
+  if(picker)picker.querySelectorAll('.ra-type-tile').forEach(t=>t.classList.remove('selected'));
   // Restore fresh welcome screen
   const el=msgs();
   el.innerHTML=`
@@ -1885,9 +1890,13 @@ function startNewChat(){
       </div>
       <div class="ra-speech">To get started choose a request type below — or describe what you need in the box.</div>
     </div>`;
-  // Re-insert type picker
-  const picker=document.getElementById('type-picker');
-  if(picker)el.appendChild(picker);
+  // Re-attach picker and restore its visibility
+  if(picker){
+    picker.style.display='';
+    el.appendChild(picker);
+  }
+  const wb=document.getElementById('welcome-block');
+  if(wb)wb.style.display='';
   // Reset brief panel
   document.getElementById('brief-empty').style.display='';
   document.getElementById('brief-sections').style.display='none';
