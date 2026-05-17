@@ -378,6 +378,9 @@ body.col-resizing{cursor:col-resize;user-select:none}
 .ra-proj-req-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:9999px;flex-shrink:0}
 .ra-proj-req-status.sent{background:rgba(113,221,140,.15);color:var(--color-green)}
 .ra-proj-req-status.draft{background:rgba(44,58,255,.15);color:var(--color-primary)}
+.ra-proj-req-status.review{background:rgba(255,181,91,.18);color:#E5A352;animation:pulseReview 2s ease-in-out infinite}
+.ra-proj-req-status.approved{background:rgba(113,221,140,.25);color:var(--color-green)}
+@keyframes pulseReview{0%,100%{opacity:1}50%{opacity:.6}}
 .ra-proj-req-chevron{width:16px;height:16px;flex-shrink:0;stroke:var(--ra-muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;fill:none;transition:transform .18s}
 .ra-proj-req.expanded .ra-proj-req-chevron{transform:rotate(180deg)}
 .ra-proj-req-body{display:none;padding:0 12px 12px;border-top:1px solid var(--ra-border)}
@@ -405,6 +408,8 @@ body.col-resizing{cursor:col-resize;user-select:none}
 .ra-req-detail-title{font-size:14px;font-weight:700;color:var(--ra-text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ra-req-detail-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:9999px;flex-shrink:0}
 .ra-req-detail-status.sent{background:rgba(113,221,140,.15);color:var(--color-green)}
+.ra-req-detail-status.review{background:rgba(255,181,91,.18);color:#E5A352}
+.ra-req-detail-status.approved{background:rgba(113,221,140,.25);color:var(--color-green)}
 .ra-req-detail-body{flex:1;overflow-y:auto;padding:12px 14px}
 .ra-req-detail-body::-webkit-scrollbar{width:3px}
 .ra-req-detail-body::-webkit-scrollbar-thumb{background:var(--ra-border);border-radius:2px}
@@ -909,8 +914,10 @@ function submitToProject(){
     dueDate: dd.toISOString().slice(0,10),
     desc: S.pkg?.desc||''
   };
+  const projIdx=S.project.length;
   S.project.push(entry);
   renderProjectPanel();
+  scheduleProjectDelivery(projIdx);
   // Replace the submit button with a sent confirmation
   const btn=document.querySelector('.ra-brc-submit');
   if(btn){btn.disabled=true;btn.style.background='var(--color-green)';btn.style.color='#111';btn.innerHTML='✓ Added to project';}
@@ -1024,6 +1031,83 @@ function requestChanges(){
   showTyping(()=>addMsg('No problem — annotate the specific changes on each asset using the fullscreen viewer, then tap "Send notes to designer".','ai'),600);
 }
 
+/* ── PROJECT ASSET DELIVERY ── */
+function scheduleProjectDelivery(idx){
+  // Stagger: each new request gets a random 5-9s delay after submission
+  const delay=5000+Math.floor(Math.random()*4000);
+  setTimeout(()=>deliverProjectAssets(idx),delay);
+}
+
+function deliverProjectAssets(idx){
+  const r=S.project[idx];
+  if(!r||r.status==='approved')return;
+  r.status='review';
+  r.deliverables=[
+    {id:'d1',name:`${r.title} — Feed Ad`,label:'Feed',ratio:'1:1',accent:r.accent},
+    {id:'d2',name:`${r.title} — Story Ad`,label:'Story',ratio:'9:16',accent:r.accent},
+    {id:'d3',name:`${r.title} — Landscape`,label:'Landscape',ratio:'16:9',accent:r.accent},
+  ];
+  r.approvals={};
+  renderProjectPanel();
+  showTyping(()=>{
+    addMsg(`Your designer delivered assets for <strong>${r.title}</strong> 🎉 Tap any to open full screen, or approve all inline.`,'ai');
+    showProjectAssetReview(idx);
+  },600);
+}
+
+function showProjectAssetReview(idx){
+  const r=S.project[idx];
+  const dvs=r.deliverables;
+  const wrap=document.createElement('div');
+  wrap.className='ra-asset-review';
+  wrap.innerHTML=`<div class="ra-asset-review-label">Assets ready for your review — ${r.title}</div>`+
+    dvs.map((d,i)=>`
+      <div class="ra-asset-row" onclick="openProjectFS(${idx},${i})">
+        <div class="ra-asset-thumb-wrap"><canvas id="pthumb-${idx}-${i}" width="48" height="48"></canvas><div class="ra-asset-label-badge">${d.label}</div></div>
+        <div class="ra-asset-info"><div class="ra-asset-name">${d.name}</div><div class="ra-asset-meta">Image · <span class="ra-asset-open">Open full screen</span></div></div>
+        <div class="ra-asset-actions">
+          <button class="ra-av-btn approve" id="papprove-${idx}-${i}" onclick="event.stopPropagation();toggleProjApproval(${idx},${i},'approve')" title="Approve">✓</button>
+          <button class="ra-av-btn reject" id="preject-${idx}-${i}" onclick="event.stopPropagation();toggleProjApproval(${idx},${i},'reject')" title="Reject">✕</button>
+        </div>
+      </div>`).join('')+
+    `<div class="ra-review-footer"><button class="ra-approve-all-btn" onclick="approveProjectAll(${idx})">Approve all ✓</button><button class="ra-changes-btn" onclick="requestChanges()">Request changes</button></div>`;
+  msgs().appendChild(wrap);
+  dvs.forEach((d,i)=>setTimeout(()=>{
+    const c=document.getElementById(`pthumb-${idx}-${i}`);
+    if(c)drawThumb(c,d,48,48);
+  },50*i));
+  scrollChat();
+}
+
+function toggleProjApproval(idx,assetIdx,action){
+  const r=S.project[idx];
+  r.approvals[assetIdx]=r.approvals[assetIdx]===action?null:action;
+  const ab=document.getElementById(`papprove-${idx}-${assetIdx}`);
+  const rb=document.getElementById(`preject-${idx}-${assetIdx}`);
+  if(ab)ab.classList.toggle('active',r.approvals[assetIdx]==='approve');
+  if(rb)rb.classList.toggle('active',r.approvals[assetIdx]==='reject');
+}
+
+function approveProjectAll(idx){
+  const r=S.project[idx];
+  if(!r.deliverables)return;
+  r.deliverables.forEach((_,i)=>{r.approvals[i]='approve';toggleProjApproval(idx,i,'approve');});
+  r.status='approved';
+  renderProjectPanel();
+  showTyping(()=>{
+    addMsg(`All assets for <strong>${r.title}</strong> approved ✓ Great work!`,'ai');
+    scrollChat();
+  },500);
+}
+
+function openProjectFS(idx,assetIdx){
+  // Load project deliverables into global FS state
+  S.deliverables=S.project[idx].deliverables;
+  S.approvals=S.project[idx].approvals;
+  S._projFSIdx=idx;
+  openFS(assetIdx);
+}
+
 function askAnotherRequest(){
   const wrap=document.createElement('div');
   wrap.className='ra-next-prompt';
@@ -1084,6 +1168,7 @@ function chooseCreateProject(){
     desc:document.getElementById('bf-desc').textContent
   });
   S.projectName=brands[brandIdx]+' Project';
+  scheduleProjectDelivery(S.project.length-1);
   addMsg('Create a Project','user');
   showTyping(()=>{
     addMsg(`Project created — I've grouped your requests under <strong>${S.projectName}</strong>. You can expand each one in the side panel, or add more anytime.`,'ai');
@@ -1114,7 +1199,7 @@ function renderProjectPanel(){
           <div class="ra-proj-req-name">${r.title}</div>
           <div class="ra-proj-req-type">${r.type}</div>
         </div>
-        <div class="ra-proj-req-status ${r.status}">${r.status==='sent'?'Sent':'Draft'}</div>
+        <div class="ra-proj-req-status ${r.status}">${{sent:'Sent',review:'Review',approved:'Approved',draft:'Draft'}[r.status]||'Sent'}</div>
         <svg class="ra-proj-req-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
     </div>`).join('')+
@@ -1127,7 +1212,9 @@ function openReqDetail(i){
   const r=S.project[i];
   const p=r.pkg;
   document.getElementById('req-detail-title').textContent=r.title;
-  document.getElementById('req-detail-status').textContent=r.status==='sent'?'Sent':'Draft';
+  const statusEl=document.getElementById('req-detail-status');
+  statusEl.textContent={sent:'Sent',review:'Review needed',approved:'Approved',draft:'Draft'}[r.status]||'Sent';
+  statusEl.className='ra-req-detail-status '+r.status;
   // Build detail body reusing brief section styles
   const dd=r.dueDate||'';
   document.getElementById('req-detail-body').innerHTML=`
@@ -1290,7 +1377,7 @@ function openFS(idx){
   document.getElementById('fs-viewer').classList.remove('hidden');
   renderFS();
 }
-function closeFS(){document.getElementById('fs-viewer').classList.add('hidden');}
+function closeFS(){document.getElementById('fs-viewer').classList.add('hidden');S._projFSIdx=null;}
 function fsNav(dir){
   S.fsCurrent=(S.fsCurrent+dir+S.deliverables.length)%S.deliverables.length;
   S.fsPins=[];renderFS();
@@ -1364,8 +1451,16 @@ function sendFSNotes(){
   closeFS();
   showTyping(()=>addMsg(`Notes sent to the designer (${notes||'no'} annotation${notes!==1?'s':''}). They\'ll come back with revisions shortly.`,'ai'),400);
 }
-function rejectFSAsset(){const d=S.deliverables[S.fsCurrent];S.approvals[S.fsCurrent]='reject';toggleApproval(S.fsCurrent,'reject');closeFS();addMsg(`${d.label} Ad marked for revision.`,'user');}
-function approveFSAsset(){const d=S.deliverables[S.fsCurrent];S.approvals[S.fsCurrent]='approve';toggleApproval(S.fsCurrent,'approve');closeFS();addMsg(`${d.label} Ad approved ✓`,'user');}
+function rejectFSAsset(){
+  const d=S.deliverables[S.fsCurrent];S.approvals[S.fsCurrent]='reject';
+  if(S._projFSIdx!=null){toggleProjApproval(S._projFSIdx,S.fsCurrent,'reject');}else{toggleApproval(S.fsCurrent,'reject');}
+  closeFS();addMsg(`${d.label} Ad marked for revision.`,'user');
+}
+function approveFSAsset(){
+  const d=S.deliverables[S.fsCurrent];S.approvals[S.fsCurrent]='approve';
+  if(S._projFSIdx!=null){toggleProjApproval(S._projFSIdx,S.fsCurrent,'approve');}else{toggleApproval(S.fsCurrent,'approve');}
+  closeFS();addMsg(`${d.label} Ad approved ✓`,'user');
+}
 
 /* ── SEND / CHAT ── */
 function sendMessage(){
