@@ -173,6 +173,12 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif}
 .db-ai-fab-label{font-size:13px;font-weight:800;color:#fff;letter-spacing:.04em}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+/* Live rows from request agent */
+.db-live-row{animation:fadeUp .3s ease}
+.db-req-status{display:inline-flex;align-items:center;padding:2px 8px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:.04em}
+.db-req-status.in-review{background:rgba(44,58,255,.12);color:#2C3AFF}
+.db-req-status.assets-ready{background:rgba(255,181,91,.18);color:#E5A352}
+.db-req-status.approved{background:rgba(113,221,140,.2);color:#5CD801}
 </style>
 </head>
 <body>
@@ -231,10 +237,10 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif}
               </div>
               <table class="db-table">
                 <thead><tr><th>Priority</th><th>Title</th><th>Project</th><th>Category</th><th>Assignee</th><th>Last</th></tr></thead>
-                <tbody>
-                  <tr><td>1</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#2C3AFF,#8B5CF6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
-                  <tr><td>2</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#3B82F6,#2C3AFF)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
-                  <tr><td>3</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#6366F1,#3B82F6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
+                <tbody id="db-req-tbody">
+                  <tr><td>—</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#2C3AFF,#8B5CF6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
+                  <tr><td>—</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#3B82F6,#2C3AFF)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
+                  <tr><td>—</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#6366F1,#3B82F6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
                 </tbody>
               </table>
             </div>
@@ -243,7 +249,7 @@ html,body{height:100%;font-family:'Lato',system-ui,sans-serif}
               <div class="db-card-hd"><span class="db-card-title">Projects</span></div>
               <table class="db-table">
                 <thead><tr><th>Title</th><th># of Requests</th><th>Assets</th><th>Last Updated</th><th>Status</th><th>Complete</th></tr></thead>
-                <tbody>
+                <tbody id="db-proj-tbody">
                   <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
                   <tr><td><div class="db-req-name">Project</div><div style="display:flex;gap:4px;margin-top:3px"><span class="db-status-tag in-progress" style="padding:2px 8px;font-size:11px">Internal</span><span class="db-status-tag in-progress" style="padding:2px 8px;font-size:11px">Graphic</span><span style="font-size:11px;color:var(--db-muted);align-self:center">+2</span></div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
                   <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>7</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
@@ -354,7 +360,67 @@ function buildDbChart() {
 
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(buildDbChart, 50);
+  loadLiveData();
 });
+
+function loadLiveData() {
+  const statusLabel = {
+    'in-review':    ['In Review',    'in-review'],
+    'assets-ready': ['Assets Ready', 'assets-ready'],
+    'approved':     ['Approved',     'approved'],
+  };
+
+  // ── Requests ──
+  const reqs = (() => { try { return JSON.parse(localStorage.getItem('dp_requests') || '[]'); } catch(e) { return []; } })();
+  const reqTbody = document.getElementById('db-req-tbody');
+  reqs.forEach((r, n) => {
+    const [label, cls] = statusLabel[r.status] || ['In Review', 'in-review'];
+    const tr = document.createElement('tr');
+    tr.className = 'db-live-row';
+    tr.innerHTML = `
+      <td style="color:var(--db-muted)">${n + 1}</td>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div class="db-req-thumb" style="background:${r.accent}"></div>
+        <div>
+          <div class="db-req-name">${r.title}</div>
+          <span class="db-req-status ${cls}">${label}</span>
+        </div>
+      </div></td>
+      <td>${r.project || '—'}</td>
+      <td>${r.type}</td>
+      <td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Jane Johnson</div></td>
+      <td style="color:var(--db-muted)">${r.createdAt}</td>`;
+    reqTbody.prepend(tr);
+  });
+
+  // ── Projects ──
+  const projs = (() => { try { return JSON.parse(localStorage.getItem('dp_projects') || '[]'); } catch(e) { return []; } })();
+  const projTbody = document.getElementById('db-proj-tbody');
+  projs.forEach(p => {
+    const pct = p.completion || 0;
+    const isComplete = p.status === 'complete';
+    const tr = document.createElement('tr');
+    tr.className = 'db-live-row';
+    tr.innerHTML = `
+      <td><div class="db-req-name">${p.name}</div><div class="db-req-tag">+ Add tags</div></td>
+      <td>${p.requestCount || 0}</td>
+      <td>${p.assetCount || 0}</td>
+      <td>📅 ${p.createdAt}</td>
+      <td><span class="db-status-tag ${isComplete ? 'complete' : 'in-progress'}">${isComplete ? 'Complete' : 'In Progress'}</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div class="db-progress-bar"><div class="db-progress-fill" style="width:${pct}%"></div></div>
+        <span style="font-size:12px;color:var(--db-muted)">${pct}%</span>
+      </div></td>`;
+    projTbody.prepend(tr);
+  });
+
+  // Update stat counters
+  const awaitingEl = document.querySelector('.db-stat-box .db-stat-v');
+  if (awaitingEl && reqs.length) {
+    const inReview = reqs.filter(r => r.status === 'in-review' || r.status === 'assets-ready').length;
+    awaitingEl.textContent = String(inReview).padStart(2, '0');
+  }
+}
 </script>
 </body>
 </html>

@@ -697,8 +697,17 @@ const S = {
   roles:[{name:'Jane Johnson',color:'#E05A2B',initial:'J',label:'Requester'}],
   history:[], deliverables:[], approvals:{},
   fsCurrent:0, fsPins:[], fsColor:'#EF4444', fsTool:'pin',
-  project:[], projectName:'New Project'
+  project:[], projectName:'New Project',
+  _reqId:null, _projId:null
 };
+
+/* ── DASHBOARD SYNC ── */
+function dbLoad(k){try{return JSON.parse(localStorage.getItem(k)||'[]');}catch(e){return[];}}
+function dbSave(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function dbUpsertReq(entry){const a=dbLoad('dp_requests');const i=a.findIndex(r=>r.id===entry.id);if(i>=0)a[i]=entry;else a.unshift(entry);dbSave('dp_requests',a);}
+function dbUpsertProj(entry){const a=dbLoad('dp_projects');const i=a.findIndex(p=>p.id===entry.id);if(i>=0)a[i]=entry;else a.unshift(entry);dbSave('dp_projects',a);}
+function dbUpdateReq(id,patch){const a=dbLoad('dp_requests');const r=a.find(r=>r.id===id);if(r){Object.assign(r,patch);dbSave('dp_requests',a);}}
+function dbUpdateProj(id,patch){const a=dbLoad('dp_projects');const p=a.find(p=>p.id===id);if(p){Object.assign(p,patch);dbSave('dp_projects',a);}}
 const brands=['Nike.com','Bloom App','TechMart','Vaultly']; let brandIdx=0;
 function cycleBrand(){brandIdx=(brandIdx+1)%brands.length;document.getElementById('brand-label').textContent=brands[brandIdx];}
 
@@ -902,6 +911,7 @@ function selectPackage(pkg,type,emoji){
 
 function submitToProject(){
   const dd=new Date();dd.setDate(dd.getDate()+7);
+  const rId='req_'+Date.now();
   const entry={
     title: S.pkg?.name||'Untitled',
     type: S.type||'Design',
@@ -915,7 +925,11 @@ function submitToProject(){
     desc: S.pkg?.desc||''
   };
   const projIdx=S.project.length;
+  entry._reqId=rId;
   S.project.push(entry);
+  // Save request to dashboard
+  dbUpsertReq({id:rId,title:entry.title,type:entry.type,project:S.projectName,status:'in-review',accent:entry.accent,emoji:entry.emoji,createdAt:new Date().toISOString().slice(0,10),dueDate:entry.dueDate});
+  if(S._projId)dbUpdateProj(S._projId,{requestCount:S.project.length});
   renderProjectPanel();
   scheduleProjectDelivery(projIdx);
   // Replace the submit button with a sent confirmation
@@ -959,6 +973,10 @@ function set(id,text){document.getElementById(id).textContent=text;}
 /* ── SUBMIT ── */
 function submitRequest(){
   addMsg('Submit Request ✓','user');
+  // Save to dashboard
+  S._reqId='req_'+Date.now();
+  const dd=new Date();dd.setDate(dd.getDate()+7);
+  dbUpsertReq({id:S._reqId,title:S.pkg?.name||'Untitled',type:S.type||'Design',project:'',status:'in-review',accent:S.pkg?.accent||'#2C3AFF',emoji:S.typeEmoji||'🎨',createdAt:new Date().toISOString().slice(0,10),dueDate:dd.toISOString().slice(0,10)});
   const btn=document.getElementById('submit-btn');
   btn.disabled=true;btn.style.background='var(--color-green)';btn.style.color='#111';
   btn.innerHTML='<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#111;stroke-width:2.8;stroke-linecap:round;fill:none"><polyline points="20 6 9 17 4 12"/></svg> Sent to Designer';
@@ -990,6 +1008,7 @@ function renderBriefAssets(){
 }
 
 function showAssetReview(){
+  if(S._reqId)dbUpdateReq(S._reqId,{status:'assets-ready'});
   const wrap=document.createElement('div');wrap.className='ra-asset-review';
   wrap.innerHTML=`<div class="ra-asset-review-label">Assets ready for your review — tap to open full screen</div>`+
     S.deliverables.map((d,i)=>`
@@ -1018,6 +1037,7 @@ function toggleApproval(idx,action){
 }
 function approveAll(){
   S.deliverables.forEach((_,i)=>{S.approvals[i]='approve';toggleApproval(i,'approve');});
+  if(S._reqId)dbUpdateReq(S._reqId,{status:'approved'});
   showTyping(()=>{
     addMsg('All assets approved ✓ Your request is marked complete. Great work!','ai');
     // If already in a project, save this request to it then re-render
@@ -1042,6 +1062,7 @@ function deliverProjectAssets(idx){
   const r=S.project[idx];
   if(!r||r.status==='approved')return;
   r.status='review';
+  if(r._reqId)dbUpdateReq(r._reqId,{status:'assets-ready'});
   r.deliverables=[
     {id:'d1',name:`${r.title} — Feed Ad`,label:'Feed',ratio:'1:1',accent:r.accent},
     {id:'d2',name:`${r.title} — Story Ad`,label:'Story',ratio:'9:16',accent:r.accent},
@@ -1093,6 +1114,13 @@ function approveProjectAll(idx){
   if(!r.deliverables)return;
   r.deliverables.forEach((_,i)=>{r.approvals[i]='approve';toggleProjApproval(idx,i,'approve');});
   r.status='approved';
+  if(r._reqId)dbUpdateReq(r._reqId,{status:'approved'});
+  // Update project completion in dashboard
+  if(S._projId){
+    const approved=S.project.filter(p=>p.status==='approved').length;
+    const pct=Math.round(approved/S.project.length*100);
+    dbUpdateProj(S._projId,{approvedCount:approved,assetCount:approved*3,completion:pct,status:pct===100?'complete':'in-progress'});
+  }
   renderProjectPanel();
   showTyping(()=>{
     addMsg(`All assets for <strong>${r.title}</strong> approved ✓ Great work!`,'ai');
@@ -1136,13 +1164,13 @@ function askAnotherRequest(){
 }
 
 function dismissNextPrompt(){
-  document.getElementById('next-prompt').remove();
+  document.getElementById('next-prompt')?.remove();
   addMsg('Done for now','user');
   showTyping(()=>addMsg('You\'re all set! Head back to the dashboard whenever you\'re ready.','ai'),500);
 }
 
 function chooseCreateAnother(){
-  document.getElementById('next-prompt').remove();
+  document.getElementById('next-prompt')?.remove();
   addMsg('Create another request','user');
   showTyping(()=>{
     addMsg('Let\'s go — what type of design do you need this time?','ai');
@@ -1151,7 +1179,7 @@ function chooseCreateAnother(){
 }
 
 function chooseCreateProject(){
-  document.getElementById('next-prompt').remove();
+  document.getElementById('next-prompt')?.remove();
   // Save current request into project array
   const title=document.getElementById('bf-title').textContent||S.pkg?.name||'Untitled Request';
   const dd2=new Date();dd2.setDate(dd2.getDate()+7);
@@ -1165,9 +1193,14 @@ function chooseCreateProject(){
     sizes:document.getElementById('bf-sizes').textContent,
     channels:document.getElementById('bf-channels').textContent,
     dueDate:document.getElementById('bf-due-date').value||dd2.toISOString().slice(0,10),
-    desc:document.getElementById('bf-desc').textContent
+    desc:document.getElementById('bf-desc').textContent,
+    _reqId:S._reqId
   });
   S.projectName=brands[brandIdx]+' Project';
+  S._projId='proj_'+Date.now();
+  // Save project and link the first request to it
+  dbUpsertProj({id:S._projId,name:S.projectName,requestCount:S.project.length,assetCount:0,approvedCount:0,status:'in-progress',createdAt:new Date().toISOString().slice(0,10)});
+  if(S._reqId)dbUpdateReq(S._reqId,{project:S.projectName});
   scheduleProjectDelivery(S.project.length-1);
   addMsg('Create a Project','user');
   showTyping(()=>{
