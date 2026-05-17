@@ -43,13 +43,13 @@
       <div class="db-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="Search"></div>
       <div class="db-topbar-r">
         <button class="db-theme-btn" onclick="toggleDbTheme()" title="Toggle light/dark">☀</button>
-        <a class="db-sb-link" href="onboarding.html" style="font-size:12.5px;border-radius:9999px;padding:4px 12px;border:1px solid var(--db-border)">Onboarding</a>
+        <a class="db-sb-link db-pill-link" href="onboarding.html">Onboarding</a>
         <button class="db-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
         <button class="db-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
         <div class="db-user">
           <div class="db-user-av">J</div>
           <div class="db-user-info"><div class="db-user-name">Jane Johnson</div><div class="db-user-role">DP Admin</div></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:13px;height:13px;color:var(--db-muted)"><polyline points="6 9 12 15 18 9"/></svg>
+          <svg class="db-chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
       </div>
     </div>
@@ -68,9 +68,9 @@
               <table class="db-table">
                 <thead><tr><th>Priority</th><th>Title</th><th>Project</th><th>Category</th><th>Assignee</th><th>Last</th></tr></thead>
                 <tbody id="db-req-tbody">
-                  <tr><td>—</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#2C3AFF,#8B5CF6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
-                  <tr><td>—</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#3B82F6,#2C3AFF)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
-                  <tr><td>—</td><td><div style="display:flex;align-items:center;gap:10px"><div class="db-req-thumb" style="background:linear-gradient(135deg,#6366F1,#3B82F6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td style="color:var(--db-muted)">—</td></tr>
+                  <tr><td>—</td><td><div class="db-req-cell"><div class="db-req-thumb" style="background:linear-gradient(135deg,#2C3AFF,#8B5CF6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td class="db-td-muted">—</td></tr>
+                  <tr><td>—</td><td><div class="db-req-cell"><div class="db-req-thumb" style="background:linear-gradient(135deg,#3B82F6,#2C3AFF)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td class="db-td-muted">—</td></tr>
+                  <tr><td>—</td><td><div class="db-req-cell"><div class="db-req-thumb" style="background:linear-gradient(135deg,#6366F1,#3B82F6)"></div><div><div class="db-req-name">Youtube thumbnail</div><div class="db-req-tag">+ Add tags</div></div></div></td><td>Youtube campaign</td><td>Marketing</td><td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Unassigned</div></td><td class="db-td-muted">—</td></tr>
                 </tbody>
               </table>
             </div>
@@ -80,10 +80,10 @@
               <table class="db-table">
                 <thead><tr><th>Title</th><th># of Requests</th><th>Assets</th><th>Last Updated</th><th>Status</th><th>Complete</th></tr></thead>
                 <tbody id="db-proj-tbody">
-                  <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
-                  <tr><td><div class="db-req-name">Project</div><div style="display:flex;gap:4px;margin-top:3px"><span class="db-status-tag in-progress" style="padding:2px 8px;font-size:11px">Internal</span><span class="db-status-tag in-progress" style="padding:2px 8px;font-size:11px">Graphic</span><span style="font-size:11px;color:var(--db-muted);align-self:center">+2</span></div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
-                  <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>7</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
-                  <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag complete">Complete</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="db-progress-bar"><div class="db-progress-fill" style="width:100%"></div></div><span style="font-size:12px;color:var(--db-muted)">55%</span></div></td></tr>
+                  <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div class="db-progress-cell"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span class="db-pct-label">55%</span></div></td></tr>
+                  <tr><td><div class="db-req-name">Project</div><div class="db-tag-row"><span class="db-status-tag in-progress db-tag-chip">Internal</span><span class="db-status-tag in-progress db-tag-chip">Graphic</span><span class="db-tag-more">+2</span></div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div class="db-progress-cell"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span class="db-pct-label">55%</span></div></td></tr>
+                  <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>7</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag in-progress">In Progress</span></td><td><div class="db-progress-cell"><div class="db-progress-bar"><div class="db-progress-fill" style="width:55%"></div></div><span class="db-pct-label">55%</span></div></td></tr>
+                  <tr><td><div class="db-req-name">Project</div><div class="db-req-tag">+ Add tags</div></td><td>8</td><td>2</td><td>📅 Sep 07, 2025...</td><td><span class="db-status-tag complete">Complete</span></td><td><div class="db-progress-cell"><div class="db-progress-bar"><div class="db-progress-fill" style="width:100%"></div></div><span class="db-pct-label">100%</span></div></td></tr>
                 </tbody>
               </table>
             </div>
@@ -105,8 +105,8 @@
               </div>
             </div>
             <div class="db-right-card">
-              <div class="db-rc-hd"><span class="db-rc-title">Request Usage</span><span class="db-rc-action" style="font-size:12px">Last 7 days ▾</span></div>
-              <canvas id="db-chart" style="width:100%;height:110px;display:block"></canvas>
+              <div class="db-rc-hd"><span class="db-rc-title">Request Usage</span><span class="db-rc-action db-rc-action-sm">Last 7 days ▾</span></div>
+              <canvas id="db-chart" class="db-chart-canvas"></canvas>
               <div class="db-chart-legend">
                 <div class="db-chart-legend-item"><div class="db-chart-legend-dash"></div>Requests</div>
                 <div class="db-chart-legend-item"><div class="db-chart-legend-line"></div>Completed</div>
@@ -208,8 +208,8 @@ function loadLiveData() {
     const tr = document.createElement('tr');
     tr.className = 'db-live-row';
     tr.innerHTML = `
-      <td style="color:var(--db-muted)">${n + 1}</td>
-      <td><div style="display:flex;align-items:center;gap:10px">
+      <td class="db-td-muted">${n + 1}</td>
+      <td><div class="db-req-cell">
         <div class="db-req-thumb" style="background:${r.accent}"></div>
         <div>
           <div class="db-req-name">${r.title}</div>
@@ -219,7 +219,7 @@ function loadLiveData() {
       <td>${r.project || '—'}</td>
       <td>${r.type}</td>
       <td><div class="db-unassigned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Jane Johnson</div></td>
-      <td style="color:var(--db-muted)">${r.createdAt}</td>`;
+      <td class="db-td-muted">${r.createdAt}</td>`;
     reqTbody.prepend(tr);
   });
 
@@ -237,9 +237,9 @@ function loadLiveData() {
       <td>${p.assetCount || 0}</td>
       <td>📅 ${p.createdAt}</td>
       <td><span class="db-status-tag ${isComplete ? 'complete' : 'in-progress'}">${isComplete ? 'Complete' : 'In Progress'}</span></td>
-      <td><div style="display:flex;align-items:center;gap:8px">
+      <td><div class="db-progress-cell">
         <div class="db-progress-bar"><div class="db-progress-fill" style="width:${pct}%"></div></div>
-        <span style="font-size:12px;color:var(--db-muted)">${pct}%</span>
+        <span class="db-pct-label">${pct}%</span>
       </div></td>`;
     projTbody.prepend(tr);
   });

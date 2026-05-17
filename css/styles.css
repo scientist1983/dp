@@ -180,6 +180,29 @@ body:has(#ra-wrap){overflow:hidden}
 .db-ai-fab:hover{opacity:.88}
 .db-ai-fab-label{font-size:13px;font-weight:800;color:#fff;letter-spacing:.04em}
 
+/* Topbar pill link (e.g. Onboarding) */
+.db-pill-link{font-size:12.5px;border-radius:9999px;padding:4px 12px;border:1px solid var(--db-border)}
+/* User menu chevron */
+.db-chevron-icon{width:13px;height:13px;color:var(--db-muted);flex-shrink:0}
+/* Request title cell */
+.db-req-cell{display:flex;align-items:center;gap:10px}
+/* Muted table cell */
+.db-td-muted{color:var(--db-muted)}
+/* Progress bar cell */
+.db-progress-cell{display:flex;align-items:center;gap:8px}
+/* Percentage label */
+.db-pct-label{font-size:12px;color:var(--db-muted)}
+/* Project tag row */
+.db-tag-row{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;align-items:center}
+/* Small status-tag chip variant */
+.db-tag-chip{padding:2px 8px;font-size:11px}
+/* "+N more" overflow hint */
+.db-tag-more{font-size:11px;color:var(--db-muted);align-self:center}
+/* Chart canvas */
+.db-chart-canvas{width:100%;height:110px;display:block}
+/* Small variant for rc-action */
+.db-rc-action-sm{font-size:12px}
+
 /* Live rows injected from request agent */
 .db-live-row{animation:fadeUp .3s ease}
 .db-req-status{display:inline-flex;align-items:center;padding:2px 8px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:.04em}
