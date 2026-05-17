@@ -1239,7 +1239,40 @@ function openReqDetail(i){
       ${row('Visual Style',p?.visualStyle||'—')}
       ${row('Things to Avoid',p?.thingsToAvoid||'—')}
       ${row('Visual References',p?.visualReferences||'—')}
-    </div>`;
+    </div>
+    ${r.deliverables&&r.deliverables.length?`
+    <div class="ra-brief-section">
+      <div class="ra-section-label">Assets</div>
+      ${r.deliverables.map((d,ai)=>`
+        <div class="ra-brief-asset-row">
+          <div class="ra-brief-asset-thumb"><canvas id="rdthumb-${i}-${ai}" width="36" height="36" style="border-radius:7px"></canvas></div>
+          <div class="ra-brief-asset-info">
+            <div class="ra-brief-asset-name">${d.name}</div>
+            <div class="ra-brief-asset-type">Image</div>
+          </div>
+          <button class="ra-dl-btn" onclick="openProjectFS(${i},${ai})" title="Open full screen">
+            <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+        </div>`).join('')}
+    </div>
+    <div class="ra-brief-section">
+      <div class="ra-section-label">Workflows</div>
+      <div class="ra-workflow-row">
+        <div class="ra-wf-avatars">
+          <div class="ra-wf-av" style="background:#5CD801;color:#111">V</div>
+          <div class="ra-wf-av" style="background:#2C3AFF">S</div>
+          <div class="ra-wf-av" style="background:#E05A2B">J</div>
+        </div>
+        <div class="ra-wf-info">Team · Design Pickle · Your team · You</div>
+      </div>
+    </div>`:''}`;
+  // Draw asset thumbnails after DOM is painted
+  if(r.deliverables){
+    r.deliverables.forEach((d,ai)=>setTimeout(()=>{
+      const c=document.getElementById(`rdthumb-${i}-${ai}`);
+      if(c)drawThumb(c,d,36,36);
+    },40*ai));
+  }
   // Switch panels
   document.getElementById('project-panel').style.display='none';
   document.getElementById('req-detail-panel').style.display='flex';
