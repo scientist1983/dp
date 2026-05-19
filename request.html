@@ -1536,7 +1536,18 @@ function renderNavList(filter){
     <div class="ra-nav-item${c.id===S.activeChatId?' active':''}${c.unread?' unread':''}" onclick="loadChat('${c.id}')">
       <div class="ra-nav-item-title">${c.title}</div>
       <div class="ra-nav-item-time">${navTimeLabel(c.timestamp)}</div>
+      <button class="ra-nav-del" onclick="event.stopPropagation();deleteChat('${c.id}')" title="Remove chat">✕</button>
     </div>`).join('');
+}
+
+function deleteChat(id){
+  S.chats=S.chats.filter(c=>c.id!==id);
+  try{localStorage.setItem('dp_chats',JSON.stringify(S.chats));}catch(e){}
+  if(S.activeChatId===id){
+    startNewChat();
+  } else {
+    renderNavList();
+  }
 }
 
 function loadChat(id){
